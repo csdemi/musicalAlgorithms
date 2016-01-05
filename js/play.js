@@ -1,4 +1,3 @@
-
 //Array to hold voices  
 
 //a boolean flag that's used for stopping playback
@@ -328,21 +327,20 @@ function createTrack( basedataArray, voice,channel,microTempo,type)
 {
     //alert("creating voice on channel"+channel);
     
-		var pitchArray=voice.FinalPitchArray;
-		var durationArray=voice.durationMappingArray;
-		var midiNotes=new Array(pitchArray.length);
+		var pitchArray = voice.FinalPitchArray;
+		var durationArray = voice.durationMappingArray;
+		var midiNotes = new Array(pitchArray.length);
 		//get instrument string
-		var trackdata='MTrk'//|0 Meta Text "'+voice.instrumentString+'"|0 ParCh='+channel+' p='+voice.instrument+' v=120';
-		var trackdataArray=trackdata.split('|');
+		var trackdata = 'MTrk'//|0 Meta Text "'+voice.instrumentString+'"|0 ParCh='+channel+' p='+voice.instrument+' v=120';
+		var trackdataArray = trackdata.split('|');
 																						
 																						
-		var dur2=microTempo/24;//1 MIDI clock
+		var dur2 = microTempo/24;//1 MIDI clock
 		//24 MIDI clocks in every quarter note
-		var nowDur =0;//(1 << durationArray[1]) * 120;
+		var nowDur = 0;//(1 << durationArray[1]) * 120;
 	for(var i=0;i<midiNotes.length;i++)
 	{
-		midiNotes[i]=pitchArray[i]+20;
-		
+		midiNotes[i] = pitchArray[i]+20;
 		if (isNaN(midiNotes[i])) { alert('note ' + i + ' is invalid. Notes must be integers.'); return; }
 		if ((midiNotes[i]<0) || (midiNotes[i]>=127)) { alert('note ' + midiNotes[i]+"= "+"midiNotes[" +i+"]"+ ' is invalid. Notes must be valid midi notes between 0 and 127.'); return; }
 		
@@ -378,29 +376,35 @@ function createTrack( basedataArray, voice,channel,microTempo,type)
 /****************************************************************Player Handlers*************************************************************************/
 function makeMidiPlay() 
 {
+    var voiceArray = GetVoiceArray();
 	var maxNoteCount = longestNoteCount(voiceArray);
-	// crashes here... Where the fuck is this called from and why are they getting this god damn value again.
+	
 	var i = 0;
-	(function playR(){
+    // this is where playR is, what a bizarre way to declare a function
+	(function playR(){// maybe playR means, play recursive.....
 	tempo=parseInt($("#tempo").val());
 		setTimeout(function(){
-			
+		   
 			if(i < maxNoteCount && paused){
 				for(currentVoice = 0; currentVoice < voiceArray.length; currentVoice++){
-					if(!stopped)
-					{
-						if(voiceArray[currentVoice].muted != true)
-							playAndLight(i,currentVoice);
+				    
+				    if (!stopped)
+				    {
+				        
+				        if (voiceArray[currentVoice].muted != true) {
+				            
+				            playAndLight(i, currentVoice);
+				        }
 					}
 					else
 						return;
 				}
-
-				playR();
+			
+				playR();// line 385 is called?!?!?!
 			}
 			else if(!paused){
-				
-				playR();
+			    
+				playR();// line 385 is called?!?!?!
 			}
 			else{
 				disableAllVoices(false);
@@ -419,10 +423,11 @@ function makeMidiPlay()
 	})();
 }
 
-function playAndLight(i,currentVoice){
-	var duration = (getMidiClocks(voiceArray[currentVoice - 1].durationMappingArray[i])/24);
-	var note = voiceArray[currentVoice - 1].FinalPitchArray[i] + 20;
-	var pos = i;
+function playAndLight(i, currentVoice) {
+    var duration = (getMidiClocks(voiceArray[currentVoice].durationMappingArray[i]) / 24);
+    var note = voiceArray[currentVoice].FinalPitchArray[i] + 20;
+    var pos = i;
+   
 	setTimeout(function(){
 		if(!stopped)
 		{
@@ -439,11 +444,7 @@ function playAndLight(i,currentVoice){
 
 function play()
 {
-
-	
-	if(!paused){
-		
-			
+	if(!paused){		
 		paused = true;
 		$(".player-pause").prop('disabled',false);
 		$(".player-play").prop('disabled',true);
@@ -456,7 +457,6 @@ function play()
 			makeMidiPlay();	
 		}
 	}
-	
 }
 
 function pause()
@@ -551,8 +551,8 @@ function selectInstrument(voiceNum) {
 		}
 		
 		MIDI.programChange( (voice - 1), instrument);
-		voiceArray[voice-1].instrument=instrument;
-		voiceArray[voice - 1].instrumentString = selectedString;
+		voiceArray[voice - 1].instrument=instrument;// this is the midi number assocaited with the instrument.
+		voiceArray[voice - 1].instrumentString = selectedString;// I am assuming this is the sttring representation of the instrument.
 }
 
 
@@ -583,6 +583,7 @@ function getMidiClocks(intDur)
 }
 
 //parses string of ints (from pitch mapping or duration mapping) to an array
+// probably can delete this function.
 function toArray(input) {
     var result = new Array();
     if (input !== undefined) {
@@ -647,3 +648,4 @@ function playPanel(numberOfVoice) {
     }
 }
 /****************************************************************End Helper Functions*********************************************************************/
+
