@@ -10,7 +10,27 @@ $(document).ready(function(){
 		var $selectionBox = $parentId.find('[id^=input_set]');	
 		var $selected = $selectionBox.find("option:selected");
 		var voiceNumber = getVoiceNumber($parentId); //All of this stuff is needed for logic.
+        /* 
+        This shows and hides the fields for the DNA and Protein by checking what the option is in the dropdown menu.
+        If the option is DNA then it will toggle on the areas and display the current values of the items. This area will allow 
+        the user to customize the values to the letters and then convert all the letters in the input area to numerical data 
+        that will be used to play music.
+        */
+        var $dnaLabel = $('#dna');
+        var $sequenceInput =$('#sequence');
+        if($selected.text()=="DNA")
+        {
+            $dnaLabel.show();
+            $sequenceInput.show();
+        }
+        else
+        {
+            $dnaLabel.hide();
+            $sequenceInput.hide();
+            
+        }
 
+        
 		if ($selected.text() == "Custom") {
 		    $area.prop("readonly", false);
 		    $area.val("");
@@ -19,7 +39,8 @@ $(document).ready(function(){
 		else {
 			$area.prop("readonly", true);
 		}
-		
+
+
 		validatePanel($area, getVoiceNumber($parentId));
 
 		var $durId = $('#dInput_set'+voiceNumber).closest('div[id]');
@@ -97,9 +118,8 @@ $(document).ready(function(){
 		updateTooltipVals($parentId);
 		updateDurationMapTooltip($parentId);
 	});
-	
-	
-	
+    
+
 	function tooltip($parentId){
 		$infoTooltip = $parentId.find('[id^=pitchInfo]');
 		var $input = $parentId.find('[id^=input_set]');		
@@ -154,19 +174,22 @@ function pitchInput(numberOfVoice) {
 					<option>Powers</option>\
 					<option>E Constant</option>\
 					<option>Custom</option>\
+                    <option>DNA</option>\
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
-				<label >Note Count:</label>\
+				<label>Note Count:</label>\
 				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
+                <label id='dna' style='display:none'>Sequence</label>\
+                <textarea id='sequence' style='display:none'"+ voiceCount + "'></textarea><br>\
 				<label>Input:</label><br>\
-				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
+				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea><br>\
 			</fieldset>\
 		</div>\
 		";
-
         $(".pitch_input").append($voice);
     }
 }
+
 
 
 
