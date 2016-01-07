@@ -16,17 +16,23 @@ $(document).ready(function(){
         the user to customize the values to the letters and then convert all the letters in the input area to numerical data 
         that will be used to play music.
         */
-        var $dnaLabel = $('#dna');
-        var $sequenceInput =$('#sequence');
+        var $dnaLabel = $parentId.find('[id^=dna]');
+        var $sequenceInput =$parentId.find('[id^=sequence]');
+        var $notes =$parentId.find('[id^=notes]');
+        var $notesField=$countId;
         if($selected.text()=="DNA")
         {
             $dnaLabel.show();
             $sequenceInput.show();
+            $notes.hide();
+            $notesField.hide();
         }
         else
         {
             $dnaLabel.hide();
             $sequenceInput.hide();
+            $notes.show();
+            $notesField.show();
             
         }
 
@@ -177,10 +183,10 @@ function pitchInput(numberOfVoice) {
                     <option>DNA</option>\
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
-				<label>Note Count:</label>\
+				<label id='notes"+ voiceCount + "' style='display'>Note Count:</label>\
 				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
-                <label id='dna' style='display:none'>Sequence</label>\
-                <textarea id='sequence' style='display:none'"+ voiceCount + "'></textarea><br>\
+                <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
+                <textarea id='sequence"+ voiceCount + "' style='display:none'></textarea><br>\
 				<label>Input:</label><br>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea><br>\
 			</fieldset>\
