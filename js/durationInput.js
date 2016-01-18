@@ -1,97 +1,142 @@
 
 $(document).ready(function(){
 
-// This is called when the algorithm is changed.
-	$('.duration_input').on('change', '[id^=dInput_set]', function() {	
-	    var voiceArray = GetVoiceArray();
-	    
-	    var $parentId = $(this).closest('div[id]');
-		var $area = $parentId.find('[id^=dAreaMap]');
-		var $selectionBox = $parentId.find('[id^=dInput_set]');	
-		var $selected = $selectionBox.find("option:selected");
-		var voiceNumber = getVoiceNumber($parentId);
-		 
-		if($selected.text() == "Custom")
+    /*
+        This is thrown when the user interacts with the drop down menu.
+    */
+	$('.duration_input').on('change', '[id^=dInput_set]', function() {	  
+	    var $panel = $(this).closest('div[id]');
+		var $TextBox = $panel.find('[id^=dAreaMap]');
+		var $Algorithm = $panel.find('[id^=dInput_set]');	
+		var $SelectedAlgorithm = $Algorithm.find("option:selected");
+		var voiceNumber = getVoiceNumber($panel);
+		
+		voiceArray[voiceNumber - 1].originalDurationArrayAlgorithm = $SelectedAlgorithm.text();
+
+		if($SelectedAlgorithm.text() == "Custom")
 		{
-		    $area.prop("readonly", false);
-		    $area.val("");
+		    $TextBox.prop("readonly", false);
+		    $TextBox.val("");
 		    
-		    $area.val(populateDurationCustomText(voiceArray[voiceNumber - 1].originalPitchArray.length));
-		    
+		    $TextBox.val(populateDurationCustomText(voiceArray[voiceNumber - 1].originalPitchArray.length))
+		    voiceArray[voiceNumber - 1].originalDurationArray = $TextBox.val().split(",");
+		    UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+
+		    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
 		}
-		else if($selected.text() !=  "Custom")
+		else if($SelectedAlgorithm.text() !=  "Custom")
 		{
-		    $area.prop("readonly", true);
+		    $TextBox.prop("readonly", true);
+
+		    UpdateOriginalDurationArray(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text());
+		    UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound); // This needs adjusted once duration mapping is dealt with.
+
+		    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+
+		    $TextBox.val(voiceArray[voiceNumber - 1].originalDurationArray);
 		}
 		
-		call_duration($selected.text(), voiceArray[voiceNumber - 1].originalPitchArray.length, $area.attr('id'), voiceArray[voiceNumber - 1]);
-		call_dur_Mapping($parentId, voiceNumber);
-		SetVoiceArray(voiceArray);
-		
-		updateTooltipVals($parentId);
+		updateTooltipVals($panel);
 	});
 	
-	//This function fills the durationInput textbox with the appropriate number of notes (1 by default) in order to match the number of notes in the pitch section.
+	/*
+		This function fills the durationInput textbox with the appropriate number of notes (1 by default) in order to match the number of notes in the pitch section.
+	*/
 	function populateDurationCustomText(noteCount) {
-		var noteString = "";
-			for(var i = 0; i < noteCount - 1; i++)
-			{
-				noteString += 1 + ",";
-			}
-			
-			
-			if(noteCount > 0)
-			{
-				noteString += "1";
-			}
-		return noteString;
-		
-	}//end function
-    // The func below is called when the text area is played with.
-    // this method down is crashing somewhere around the call_duration call.
-    // this needs deleted VVVVVVV Was on('change', '[id^=dIput_set], [id^=dAreaMap]'
-	$('.duration_input').on('change', '[id^=dAreaMap]', function() {
-	    var voiceArray = GetVoiceArray();
-	 
-	    var $parentId = $(this).closest('div[id]');
-		var currVoiceNum = getVoiceNumber($parentId);
-		var $area = $parentId.find('[id^=dAreaMap]');	
-		var $selected = $parentId.find("option:selected");
-		tooltip($parentId);
-
-		if($selected.text() == "Custom")
+		var customArray = new Array();
+	    for(var i = 0; i < noteCount; i++)
 		{
-			$area.prop("readonly", false);
-			//alert("text area is editable");
+	        customArray.push(1);
+	    }
+		return customArray;
+		
+	}
+	
+	/*
+		This is used when custom is selected and the user is inputing values in the window.
+	*/
+	$('.duration_input').on('change', '[id^=dAreaMap]', function() {	 
+	    var $panel = $(this).closest('div[id]');
+		var voiceNumber = getVoiceNumber($panel);
+		var $TextBox = $panel.find('[id^=dAreaMap]');	
+	
+		tooltip($panel);
+
+		var TextData = document.getElementById($TextBox.attr('id')).value;
+		var candidateArray = TextData.split(",");
+	    
+		if (candidateArray.length > voiceArray[voiceNumber - 1].originalPitchArray.length)
+		{    
+		    var DifferenceInLength = candidateArray.length - voiceArray[voiceNumber - 1].originalPitchArray.length;
+		    candidateArray.length -= DifferenceInLength;
+
+		    if (ValidateCustomData(candidateArray) == false)
+		    {
+		        alert("Make Sure All Data Entered Is An Integer");
+		     
+		        $TextBox.val(populateDurationCustomText(voiceArray[voiceNumber - 1].originalPitchArray.length));
+		        voiceArray[voiceNumber - 1].originalDurationArray = $TextBox.val().split(",");
+		        UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+		    }
+		    else
+		    {
+		        voiceArray[voiceNumber - 1].originalDurationArray = candidateArray;
+		        UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+		        $TextBox.val(voiceArray[voiceNumber - 1].originalDurationArray);
+
+		        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+		    }
+		}
+		else if (candidateArray.length < voiceArray[voiceNumber - 1].originalPitchArray.length)
+		{
+		    if (ValidateCustomData(candidateArray) == false)
+		    {
+		        alert("Make Sure All Data Entered Is An Integer");
+
+		        $TextBox.val(populateDurationCustomText(voiceArray[voiceNumber - 1].originalPitchArray.length));
+		        voiceArray[voiceNumber - 1].originalDurationArray = $TextBox.val().split(",");
+		        UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+		    }
+		    else
+		    {
+		        var DifferenceInLength = voiceArray[voiceNumber - 1].originalPitchArray.length - candidateArray.length;
+		        var FillerArray = populateDurationCustomText(DifferenceInLength);
+		        var OriginalArray = $TextBox.val().split(",");
+
+		        candidateArray = OriginalArray.concat(FillerArray);
+		        
+		        voiceArray[voiceNumber - 1].originalDurationArray = candidateArray;
+		        UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+		        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+
+		        $TextBox.val(voiceArray[voiceNumber - 1].originalDurationArray);
+		    }
 		}
 		else
 		{
-			$area.prop("readonly", true);
-			//alert("text area is not editable");
+		    if (ValidateCustomData(candidateArray) == false)
+		    {
+		        alert("Make Sure All Data Entered Is An Integer");
+
+		        $TextBox.val(populateDurationCustomText(voiceArray[voiceNumber - 1].originalPitchArray.length))
+		        voiceArray[voiceNumber - 1].originalDurationArray = $TextBox.val().split(",");
+		        UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+		    }
+		    else
+		    {
+		        voiceArray[voiceNumber - 1].originalDurationArray = candidateArray;
+		        UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber - 1].durationMappingArrayUpperBound);
+
+		        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+		        $TextBox.val(voiceArray[voiceNumber - 1].originalDurationArray);
+		    }
 		}
-
-		validatePanel($area, getVoiceNumber($parentId));
-		var $noteCount = getNoteCount($area);
-	    //call_pitch($selected.text(),$noteCount,$area.attr('id')); old version.
-		/**/call_duration($selected.text(), voiceArray[currVoiceNum -1].originalDurationArray.length, $area.attr('id'), voiceArray[currVoiceNum - 1]);
-		SetVoiceArray(voiceArray);
-		var $pitId = $('#input_set' + currVoiceNum).closest('div[id]');
-		var $pitArea = $pitId.find('[id^=areaPitch]');
-		var $pitSelection = $pitId.find("option:selected");//.find('[id^=dInput_Set]');
-		validatePanel($area, getVoiceNumber($parentId));
-		//call_pitch($pitSelection.text(),$noteCount,$pitArea.attr('id'));
-		
-		var $range = $(".duration_mapping").closest('div[id]').find('[id^=dRange]');
-		var $to = $(".duration_mapping").closest('div[id]').find('[id^=dTo]');
-		dWriteRangeOut($range.val(),$to.val(),currVoiceNum);
-		call_dur_Mapping($(this).closest('div[id]'),currVoiceNum);
-		call_pitch_Mapping($(this).closest('div[id]'),currVoiceNum);// this may not be needed
-
-		updateDurationMappingData($parentId,currVoiceNum);
-		updateTooltipVals($parentId);
+		updateTooltipVals($panel);
 	});
 
-
+	/*
+		This is retained from previous version
+	*/
 	function tooltip($parentId){
 		$infoTooltip = $parentId.find('[id^=durPitchInfo]');
 		var $input = $parentId.find('[id^=dInput_set]');		
@@ -102,9 +147,241 @@ $(document).ready(function(){
 		$infoTooltip.attr("data-original-title",tooltipText); 
 	}		
 });
+// This is new, below.
 
+/*
+	Updates the array when called.
+*/
+function UpdateDurationMappingArray(voices, algorithm, low, high) {
+    var DurationMappingAlgorithm = algorithm;
+    var lowerNoteBound = voices.durationMappingArrayLowerBound;
+    var upperNoteBound = voices.durationMappingArrayUpperBound;
+
+    musicNormalize.setAlgorithm(normalizeFactory.createNormalizer(DurationMappingAlgorithm));
+    
+    voices.durationMappingArray = musicNormalize.normalize(voices.originalDurationArray, lowerNoteBound, upperNoteBound);
+}
+
+/*
+	This updates the original array when called.
+*/
+function UpdateOriginalDurationArray(voices, algorithm) {
+    var Algorithm = algorithmFactory.createSequence(algorithm);
+    musicAlgorithms.setAlgorithm(Algorithm);
+
+    voices.originalDurationArray = musicAlgorithms.getValues(voices.originalPitchArray.length);
+}
+
+/*
+	Default init.
+*/
+function LoadDefaultDurationInputTextBox(voices, voiceTotal) {
+    $('[id^=dPitchPanel1]').ready(function () {
+        var $panel = $(this);
+        var $NoteTextField = $panel.find('[id^=dAreaMap1]');
+        $NoteTextField.val(voices[voiceTotal - 1].originalDurationArray);
+    });
+}
+
+/*
+	This gets the user input data from the text field to update originalDurationArray.
+*/
+function GetCustomDataField(voiceNumber)
+{
+    var tempArray = new Array();
+    if (voiceNumber == 1) {
+        $('[id^=dPitchPanel1]').ready(function () {
+            var $panel = $(this);
+            var $TextBox = $panel.find('[id^=dAreaMap1]');
+            var TextData = document.getElementById($TextBox.attr('id')).value;
+            tempArray = TextData.split(",");
+        });
+    }
+    else if (voiceNumber == 2) {
+        $('[id^=dPitchPanel2]').ready(function () {
+            var $panel = $(this);
+            var $TextBox = $panel.find('[id^=dAreaMap2]');
+            var TextData = document.getElementById($TextBox.attr('id')).value;
+            tempArray = TextData.split(",");
+        });
+    }
+    else if (voiceNumber == 3) {
+        $('[id^=dPitchPanel3]').ready(function () {
+            var $panel = $(this);
+            var $TextBox = $panel.find('[id^=dAreaMap3]');
+            var TextData = document.getElementById($TextBox.attr('id')).value;
+            tempArray = TextData.split(",");
+        });
+    }
+    else if (voiceNumber == 4) {
+        $('[id^=dPitchPanel4]').ready(function () {
+            var $panel = $(this);
+            var $TextBox = $panel.find('[id^=dAreaMap4]');
+            var TextData = document.getElementById($TextBox.attr('id')).value;
+            tempArray = TextData.split(",");
+        });
+    }
+    return tempArray;
+}
+/*
+    This allows the pitchInput.js to acquire information form the durationInput.js panels for updating purposes.
+        Note: The weird panelpitch methods inside the if stucture cannot return values.
+*/
+function GetCurrentSelectedDurationAlgorithm(voiceNumber)
+{
+    var algorithm = "";
+    if (voiceNumber == 1)
+    {
+        $('[id^=dPitchPanel1]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set1]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if(voiceNumber == 2)
+    {
+        $('[id^=dPitchPanel2]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set2]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 3) {
+        $('[id^=dPitchPanel3]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set3]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 4) {
+        $('[id^=dPitchPanel4]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set4]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    return algorithm;
+}
+
+/*
+    This loads the current algorithm after a voice has been deleted
+*/
+function LoadDurationAlgorithm(voices, voiceTotal) {
+    if (voiceTotal == 1) {
+        $('[id^=dPitchPanel1]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set1]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].originalDurationArrayAlgorithm);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=dPitchPanel2]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set2]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].originalDurationArrayAlgorithm);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=dPitchPanel3]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set3]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].originalDurationArrayAlgorithm);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=dPitchPanel4]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=dInput_set4]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].originalDurationArrayAlgorithm);
+        });
+    }
+}
+
+/*
+    This updates from pitchInput.js the length of the notes. Only Note Count effects this.
+*/
+function UpdateDurationInputTextBoxFromPitchInput(voices, voiceNumber)
+{
+    if(voiceNumber == 1)
+    {
+        $('[id^=dPitchPanel1').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap1]');
+            $NoteTextField.val(voices.originalDurationArray);
+        });
+    }
+    else if(voiceNumber == 2)
+    {
+        $('[id^=dPitchPanel2').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap2]');
+            $NoteTextField.val(voices.originalDurationArray);
+        });
+    }
+    else if (voiceNumber == 3) {
+        $('[id^=dPitchPanel3').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap3]');
+            $NoteTextField.val(voices.originalDurationArray);
+        });
+    }
+    else if (voiceNumber == 4) {
+        $('[id^=dPitchPanel4').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap4]');
+            $NoteTextField.val(voices.originalDurationArray);
+        });
+    }
+}
+
+/*
+    This is called when voices are increased and decreased
+*/
+function LoadDurationInputTextBox(voices, voiceTotal) {
+    if (voiceTotal == 1) {
+        $('[id^=dPitchPanel1]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap1]');
+            $NoteTextField.val(voices[voiceTotal - 1].originalDurationArray);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=dPitchPanel2]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap2]');
+            $NoteTextField.val(voices[voiceTotal - 1].originalDurationArray);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=dPitchPanel3]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap3]');
+            $NoteTextField.val(voices[voiceTotal - 1].originalDurationArray);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=dPitchPanel4]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=dAreaMap4]');
+            $NoteTextField.val(voices[voiceTotal - 1].originalDurationArray);
+        });
+    }
+
+}
+
+/*
+    This is used to generate the panel.
+*/
 function durationInput(numberOfVoice) {
-    for (var voiceCount = 1; voiceCount <= numberOfVoice; voiceCount++) {
+    var voiceCount = numberOfVoice;
         var $voice = "\
 		<div id='dPitchPanel"+ voiceCount + "' class='full_view well well-sm'>\
 			<fieldset>\
@@ -129,10 +406,4 @@ function durationInput(numberOfVoice) {
 		</div>\
 		";
         $(".duration_input").append($voice);
-    }
 }
-
-	
-	
-	
-

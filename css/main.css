@@ -7,6 +7,12 @@
 /* ----- Helper Mixins ----- */
 /* ----- Page Styles ------ */
 /* Base Styles */
+input#letterAText1,input#letterTText1,input#letterUText1,
+input#letterAText2,input#letterTText2,input#letterUText2,
+input#letterAText3,input#letterTText3,input#letterUText3,
+input#letterAText4,input#letterTText4,input#letterUText4{
+    width: 29px;
+}
 body {
   background: url("../images/background.png");
   background-repeat: repeat;
