@@ -62,7 +62,7 @@ $(function () {
 */
 // this is probably where I need to start working on changing this stuff. 
 function getOutput() {
-    voiceArray = GetVoiceArray();
+    
     var $voiceNum = $('#welcomeChoice option:selected').val();
 
     for (var i = 0; i < $voiceNum; i++) {
@@ -374,7 +374,7 @@ function createTrack( basedataArray, voice,channel,microTempo,type)
 /****************************************************************Player Handlers*************************************************************************/
 function makeMidiPlay() 
 {
-    var voiceArray = GetVoiceArray();
+    //var voiceArray = GetVoiceArray();
 	var maxNoteCount = longestNoteCount(voiceArray);
 	
 	var i = 0;

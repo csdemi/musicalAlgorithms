@@ -63,7 +63,7 @@ var Division = function(){
 	{
 	    var counter = 0;
 
-	    while(value !== translatedTable[counter].originalValue)
+	    while(value != translatedTable[counter].originalValue)
 	    {
 	        counter++;
 	    }
