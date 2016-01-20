@@ -20,17 +20,35 @@ $(document).ready(function()
         the user to customize the values to the letters and then convert all the letters in the input area to numerical data 
         that will be used to play music.
         */
-            var $dnaLabel = $panel.find('[id^=dna]');//Finds the DNA label so we can show when needed
+            var $dnaLabel = $panel.find('[id^=dna]');//Finds the DNA label so we can display the Sequence label
             var $sequenceInput =$panel.find('[id^=sequence]');//Finds the type of sequence that is going on
             var $textAreaInput=$panel.find('[id^=areaPitch]');//Finds the ID for the AreaText to clear it when DNA/RNA/Proteins ect are choosen
             var $letterA=$panel.find('[id^=A]');//Label for the letter A so we can show and hide it as needed
             var $letterT=$panel.find('[id^=T]');
             var $letterU=$panel.find('[id^=U]');
+            var $letterG=$panel.find('[id^=G]');
+            var $letterC=$panel.find('[id^=C]');
             var $letterAText=$panel.find('[id^=letterAText]');//The text area for the letter A so we can change values if the user wants to.
             var $letterTText=$panel.find('[id^=letterTText]');
             var $letterUText=$panel.find('[id^=letterUText]');
+            var $letterCText=$panel.find('[id^=letterCText]');
+            var $letterGText=$panel.find('[id^=letterGText]');
+            var $buttonConvert=$panel.find('[id^=convert]');
+            var $buttonDuplicate=$panel.find('[id^=duplicates]');
             if($SelectedAlgorithm.text()=="DNA"||$SelectedAlgorithm.text()=="RNA")
-            {          
+            { 
+                $dnaLabel.show();
+                $sequenceInput.show();
+                $textAreaInput.val("");
+                $NoteCount.val("");
+                $letterA.show();
+                $letterC.show();
+                $letterG.show();
+                $letterAText.show();
+                $letterCText.show();
+                $letterGText.show();
+                $buttonConvert.show();
+                $buttonDuplicate.show();
                 if($SelectedAlgorithm.text()=="RNA")
                 {
                     $letterT.hide();
@@ -44,13 +62,36 @@ $(document).ready(function()
                     $letterU.hide();
                     $letterTText.show();
                     $letterUText.hide();
-                }
-                $dnaLabel.show();
-                $sequenceInput.show();
-                $textAreaInput.val("");
-                $NoteCount.val("");
-                $letterA.show();
-                $letterAText.show();
+                    $sequenceInput.val(voiceArray[voiceNumber-1].biology.originalDNASequence);
+                    voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+                    $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
+                    $letterAText.val(voiceArray[voiceNumber-1].biology.dnaValues[0]);
+                    $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]);
+                    $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]);
+                    $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]);
+                    var i=0;
+                    for(i;i<voiceArray[voiceNumber-1].biology.userSequenceArray.length;i++)
+                        {
+                            if(voiceArray[voiceNumber-1].biology.userSequenceArray[i]=="A")
+                                {
+                                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[0];
+                                }
+                            else if(voiceArray[voiceNumber-1].biology.userSequenceArray[i]=="T")
+                                {
+                                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[1];
+                                }
+                            else if(voiceArray[voiceNumber-1].biology.userSequenceArray[i]=="C")
+                                {
+                                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[2];
+                                }
+                            else
+                                {
+                                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[3];
+                                }
+                        }
+                        $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
+                    UpdateOriginalPitchArray(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text());
+                } 
             }
             else
             {
@@ -60,9 +101,15 @@ $(document).ready(function()
                 $letterA.hide();
                 $letterT.hide();
                 $letterU.hide();
+                $letterC.hide();
+                $letterG.hide();
                 $letterAText.hide();
                 $letterUText.hide();
                 $letterTText.hide();
+                $letterCText.hide();
+                $letterGText.hide();
+                $buttonConvert.hide();
+                $buttonDuplicate.hide();
             }
         
         if($SelectedAlgorithm.text() == "Custom")
@@ -514,6 +561,7 @@ function pitchInput(numberOfVoice) {
 					<option>E Constant</option>\
                     <option>DNA</option>\
                     <option>RNA</option>\
+                    <option>Protein</option>\
 					<option>Custom</option>\
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
@@ -528,11 +576,14 @@ function pitchInput(numberOfVoice) {
                 <input type='text' id='letterTText"+voiceCount+"'style='display:none'></input>\
                 <label id='U"+voiceCount+"'style='display:none'>U=</label>\
                 <input type='text' id='letterUText"+voiceCount+"'style='display:none'></input>\
-                <label id='A"+voiceCount+"'style='display:none'>G=</label>\
-                <input type='text' id='letterAText"+voiceCount+"'style='display:none'></input>\
-                <label id='A"+voiceCount+"'style='display:none'>C=</label>\
-                <input type='text' id='letterAText"+voiceCount+"'style='display:none'></input>\
-                <br id='A"+voiceCount+"'style='display:none'><\span>\
+                <label id='C"+voiceCount+"'style='display:none'>C=</label>\
+                <input type='text' id='letterCText"+voiceCount+"'style='display:none'></input>\
+                <label id='G"+voiceCount+"'style='display:none'>G=</label>\
+                <input type='text' id='letterGText"+voiceCount+"'style='display:none'></input>\
+                <button id='convert"+voiceCount+"'style='display:none'>Convert</button>\
+                <button id='duplicates"+voiceCount+"'style='display:none'>Count Duplicates</button>\
+                <br id='A"+voiceCount+"'style='display:none'>\
+                <\span>\
 				<label>Input:</label><br>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea><br>\
 			</fieldset>\

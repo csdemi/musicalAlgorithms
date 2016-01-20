@@ -28,5 +28,7 @@ function VoiceObject(id)
     this.instrumentString = "";
 
     this.muted = false;
+    /*Create the biology object to be used for DNA/RNA/Proteins/Codons */
+    this.biology=new biologyObject();
 }
 
