@@ -1,45 +1,67 @@
-/*ToDo
+$(document).ready(function () {
+    /*
+        This is triggered only when the Scale Option is changed.
+    */
+    $('.scale_options').on('change', '[id^=so_scale_options]', function () {
+        $(this).parent().parent().find("select").eq(1).css({ display: "" }).prev().html("Key: ");
+        /*
+            The above line of code allows the Voice Panel to be changed when voice is selected and 
+            and returns the Voice Panel to normal operation if anything other than Morph is selected. 
+        */
+        var ModificationArray = new Array();// Due to previous solution, this is used to modify the FinalPitchArray.
+
+        var $panel = $(this).closest('div[id]');// This gets the current panel.
+        var $TextBox = $panel.find('[id^=so_text_area]');// This gets the current panel's textbox.
+
+        var $ScaleOption = $panel.find('[id^=so_scale_options]');// This gets the scale selection drop down menu.
+        var $SelectedScale = $ScaleOption.find("option:selected");// This gets the current data from the scale drop down menu.
+
+        var $KeyOption = $panel.find('[id^=so_key_options]');// This gets the location of the Key drop down menu.
+        var $SelectedKey = $KeyOption.find("option:selected");// This gets the current data from the key drop down menu.
+        
+        var voiceNumber = getVoiceNumber($panel);// Located in WebsiteFunctions.js
+
+        if($SelectedScale.text() == "Morph")
+        {
+            Morph($(this).parent().parent());
+        }
+        else if($SelectedScale.text() != "Morph")
+        {
+            ModificationArray = adjustForKey(getScaleArray($SelectedScale.val()),voiceNumber);
+            voiceArray[voiceNumber - 1].FinalPitchArray = createOutput(voiceArray[voiceNumber - 1].pitchMappingArray, ModificationArray, voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+           
+            $TextBox.val(voiceArray[voiceNumber - 1].FinalPitchArray);
+        }
+    });
+
+    /*
+        This is triggered only when Key is changed.
+    */
+    $('.scale_options').on('change', '[id^=so_key_options]', function () {
+        var ModificationArray = new Array();
+
+        var $panel = $(this).closest('div[id]');
+        var $TextBox = $panel.find('[id^=so_text_area]');
+
+        var $ScaleOption = $panel.find('[id^=so_scale_options]');
+        var $SelectedScale = $ScaleOption.find("option:selected");
+
+        var $KeyOption = $panel.find('[id^=so_key_options]');
+        var $SelectedKey = $KeyOption.find("option:selected");
+
+        var voiceNumber = getVoiceNumber($panel);
+        
+        ModificationArray = adjustForKey(getScaleArray($SelectedScale.val()),voiceNumber);
+        voiceArray[voiceNumber - 1].FinalPitchArray = createOutput(voiceArray[voiceNumber - 1].pitchMappingArray, ModificationArray, voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+        $TextBox.val(voiceArray[voiceNumber - 1].FinalPitchArray);
+    });
+
+});
+	
+/*
+    This is used to return the array that will be used to offset the keys per scale. Maintained from the previous version.
 */
-$(document).ready(start);
-
-function start(){
-	$('.scale_options').on('change', '[id^=so_scale_options], [id^=so_key_options]', function() {
-		$(this).parent().parent().find("select").eq(1).css({ display: "" }).prev().html("Key: ");
-		//parentId = $(this).closest('div[id]')
-		if ($(this).val() === "Morph")
-			Morph($(this).parent().parent());
-		else
-			doScaleOptions(getVoiceNumber($(this).closest('div[id]')));
-	});
-	
-	// Not necessary. There should be one event in one place to avoid redundancy
-	$('.pitch_mapping').on('change', '[id^=range], [id^=to],[id^=compressType]', function() {
-		doScaleOptions(getVoiceNumber($(this).closest('div[id]')));
-	});
-	
-	$(".pitch_input").on('change','[id^=input_set],[id^=note_count]',function(){
-		doScaleOptions(getVoiceNumber($(this).closest('div[id]')));
-	});
-}
-
-function doScaleOptions(currVoiceNum) {
-        var voiceArray = GetVoiceArray();
-
-        var textAreaData = getDataArray($("#mapArea" + currVoiceNum));
-		var $so_textArea = $('.scale_options').find('[id^=so_text_area'+currVoiceNum+']');
-		var $pitchMin = $('#range' + currVoiceNum).val();
-		var $pitchMax = $('#to'+currVoiceNum).val();
-		var $scaleBySelection = $("#so_scale_options"+currVoiceNum).find("option:selected");
-		
-		// Get array based on user choice and adjust for key
-		var selectedScaleArray = adjustForKey(getScaleArray($scaleBySelection.val()));
-		// apply array to data in scale options text area
-		//textAreaData = createOutput(textAreaData, selectedScaleArray, $pitchMin, $pitchMax);
-		voiceArray[currVoiceNum - 1].FinalPitchArray = createOutput(voiceArray[currVoiceNum - 1].pitchMappingArray, selectedScaleArray, $pitchMin, $pitchMax);
-		SetVoiceArray(voiceArray);
-		mapWriteOutput($so_textArea.attr("id"), voiceArray[currVoiceNum - 1].FinalPitchArray);
-	}
-	
 function getScaleArray(choice){
 		// All arrays are off by 3. Should be fixed eventually
 		switch(choice){
@@ -61,36 +83,49 @@ function getScaleArray(choice){
 					return new Array(0,0,0,0,0,0,0,0,0,0,0,0);
 		}
 	}
-	
-function createOutput(textAreaData, scaleArray, pitchMin, pitchMax){
-		for(var i = 0; i < textAreaData.length; i++)
+
+/*
+    A helper method for changing the final array to suit users choice of scale. Maintained from the previous version.
+*/
+function createOutput(textAreaData, scaleArray, pitchMin, pitchMax) {
+    var tempArray = new Array();
+    for (var x = 0; x < textAreaData.length; x++)
+    {
+        tempArray.push(textAreaData[x]);
+    }
+		for(var i = 0; i < tempArray.length; i++)
 		{
-			if(parseInt(textAreaData[i])!==0)
+			if(parseInt(tempArray[i])!==0)
 			{
-				if(textAreaData[i] + scaleArray[textAreaData[i] % 12] > pitchMax)
+				if(tempArray[i] + scaleArray[tempArray[i] % 12] > pitchMax)
 				{
 					// Account for exceeding max by checking the next value down
-					textAreaData[i] --;
+					tempArray[i] --;
 					i --;
 				}
-				else if(textAreaData[i] + scaleArray[textAreaData[i] % 12] < pitchMin)
+				else if(tempArray[i] + scaleArray[tempArray[i] % 12] < pitchMin)
 				{
 					// Account for exceeding min
-					textAreaData[i] ++;
+					tempArray[i] ++;
 					i --;
 				}
 				else
 				{
-					textAreaData[i] += scaleArray[textAreaData[i] % 12]; // this corresponds to the scale arrays
+					tempArray[i] += scaleArray[tempArray[i] % 12]; // this corresponds to the scale arrays
 				}
 			}
 		}
-		return textAreaData;
+		return tempArray;
 	}
 	
-function adjustForKey(array){
-		var shift = $("#so_key_options1").find("option:selected").index();
-		for(var i = 0; i < shift + 4; i++) // +4 because arrays are off by 4. Needs to be shifted over eventually
+/*
+    This is used to modifiy the final array. Maintained from the previous version.
+*/
+function adjustForKey(array, voiceValue){
+
+    var shift = $("#so_key_options" + voiceValue).find("option:selected").index();
+   
+    for (var i = 0; i < shift + 4; i++) // +4 because arrays are off by 4. Needs to be shifted over eventually
 		{
 			var popped = array.pop();
 			array.unshift(popped);	
@@ -99,8 +134,9 @@ function adjustForKey(array){
 		return array;
 	}
 	
-
-/* Dylan: Adds Morph panel to the correct voice  */
+/*
+    This is what gets the morph window to show up. Maintained from previous version.
+*/
 function Morph($elem) {
 	// Set starting data
 	setStartData($elem.find("textarea").val().split(","));
@@ -115,6 +151,9 @@ function Morph($elem) {
 	$("[data-slider]").change();
 }
 
+/*
+	Seems it opens the over window for the morph. Maintained from the previous version.
+*/
 function openMorph(voice) {
 	setStartData($(voice).find("textarea").val().split(","));
 	update();
@@ -123,8 +162,97 @@ function openMorph(voice) {
 	$(".morph-modal").data("voice-num", voice.id);
 }
 
+// new below
+/*
+    This is used for the initialization.
+*/
+function LoadDefaultScaleOptionInputTextBox(voices, voiceTotal) {
+    $('[id^=scaleOptionsPanel1]').ready(function () {
+        var $panel = $(this);
+        var $NoteTextField = $panel.find('[id^=so_text_area1]');
+        $NoteTextField.val(voices[voiceTotal - 1].FinalPitchArray);
+    });
+}
+
+/*
+    This is called when changes have occured in pitchmapping or pitchinput.js
+*/
+function GetCurrentSelectedScale(voiceNumber) {
+    var algorithm = "";
+    if (voiceNumber == 1) {
+        $('[id^=scaleOptionsPanel1]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=so_scale_options1]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 2) {
+        $('[id^=scaleOptionsPanel2]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=so_scale_options2]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 3) {
+        $('[id^=scaleOptionsPanel3]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=so_scale_options3]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 4) {
+        $('[id^=scaleOptionsPanel4]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=so_scale_options4]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    return algorithm;
+}
+
+/*
+    This Loads the text box from pitchInput and pitchMapping when data is changed.
+*/
+function LoadScaleOptionsInputTextBox(voices, voiceTotal) {
+    if (voiceTotal == 1) {
+        $('[id^=scaleOptionsPanel1]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=so_text_area1]');
+            $NoteTextField.val(voices[voiceTotal - 1].FinalPitchArray);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=scaleOptionsPanel2]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=so_text_area2]');
+            $NoteTextField.val(voices[voiceTotal - 1].FinalPitchArray);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=scaleOptionsPanel3]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=so_text_area3]');
+            $NoteTextField.val(voices[voiceTotal - 1].FinalPitchArray);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=scaleOptionsPanel4]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=so_text_area4]');
+            $NoteTextField.val(voices[voiceTotal - 1].FinalPitchArray);
+        });
+    }
+}
+
+/*
+	This is the Website panel GUI.
+*/
 function scaleOptions(numberOfVoice) {
-    for (var voiceCount = 1; voiceCount <= numberOfVoice; voiceCount++) {
+    var voiceCount = numberOfVoice;
         var $voice = "\
 		<div id='scaleOptionsPanel"+ voiceCount + "' class='full_view well well-sm'>\
 			<fieldset>\
@@ -161,5 +289,4 @@ function scaleOptions(numberOfVoice) {
 		</div>\
 		";
         $(".scale_options").append($voice);
-    }
 }

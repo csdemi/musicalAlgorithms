@@ -62,7 +62,7 @@ $(function () {
 */
 // this is probably where I need to start working on changing this stuff. 
 function getOutput() {
-    voiceArray = GetVoiceArray();
+    
     var $voiceNum = $('#welcomeChoice option:selected').val();
 
     for (var i = 0; i < $voiceNum; i++) {
@@ -97,12 +97,14 @@ function getOutput() {
 /**
 *This function sets all the "controls" to their default values. "Controls": the text boxes that hold our pitch and duration arrays, and the progress counter 
 */
-function setDefaultControls(voiceArray) {
+function setDefaultControls() {
     
 	unColorKeys();
     var maxProgress = $("#progress").attr("max");
     $("#counter").text("-" + " of " + maxProgress);
-    for (var i = 0; i < voiceArray.length; i++) {
+	var voiceCount = $('#welcomeChoice option:selected').val();
+    
+    for (var i = 0; i < voiceCount; i++) {
         var voiceNum = i + 1;
         var pitchArray = voiceArray[i].FinalPitchArray;
         var durationArray = voiceArray[i].durationMappingArray;
@@ -374,8 +376,8 @@ function createTrack( basedataArray, voice,channel,microTempo,type)
 /****************************************************************Player Handlers*************************************************************************/
 function makeMidiPlay() 
 {
-    var voiceArray = GetVoiceArray();
 	var maxNoteCount = longestNoteCount(voiceArray);
+	var voiceNum = $('#welcomeChoice option:selected').val();
 	
 	var i = 0;
     // this is where playR is, what a bizarre way to declare a function
@@ -384,7 +386,7 @@ function makeMidiPlay()
 		setTimeout(function(){
 		   
 			if(i < maxNoteCount && paused){
-				for(currentVoice = 0; currentVoice < voiceArray.length; currentVoice++){
+				for(currentVoice = 0; currentVoice < voiceNum; currentVoice++){
 				    
 				    if (!stopped)
 				    {
@@ -558,8 +560,9 @@ function selectInstrument(voiceNum) {
 function longestNoteCount(voiceArray){
 	var maxLength = 1;
 	var tempVal;
+	var voiceNum = $('#welcomeChoice option:selected').val();
 
-	for(i=0; i< voiceArray.length; i++){
+	for(i=0; i< voiceNum; i++){
 		tempVal = voiceArray[i].FinalPitchArray.length;
 	
 		if(maxLength < tempVal)
@@ -600,36 +603,35 @@ function incrementControls(currentStep)
 }
 
 function playPanel(numberOfVoice) {
-    for (var voiceCount = 1; voiceCount <= numberOfVoice; voiceCount++) {
-        var $voice = "\
-		<div class='voice cf'>\
+    var $voice="\
+		<div class='voice cf' id='voiceContainer"+numberOfVoice+"'>\
 			<div class='play_voiceStyle cf'><label style='float:left;'>Pitch: </label>\
 			\
 			<div class='overflowDiv'> \
-			<input type='text' class='outputRight' id='voice"+ voiceCount + "_pitch' disabled >\
+			<input type='text' class='outputRight' id='voice"+numberOfVoice+"_pitch' disabled >\
 			</div> \
 			\
-			<input type='text' class='cur' id='voice"+ voiceCount + "_curpitch' disabled > \
+			<input type='text' class='cur' id='voice"+numberOfVoice+"_curpitch' disabled > \
 			\
 			<div class='overflowDiv'> \
-			<input type='text' class='outputLeft' id='voice"+ voiceCount + "_pitchplayed'  disabled ></div> \
+			<input type='text' class='outputLeft' id='voice"+numberOfVoice+"_pitchplayed'  disabled ></div> \
 			</div> \
 			\
 			\
 			<div class='play_voiceStyle cf'><label style='float:left;'>Duration: </label> \
 			\
 			<div class='overflowDiv'> \
-			<input type='text' class='outputRight duration' id='voice"+ voiceCount + "_duration' disabled> \
+			<input type='text' class='outputRight duration' id='voice"+numberOfVoice+"_duration' disabled> \
 			</div> \
 			\
-			<input type='text' class='cur'id='voice"+ voiceCount + "_curduration' disabled >\
+			<input type='text' class='cur'id='voice"+numberOfVoice+"_curduration' disabled >\
 			\
 			<div class='overflowDiv'> \
-			<input type='text' class='outputLeft duration' id='voice"+ voiceCount + "_durationplayed' disabled></div>\
+			<input type='text' class='outputLeft duration' id='voice"+numberOfVoice+"_durationplayed' disabled></div>\
 			</div>\
 			\
-			<div class='choose-mute'>Mute Track: <input type='checkbox' name='mute' id='mute"+ voiceCount + "' onclick='muteTrack($(this))'></div>\
-				<div class='choose-instrument'>Instrument: <select class='instrument"+ voiceCount + "' onchange='selectInstrument(" + voiceCount + ")'>\
+			<div class='choose-mute'>Mute Track: <input type='checkbox' name='mute' id='mute"+numberOfVoice+"' onclick='muteTrack($(this))'></div>\
+				<div class='choose-instrument'>Instrument: <select class='instrument"+numberOfVoice+"' onchange='selectInstrument("+numberOfVoice+")'>\
 					<option>Piano</option>\
 					<option>Guitar</option>\
 					<option>Bass</option>\
@@ -640,9 +642,8 @@ function playPanel(numberOfVoice) {
 				</select></div>\
 			</div>\
 			";
-
-        $("#voice_container_div").append($voice);
-        var width = 90 / numberOfVoice + "%";
-    }
+		
+			$("#voice_container_div").append($voice);
+			var width=90/(+$(this).find('option:selected').text())+"%";
 }
 /****************************************************************End Helper Functions*********************************************************************/
