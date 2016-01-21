@@ -89,8 +89,17 @@ $(document).ready(function()
                                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[3];
                                 }
                         }
-                        $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
-                    UpdateOriginalPitchArray(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text());
+                    $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
+                    
+                    voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
+                    UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                    UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
+                    UpdateDurationNoteCount(voiceArray[voiceNumber - 1],voiceNumber);
+                    UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+                    UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
                 } 
             }
             else
