@@ -235,8 +235,7 @@ $(document).ready(function()
 	        $NoteCount.val(UpperNoteLimit);
 	        var DifferenceInLength = candidateArray.length - UpperNoteLimit;
 	        candidateArray.length -= DifferenceInLength;
-	 
-	        if (ValidateCustomData(candidateArray) == false)
+            if (ValidateCustomData(candidateArray) == false)
 	        {
 	            alert("Make Sure All Data Entered Is An Integer");
 	        }
@@ -285,9 +284,6 @@ $(document).ready(function()
 	    }
 	})
 	
-	/*
-		Maintained from previous version.
-	*/
 	function tooltip($parentId){
 		$infoTooltip = $parentId.find('[id^=pitchInfo]');
 		var $input = $parentId.find('[id^=input_set]');		
@@ -572,8 +568,10 @@ function pitchInput(numberOfVoice) {
                     <option>RNA</option>\
                     <option>Protein</option>\
 					<option>Custom</option>\
+                    <option>DNA</option>\
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
+<<<<<<< HEAD
 				<label id='notes"+ voiceCount + "'>Note Count:</label>\
 				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
@@ -598,6 +596,5 @@ function pitchInput(numberOfVoice) {
 			</fieldset>\
 		</div>\
 		";
-
         $(".pitch_input").append($voice);
 }
