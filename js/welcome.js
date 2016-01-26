@@ -1,6 +1,5 @@
 // This is driving the site.
 var voiceArray = new Array();// voiceArray holds the voice objects that are associated with each panel.
-<<<<<<< HEAD
 
 $(document).ready(function () {
     var voiceTotal = 1;
@@ -10,32 +9,14 @@ $(document).ready(function () {
 
     CreateDefaultPanels(voiceTotal);// This creates the panel
     LoadDefaultPanels(voiceArray, voiceTotal);// This loads the default values into the panels
-=======
-var previousVoiceCount = 0;// voice count holder used to determine what needs to happen when voice number has changed.
-
-$(document).ready(function () {
-    var DefaultVoiceTotal = 1;
-    previousVoiceCount = DefaultVoiceTotal;// This is used with the voice change functions.
-
-    Init(voiceArray); //<--- Loads 4 voices with default data.
-
-    CreateDefaultPanels(DefaultVoiceTotal);// This creates the panel
-    LoadDefaultPanels(voiceArray, DefaultVoiceTotal);// This loads the default values into the panels
->>>>>>> origin/DNA
     displayImage();// This does something.
 	/*
 		This is called whenever the voice count is changed by the the user.
 	*/
 	$("#welcomeChoice").change(function () {
-<<<<<<< HEAD
 		var previousVoiceCount = voiceTotal;// Updates previousVoiceCount.
 	    voiceTotal = $(this).find('option:selected').text();
 		changeVoiceCount(voiceTotal, previousVoiceCount, voiceArray);// Executes voice change procedures.
-=======
-	    voiceTotal = $(this).find('option:selected').text();
-		changeVoiceCount(voiceTotal, previousVoiceCount, voiceArray);// Executes voice change procedures.
-		previousVoiceCount = voiceTotal;// Updates previousVoiceCount.
->>>>>>> origin/DNA
 
 		if($("#tabs_container").css('visibility') != "hidden")
 			$("#options ul li").find("#tab").click();
@@ -81,11 +62,7 @@ $(document).ready(function () {
                 pitchMapping(+previousVoiceCount + voiceIncrementor);
                 durationMapping(+previousVoiceCount + voiceIncrementor);// this creates the panel
                 scaleOptions(+previousVoiceCount + voiceIncrementor);
-<<<<<<< HEAD
                 playPanel(+previousVoiceCount + voiceIncrementor);// Move this into the loop as they get completed.
-=======
-                //playPanel(+previousVoiceCount + voiceIncrementor);// Move this into the loop as they get completed.
->>>>>>> origin/DNA
                 // Major Issues with playPanel, play.js
                 voiceIncrementor++;
             }
@@ -156,7 +133,6 @@ $(document).ready(function () {
 	/*
 		Used when the voice count is decreased. Removes the panel fields. Voice Object however is maintained in memory.
 	*/
-<<<<<<< HEAD
     function removeVoice(voiceIndex) {
         $( ("#pitchPanel" + voiceIndex) ).remove();
 		$( ("#mappingPanel" + voiceIndex) ).remove();
@@ -164,45 +140,6 @@ $(document).ready(function () {
 		$( ("#dMappingPanel" + voiceIndex) ).remove();
 		$( ("#scaleOptionsPanel" + voiceIndex) ).remove();
 		$( ("#voiceContainer" + voiceIndex) ).remove();
-=======
-    function removeVoice(numberOfVoice) {
-        if (numberOfVoice == 1)
-        {
-            $('[id^=pitchPanel1]').remove();
-            $('[id^=mappingPanel1]').remove();
-            $('[id^=dPitchPanel1]').remove();
-            $('[id^=dMappingPanel1]').remove();
-            $('[id^=scaleOptionsPanel1]').remove();
-            $('.voice1').remove();
-        }
-        else if (numberOfVoice == 2)
-        {
-            $('[id^=pitchPanel2]').remove();
-            $('[id^=mappingPanel2]').remove();
-            $('[id^=dPitchPanel2]').remove();
-            $('[id^=dMappingPanel2]').remove();
-            $('[id^=scaleOptionsPanel2]').remove();
-            $('.voice2').remove();
-        }
-        else if (numberOfVoice == 3)
-        {
-            $('[id^=pitchPanel3]').remove();
-            $('[id^=mappingPanel3]').remove();
-            $('[id^=dPitchPanel3]').remove();
-            $('[id^=dMappingPanel3]').remove();
-            $('[id^=scaleOptionsPanel3]').remove();
-            $('.voice3').remove();
-        }
-        else if (numberOfVoice == 4)
-        {
-            $('[id^=pitchPanel4]').remove();
-            $('[id^=mappingPanel4]').remove();
-            $('[id^=dPitchPanel4]').remove();
-            $('[id^=dMappingPanel4]').remove();
-            $('[id^=scaleOptionsPanel4]').remove();
-            $('.voice4').remove();
-        }
->>>>>>> origin/DNA
 }
 
 /*

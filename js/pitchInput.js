@@ -14,9 +14,7 @@ $(document).ready(function()
         var voiceNumber = getVoiceNumber($panel);// This identifies the specific panel that is to be effected.
 
         voiceArray[voiceNumber - 1].originalPitchArrayAlgorithm = $SelectedAlgorithm.text();// may not be needed.
-<<<<<<< HEAD
 
-=======
            /* 
         This shows and hides the fields for the DNA and Protein by checking what the option is in the dropdown menu.
         If the option is DNA then it will toggle on the areas and display the current values of the items. This area will allow 
@@ -123,8 +121,7 @@ $(document).ready(function()
                 $buttonConvert.hide();
                 $buttonDuplicate.hide();
             }
-        
->>>>>>> origin/DNA
+			
         if($SelectedAlgorithm.text() == "Custom")
         {
             $TextBox.prop("readonly", false);
@@ -134,11 +131,7 @@ $(document).ready(function()
             $NoteCount.val(" ");
         }
         else if($SelectedAlgorithm.text() != "Custom")
-<<<<<<< HEAD
-        {
-=======
         {  
->>>>>>> origin/DNA
             $TextBox.prop("readonly", true);
             $NoteCount.prop("readonly", false);
        
@@ -224,67 +217,6 @@ $(document).ready(function()
             updateDurationMapTooltip($panel);
         }
     });
-<<<<<<< HEAD
-
-    /*
-        This is called when user types into a text box.
-    */
-    $('.pitch_input').on('change', '[id^=areaPitch]', function () {
-        var UpperNoteLimit = 2000;
-	    var $panel = $(this).closest('div[id]');
-	    var $NoteCount = $panel.find('[id^=note_count]');
-	    var $TextBox = $panel.find('[id^=areaPitch]');
-	    var voiceNumber = getVoiceNumber($panel);
-
-	    var TextData = document.getElementById($TextBox.attr('id')).value;
-	    var candidateArray = TextData.split(",");
-	    
-	    if(candidateArray.length > UpperNoteLimit)
-	    {
-	        $NoteCount.val(UpperNoteLimit);
-	        var DifferenceInLength = candidateArray.length - UpperNoteLimit;
-	        candidateArray.length -= DifferenceInLength;
-	 
-	        if (ValidateCustomData(candidateArray) == false)
-	        {
-	            alert("Make Sure All Data Entered Is An Integer");
-	        }
-	        else
-	        {
-	            voiceArray[voiceNumber - 1].originalPitchArray = candidateArray;
-
-	            UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
-	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
-
-	            UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
-	            UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
-
-	            $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
-	            UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
-
-	            LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
-	            LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
-	            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
-	        }
-	    }
-	    else
-	    {
-	        if (ValidateCustomData(candidateArray) == false)
-	        {
-	            alert("Make Sure All Data Entered Is An Integer");
-	        }
-	        else
-	        {
-	            $NoteCount.val(candidateArray.length);
-	            voiceArray[voiceNumber - 1].originalPitchArray = candidateArray;
-
-	            UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
-	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
-
-	            UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
-	            UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
-
-=======
 
     /*
         This is called when user types into a text box.
@@ -343,7 +275,6 @@ $(document).ready(function()
 	            UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
 	            UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
 
->>>>>>> origin/DNA
 	            $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
 	            UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
 
@@ -354,12 +285,10 @@ $(document).ready(function()
 	    }
 	})
 	
-<<<<<<< HEAD
 	/*
 		Maintained from previous version.
 	*/
-=======
->>>>>>> origin/DNA
+
 	function tooltip($parentId){
 		$infoTooltip = $parentId.find('[id^=pitchInfo]');
 		var $input = $parentId.find('[id^=input_set]');		
@@ -646,11 +575,6 @@ function pitchInput(numberOfVoice) {
 					<option>Custom</option>\
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
-<<<<<<< HEAD
-				<label >Note Count:</label>\
-				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
-=======
-<<<<<<< HEAD
 				<label id='notes"+ voiceCount + "'>Note Count:</label>\
 				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
@@ -670,7 +594,6 @@ function pitchInput(numberOfVoice) {
                 <button id='duplicates"+voiceCount+"'style='display:none'>Count Duplicates</button>\
                 <br id='A"+voiceCount+"'style='display:none'>\
                 <\span>\
->>>>>>> origin/DNA
 				<label>Input:</label><br>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
 			</fieldset>\

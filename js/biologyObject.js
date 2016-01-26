@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/DNA
 function biologyObject()
 {
    //this.letters = ["W","F","L","I","M","Y","V","C","P","T","A","S","Q","N","G","H","R","E","D","K"];//Character
