@@ -135,12 +135,17 @@ if (curval == 0) {
         $("#counter").text(curval + " of " + $maxProgress);
         unColorKeys();
     }
-    // this below seems to never get called.
-	for(i=0; i<voiceArray.length;i++)
+    
+    var voiceCount = $('#welcomeChoice option:selected').val();
+	for(i=0; i < voiceCount; i++)
 	{
 	    setVoiceControls(i, curval);
 	}
 }
+
+/*
+ *  This function lights the keys.
+ */
 function setVoiceControls(index,curval)
 {
 	var voiceNum = index + 1;
