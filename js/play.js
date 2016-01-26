@@ -379,18 +379,23 @@ function createTrack( basedataArray, voice,channel,microTempo,type)
 /****************************************************************End MIDI Download Handlers**************************************************************/
 
 /****************************************************************Player Handlers*************************************************************************/
+
+/*
+ *  Note: paused = true  when not paused.
+ *	      paused = false when actually paused.
+ */
 function makeMidiPlay() 
 {
 	var maxNoteCount = longestNoteCount(voiceArray);
-	var voiceNum = $('#welcomeChoice option:selected').val();
-	
-	var i = 0;
-    // this is where playR is, what a bizarre way to declare a function
-	(function playR(){// maybe playR means, play recursive.....
-	tempo=parseInt($("#tempo").val());
+	var voiceNum = $('#welcomeChoice option:selected').val();	
+	var voiceProgress = 0;
+
+	(function playR()
+	{
+		tempo=parseInt($("#tempo").val());
 		setTimeout(function()
 		{   
-			if(i < maxNoteCount && paused)
+			if( (voiceProgress < maxNoteCount) && (paused) )
 			{
 				for(currentVoice = 0; currentVoice < voiceNum; currentVoice++)
 				{    
@@ -398,17 +403,19 @@ function makeMidiPlay()
 				    {
 				        if (voiceArray[currentVoice].muted != true) 
 				        {
-				            playAndLight(i, currentVoice);
+				            playAndLight(voiceProgress, currentVoice);
 				        }
 					}
-					else
+					else // Player stopped. Stop playing.
+					{
 						return;
+					}
 				}
-				playR();// line 385 is called?!?!?!
+				playR();
 			}
-			else if(!paused)
+			else if(!paused) // If paused
 			{   
-				playR();// line 385 is called?!?!?!
+				playR();
 			}
 			else
 			{
@@ -416,9 +423,9 @@ function makeMidiPlay()
 				playing = false;
 			}
 
-			if(paused)
+			if(paused) // If not paused.
 			{
-				i++;
+				voiceProgress++;
 			}		
 
 		},(250)/(tempo/120));
