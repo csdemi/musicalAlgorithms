@@ -388,42 +388,40 @@ function makeMidiPlay()
     // this is where playR is, what a bizarre way to declare a function
 	(function playR(){// maybe playR means, play recursive.....
 	tempo=parseInt($("#tempo").val());
-		setTimeout(function(){
-		   
-			if(i < maxNoteCount && paused){
-				for(currentVoice = 0; currentVoice < voiceNum; currentVoice++){
-				    
+		setTimeout(function()
+		{   
+			if(i < maxNoteCount && paused)
+			{
+				for(currentVoice = 0; currentVoice < voiceNum; currentVoice++)
+				{    
 				    if (!stopped)
 				    {
-				        
-				        if (voiceArray[currentVoice].muted != true) {
+				        if (voiceArray[currentVoice].muted != true) 
+				        {
 				            playAndLight(i, currentVoice);
 				        }
 					}
 					else
 						return;
 				}
-			
 				playR();// line 385 is called?!?!?!
 			}
-			else if(!paused){
-			    
+			else if(!paused)
+			{   
 				playR();// line 385 is called?!?!?!
 			}
-			else{
+			else
+			{
 				disableAllVoices(false);
 				playing = false;
 			}
 
-
-			if(paused){
+			if(paused)
+			{
 				i++;
-			}
-			
-				
-			
+			}		
 
-		},(1000/2)/(tempo/120));
+		},(250)/(tempo/120));
 	})();
 }
 
