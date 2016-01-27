@@ -417,7 +417,7 @@ function makeMidiPlay()
 			{   
 				playR();
 			}
-			else
+			else // If not paused 
 			{
 				disableAllVoices(false);
 				playing = false;
@@ -428,7 +428,7 @@ function makeMidiPlay()
 				voiceProgress++;
 			}		
 
-		},(250)/(tempo/120));
+		},(125)/(tempo/120));
 	})();
 }
 
@@ -438,17 +438,14 @@ function playAndLight(i, currentVoice) {
     var note = voiceArray[currentVoice].FinalPitchArray[i] + 20;
     var pos = i;
     
-	setTimeout(function(){
-		if(!stopped)
-		{
-			MIDI.noteOn(currentVoice, note, 120, 0);
-			MIDI.noteOff(currentVoice,note, duration);
+	if(!stopped)
+	{
+		MIDI.noteOn(currentVoice, note, 120, 0);
+		MIDI.noteOff(currentVoice,note, duration);
 
-			incrementControls(pos);
-			pos++;
-		}
-	},Math.abs(1000-(1000*(duration/4))));
-
+		incrementControls(pos);
+		pos++;
+	}
 }
 
 
