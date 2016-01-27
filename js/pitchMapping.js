@@ -1,3 +1,7 @@
+
+/*
+	Retained from previous version.
+*/
 function updatePitchMapTooltip($parent){	
 	var voiceNum = getVoiceNumber($parent);
 	var $textArea =  $("#areaPitch"+voiceNum);
@@ -6,53 +10,135 @@ function updatePitchMapTooltip($parent){
 	targetArea.popover("hide");
 	targetArea.attr("data-content","<textarea readonly>"+$textArea.val()+"</textarea>");	
 }
-// This is used when the values are changed at the orignal pitch input.
-function updatePitchMapData($parentId,voiceNumber){
-	var $currMapPanel = $("#mappingPanel"+voiceNumber);
-	var $range = $currMapPanel.find('[id^=range]');
-	var $to = $currMapPanel.find('[id^=to]');
-	
-	writeRangeOut($range.val(),$to.val(),voiceNumber);
 
-	call_pitch_Mapping($parentId,voiceNumber);// these are back at welcome.js 
-	call_dur_Mapping($parentId,voiceNumber);// originates at welcome.js
-}
-
-
+/*
+	This is how Javascript access the panel form the web page.
+*/
 $(document).ready(function(){
-    // this is called when the normalization value is changed or the range of the keyboard is changed.
-	$('.pitch_mapping').on('change', '[id^=range], [id^=to],[id^=compressType]', function() {
-	    var $parentId = $(this).closest('div[id]');
-		testRangeValues($parentId);
-		printLocalMap($parentId);
-		tooltip($parentId);
-	});
-    // this is through when a person uses the modify function.
-	$('.pitch_mapping').on('click', '[id^=modify]', function() {
-	    var $parentId = $(this).closest('div[id]');    
-		replacePitchValue($parentId);// this is going to replaceValue. in WebSiteFunctions.js
-	});	
-
-    // this is called when the algorithm is changed in pitch mapping.
-	function printLocalMap($parentId){
-		var currVoiceNum = getVoiceNumber($parentId);		
-		var $compressChoice = $parentId.find("option:selected");
-		var $range = $parentId.find('[id^=range]');
-		var $to = $parentId.find('[id^=to]');
-		var $currArea = $parentId.find('[id^=mapArea]');
-		var normalizeChoice = normalizeFactory.createNormalizer($compressChoice.text());
 	
-		var voiceArray = GetVoiceArray();
+	/*	
+    		this is called when the normalization value is changed or the range of the keyboard is changed.
+    	*/
+    $('.pitch_mapping').on('change', '[id^=compressType]', function ()
+    {
+        var $panel = $(this).closest('div[id]');
+        var $TextBox = $panel.find('[id^=mapArea]');// This gets the Text Box
+        var $Algorithm = $panel.find('[id^=compressType]');// This locates the algorithm drop down menu.
+        var $SelectedAlgorithm = $Algorithm.find("option:selected");// This gets the current algorithm
+        var voiceNumber = getVoiceNumber($panel);
 
-		musicNormalize.setAlgorithm(normalizeChoice);
-		//var currData = getDataArray($("#areaPitch"+currVoiceNum));
+        voiceArray[voiceNumber - 1].pitchMappingArrayAlgorithm = $SelectedAlgorithm.text();// This may not be needed.
+        
+        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
 
-		//var transformedData = musicNormalize.normalize(currData, $range.val(), $to.val());
-		voiceArray[currVoiceNum - 1].pitchMappingArray = musicNormalize.normalize(voiceArray[currVoiceNum - 1].originalPitchArray, $range.val(), $to.val());
-		SetVoiceArray(voiceArray);
+        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);// Found in ScaleOptions.js
 
-		mapWriteOutput($currArea.attr("id"), voiceArray[currVoiceNum - 1].pitchMappingArray);
-	}
+        $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);// Updates the Textbox on website.
+    });
+
+    /*
+        Triggered if the Upper value is changed.
+    */
+    $('.pitch_mapping').on('change', '[id^=to]', function () {
+        var $panel = $(this).closest('div[id]');
+        var $TopRange = $panel.find('[id^=to]');
+        var $BottomRange = $panel.find('[id^=range]');
+        var $TextBox = $panel.find('[id^=mapArea]');
+
+        var voiceNumber = getVoiceNumber($panel);
+
+        if($TopRange.val() > 88)
+        {
+            $TopRange.val(88);
+        }
+        else if($TopRange.val() <= $BottomRange.val())
+        {
+            $TopRange.val(+$BottomRange.val() + 1);
+        }
+
+        voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound = $TopRange.val();
+
+        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);// This will need the mode from pitch mapping including the range.
+        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); // This needs corrected once scale option is selected.
+
+        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+        $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);
+    });
+
+    /*
+        Triggered if the Lower value is changed.
+    */
+    $('.pitch_mapping').on('change', '[id^=range]', function () {
+        var $panel = $(this).closest('div[id]');
+        var $TopRange = $panel.find('[id^=to]');
+        var $BottomRange = $panel.find('[id^=range]');
+        var $TextBox = $panel.find('[id^=mapArea]');
+
+        var voiceNumber = getVoiceNumber($panel);
+
+        if ($BottomRange.val() < 1) {
+            $TopRange.val(1);
+        }
+        else if ($BottomRange.val() >= $TopRange.val()) {
+            $BottomRange.val(+$TopRange.val() - 1);
+        }
+
+        voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound = $BottomRange.val();
+
+        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
+
+        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+        $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);
+    });
+
+    /*
+        This is triggered when the modify value is selected.
+    */
+	$('.pitch_mapping').on('click', '[id^=modify]', function() {
+	    var $panel = $(this).closest('div[id]');
+	    var $TextBox = $panel.find('[id^=mapArea]');
+	    var voiceNumber = getVoiceNumber($panel);
+
+	    var $firstElement = $panel.find('[id^=modiAll]');
+	    var targetElement = $firstElement.val();
+	    
+	    var $secondElement = $panel.find('[id^=modiWith]');
+	    var candidateElement = $secondElement.val();
+
+	    if(DoesPitchContain(targetElement, voiceNumber))
+	    {
+	        if(candidateElement == 0) 
+	        {
+	            ModifyPitchMappingArray(targetElement, candidateElement, voiceNumber);
+
+	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+	            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+	            $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);
+	        }
+	        else if (candidateElement >= voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound && candidateElement <= voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound)
+	        {
+	            ModifyPitchMappingArray(targetElement, candidateElement, voiceNumber);
+
+	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);// Found in pitchInput.js
+	            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+	            $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);
+	        }
+	        else {
+                // go to the replace value method int websitefunctions and see how to show warning.
+	        }
+	    }
+	    else {
+            // go to the replace value method in websitefunctions and see how to show warning.
+	    }
+	    $firstElement.val("");
+	    $secondElement.val("");
+	});	
 
 	function tooltip($parentId){
 		$infoTooltip = $parentId.find('[id^=pitchMapInfo]');
@@ -63,22 +149,257 @@ $(document).ready(function(){
 	
 		$infoTooltip.attr("data-original-title",tooltipText); 
 	}
-
-	function testRangeValues($parentId){
-		var maxRange = 88;
-		var $range = $parentId.find('[id^=range]');
-		var $to = $parentId.find('[id^=to]');
-	
-		if((isNaN(parseInt($range.val())) || isNaN(parseInt($range.val()))) || 
-		(($range.val() < 0) || ($to.val() < $range.val()) || ($to.val() > maxRange))){
-			$range.val(1);
-			$to.val(maxRange);
-		}
-	}
 });
 
+/*
+	Used from the initial loading of the website.
+*/
+function LoadDefaultPitchMappingUpperRange(voices, voiceTotal)
+{
+    $('[id^=mappingPanel1]').ready(function () {
+        var $panel = $(this);
+        var $UpperBound = $panel.find('[id^=to1]');
+        $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayUpperBound);
+    });
+}
+
+/*
+	Loads during the init stage of the website.
+*/
+function LoadDefaultPitchMappingLowerRange(voices, voiceTotal) {
+    $('[id^=mappingPanel1]').ready(function () {
+        var $panel = $(this);
+        var $UpperBound = $panel.find('[id^=range1]');
+        $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayLowerBound);
+    });
+}
+
+/*
+	Used to update when the further voices are added.
+*/
+function LoadPitchMappingUpperRange(voices, voiceTotal) {
+    if (voiceTotal == 1) {
+        $('[id^=mappingPanel1]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=to1]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayUpperBound);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=mappingPanel2]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=to2]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayUpperBound);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=mappingPanel3]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=to3]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayUpperBound);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=mappingPanel4]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=to4]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayUpperBound);
+        });
+    }
+}
+
+
+/*
+	Used When further voices are added.
+*/
+function LoadPitchMappingLowerRange(voices, voiceTotal) {
+    if (voiceTotal == 1) {
+        $('[id^=mappingPanel1]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=range1]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayLowerBound);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=mappingPanel2]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=range2]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayLowerBound);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=mappingPanel3]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=range3]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayLowerBound);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=mappingPanel4]').ready(function () {
+            var $panel = $(this);
+            var $UpperBound = $panel.find('[id^=range4]');
+            $UpperBound.val(voices[voiceTotal - 1].pitchMappingArrayLowerBound);
+        });
+    }
+}
+
+/*
+    Used to modify the array for pitchmapping.
+*/
+function ModifyPitchMappingArray(target,candidate,voiceNumber)
+{
+    for(var x = 0; x < voiceArray[voiceNumber - 1].pitchMappingArray.length; x++)
+    {
+        if(voiceArray[voiceNumber - 1].pitchMappingArray[x] == target)
+        {
+            voiceArray[voiceNumber - 1].pitchMappingArray[x] = candidate;
+        }
+    }
+}
+
+/*
+	Checks for the existence of a candidate value to be changed.
+*/
+function DoesPitchContain(target, voiceNumber)
+{
+    for(var x = 0; x < voiceArray[voiceNumber - 1].pitchMappingArray.length; x++)
+    {
+        if(voiceArray[voiceNumber - 1].pitchMappingArray[x] == target)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+// below can go, perhaps
+function LoadPitchMappingAlgorithm(voices, voiceTotal)
+{
+    if (voiceTotal == 1) {
+        $('[id^=mappingPanel1]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType1]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].pitchMappingArrayAlgorithm);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=mappingPanel2]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType2]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].pitchMappingArrayAlgorithm);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=mappingPanel3]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType3]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].pitchMappingArrayAlgorithm);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=mappingPanel4]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType4]');// This locates the algorithm drop down menu.
+            var $SelectedAlgorithm = $Algorithm.find("option:selected");
+            $SelectedAlgorithm.text(voices[voiceTotal - 1].pitchMappingArrayAlgorithm);
+        });
+    }
+}
+
+/*
+	Used to Load the text box from the init stage.
+*/
+function LoadDefaultPitchMappingInputTextBox(voices, voiceTotal) {
+    $('[id^=mappingPanel1]').ready(function () {
+        var $panel = $(this);
+        var $NoteTextField = $panel.find('[id^=mapArea1]');
+        $NoteTextField.val(voices[voiceTotal - 1].pitchMappingArray);
+    });
+}
+
+/*
+	Retrieves the current algorithm selected in pitchmapping.
+*/
+function GetCurrentSelectedPitchMappingAlgorithm(voiceNumber)
+{
+    var algorithm = "";
+    if (voiceNumber == 1) {
+        $('[id^=mappingPanel1]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType1]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 2) {
+        $('[id^=mappingPanel2]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType2]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 3) {
+        $('[id^=mappingPanel3]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType3]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    else if (voiceNumber == 4) {
+        $('[id^=mappingPanel4]').ready(function () {
+            var $panel = $(this);
+            var $Algorithm = $panel.find('[id^=compressType4]');
+            var $selectedAlgorithm = $Algorithm.find("option:selected");
+            algorithm = $selectedAlgorithm.text();
+        });
+    }
+    return algorithm;
+}
+
+/*
+	Used to update the pitchmapping input box when changes occur. And used when voices are increased.
+*/
+function LoadPitchMappingInputTextBox(voices,voiceTotal) {
+    if (voiceTotal == 1) {
+        $('[id^=mappingPanel1]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=mapArea1]');
+            $NoteTextField.val(voices[voiceTotal - 1].pitchMappingArray);
+        });
+    }
+    else if (voiceTotal == 2) {
+        $('[id^=mappingPanel2]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=mapArea2]');
+            $NoteTextField.val(voices[voiceTotal - 1].pitchMappingArray);
+        });
+    }
+    else if (voiceTotal == 3) {
+        $('[id^=mappingPanel3]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=mapArea3]');
+            $NoteTextField.val(voices[voiceTotal - 1].pitchMappingArray);
+        });
+    }
+    else if (voiceTotal == 4) {
+        $('[id^=mappingPanel4]').ready(function () {
+            var $panel = $(this);
+            var $NoteTextField = $panel.find('[id^=mapArea4]');
+            $NoteTextField.val(voices[voiceTotal - 1].pitchMappingArray);
+        });
+    }
+}
+
+/*
+	The is the GUI.
+*/
 function pitchMapping(numberOfVoice) {
-    for (var voiceCount = 1; voiceCount <= numberOfVoice; voiceCount++) {
+    var voiceCount = numberOfVoice;
         var $voice = "\
 		<div id='mappingPanel"+ voiceCount + "' class='full_view well well-sm'>\
 			<fieldset>\
@@ -108,10 +429,4 @@ function pitchMapping(numberOfVoice) {
 		</div>\
 		";
         $(".pitch_mapping").append($voice);
-    }
 }
-
-	
-	
-	
-
