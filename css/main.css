@@ -13,6 +13,7 @@ input#letterAText3,input#letterTText3,input#letterUText3,
 input#letterAText4,input#letterTText4,input#letterUText4{
     width: 29px;
 }
+
 body {
   background: url("../images/background.png");
   background-repeat: repeat;

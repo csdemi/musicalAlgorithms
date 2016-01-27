@@ -14,6 +14,7 @@ $(document).ready(function()
         var voiceNumber = getVoiceNumber($panel);// This identifies the specific panel that is to be effected.
 
         voiceArray[voiceNumber - 1].originalPitchArrayAlgorithm = $SelectedAlgorithm.text();// may not be needed.
+
            /* 
         This shows and hides the fields for the DNA and Protein by checking what the option is in the dropdown menu.
         If the option is DNA then it will toggle on the areas and display the current values of the items. This area will allow 
@@ -120,7 +121,7 @@ $(document).ready(function()
                 $buttonConvert.hide();
                 $buttonDuplicate.hide();
             }
-        
+			
         if($SelectedAlgorithm.text() == "Custom")
         {
             $TextBox.prop("readonly", false);
@@ -284,6 +285,10 @@ $(document).ready(function()
 	    }
 	})
 	
+	/*
+		Maintained from previous version.
+	*/
+
 	function tooltip($parentId){
 		$infoTooltip = $parentId.find('[id^=pitchInfo]');
 		var $input = $parentId.find('[id^=input_set]');		
@@ -568,10 +573,8 @@ function pitchInput(numberOfVoice) {
                     <option>RNA</option>\
                     <option>Protein</option>\
 					<option>Custom</option>\
-                    <option>DNA</option>\
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
-<<<<<<< HEAD
 				<label id='notes"+ voiceCount + "'>Note Count:</label>\
 				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
@@ -592,9 +595,10 @@ function pitchInput(numberOfVoice) {
                 <br id='A"+voiceCount+"'style='display:none'>\
                 <\span>\
 				<label>Input:</label><br>\
-				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea><br>\
+				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
 			</fieldset>\
 		</div>\
 		";
+
         $(".pitch_input").append($voice);
 }
