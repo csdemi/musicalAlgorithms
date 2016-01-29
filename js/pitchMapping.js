@@ -77,11 +77,13 @@ $(document).ready(function(){
         var $TextBox = $panel.find('[id^=mapArea]');
 
         var voiceNumber = getVoiceNumber($panel);
-
-        if ($BottomRange.val() < 1) {
-            $TopRange.val(1);
-        }
-        else if ($BottomRange.val() >= $TopRange.val()) {
+		
+		if ($BottomRange.val() < 0)
+		{
+			$BottomRange.val(0);
+		}
+        else if ($BottomRange.val() >= $TopRange.val()) 
+        {
             $BottomRange.val(+$TopRange.val() - 1);
         }
 
