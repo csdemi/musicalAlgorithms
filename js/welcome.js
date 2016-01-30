@@ -1,19 +1,21 @@
 // This is driving the site.
-var voiceArray = new Array();// voiceArray holds the voice objects that are associated with each panel.
+var voiceArray = new Array(); // voiceArray holds the voice objects that are associated with each panel.
 
 $(document).ready(function () {
     var voiceTotal = 1;
-    var previousVoiceCount = voiceTotal;// This is used with the voice change functions.
+    var previousVoiceCount = voiceTotal;		// This is used with the voice change functions.
 
-    Init(voiceArray); //<--- Loads 4 voices with default data.
+    Init(voiceArray); 							//Loads 4 voices with default data.
 
-    CreateDefaultPanels(voiceTotal);// This creates the panel
-    LoadDefaultPanels(voiceArray, voiceTotal);// This loads the default values into the panels
-    displayImage();// This does something.
+    CreateDefaultPanels(voiceTotal);			// This creates the panel
+    LoadDefaultPanels(voiceArray, voiceTotal);	// This loads the default values into the panels
+    displayImage();								// This does something.
+    
 	/*
 		This is called whenever the voice count is changed by the the user.
 	*/
-	$("#welcomeChoice").change(function () {
+	$("#welcomeChoice").change(function () 
+	{
 		var previousVoiceCount = voiceTotal;// Updates previousVoiceCount.
 	    voiceTotal = $(this).find('option:selected').text();
 		changeVoiceCount(voiceTotal, previousVoiceCount, voiceArray);// Executes voice change procedures.
@@ -21,125 +23,132 @@ $(document).ready(function () {
 		if($("#tabs_container").css('visibility') != "hidden")
 			$("#options ul li").find("#tab").click();
 			
-		$(".choose-instrument").find("select").each(function() {
+		$(".choose-instrument").find("select").each(function() 
+		{
 				$(this).change();
 		});
 	});
-	/*
-		This is used to change the voices via CreatePanels and LoadPanels.
-	*/
-	function changeVoiceCount(voiceTotal, previousVoiceCount, voiceArray) {
-	    CreatePanels(voiceTotal, previousVoiceCount);// Creates the new panels
-	    LoadPanels(voiceArray, voiceTotal, previousVoiceCount);// This loads the panel after the initial creation.
-}
-	/*
-		This is used to create the default number of voices when the website is initially loaded..
-	*/
-	function CreateDefaultPanels(voiceNumber)
-	{
-	    pitchInput(voiceNumber);
-	    durationInput(voiceNumber);//  this creates the panel
-	    pitchMapping(voiceNumber);// this creates the panel
-	    durationMapping(voiceNumber);// this creates the panel
-	    scaleOptions(voiceNumber); // Initialize Scale Options Tab creates the panel
-	    playPanel(voiceNumber);
-	}
 	
-    /*
-    	This is used after the Website is up and running and the user changes the number of voices.
-    	Two conditions are checked, if the voice number has increased or decreased.
-    */
-    function CreatePanels(voiceTotal, previousVoiceCount)
+});
+
+/*
+	This is used to change the voices via CreatePanels and LoadPanels.
+*/
+function changeVoiceCount(voiceTotal, previousVoiceCount, voiceArray) 
+{
+	CreatePanels(voiceTotal, previousVoiceCount);// Creates the new panels
+	LoadPanels(voiceArray, voiceTotal, previousVoiceCount);// This loads the panel after the initial creation.
+}
+
+/*
+	This is used to create the default number of voices when the website is initially loaded..
+*/
+function CreateDefaultPanels(voiceNumber)
+{
+	pitchInput(voiceNumber);
+	durationInput(voiceNumber);//  this creates the panel
+	pitchMapping(voiceNumber);// this creates the panel
+	durationMapping(voiceNumber);// this creates the panel
+	scaleOptions(voiceNumber); // Initialize Scale Options Tab creates the panel
+	playPanel(voiceNumber);
+}
+	
+/*
+	This is used after the Website is up and running and the user changes the number of voices.
+	Two conditions are checked, if the voice number has increased or decreased.
+*/
+function CreatePanels(voiceTotal, previousVoiceCount)
+{
+	var voiceIncrementor = 1;
+
+	if(previousVoiceCount < voiceTotal)
 	{
-        var voiceIncrementor = 1;
-       
-        if(previousVoiceCount < voiceTotal)
-        {
-            for(var x = previousVoiceCount; x < voiceTotal; x++)
-            {
-                pitchInput(+previousVoiceCount + voiceIncrementor);
-                durationInput(+previousVoiceCount + voiceIncrementor);
-                pitchMapping(+previousVoiceCount + voiceIncrementor);
-                durationMapping(+previousVoiceCount + voiceIncrementor);// this creates the panel
-                scaleOptions(+previousVoiceCount + voiceIncrementor);
-                playPanel(+previousVoiceCount + voiceIncrementor);// Move this into the loop as they get completed.
-                // Major Issues with playPanel, play.js
-                voiceIncrementor++;
-            }
-        }
-        else if(previousVoiceCount > voiceTotal)
-        {
-            for( var x = previousVoiceCount; x > voiceTotal; x--)
-            {
-                removeVoice(x);
-            }
-        }
-    }
+		for(var x = previousVoiceCount; x < voiceTotal; x++)
+		{
+			pitchInput(+previousVoiceCount + voiceIncrementor);
+			durationInput(+previousVoiceCount + voiceIncrementor);
+			pitchMapping(+previousVoiceCount + voiceIncrementor);
+			durationMapping(+previousVoiceCount + voiceIncrementor);// this creates the panel
+			scaleOptions(+previousVoiceCount + voiceIncrementor);
+			playPanel(+previousVoiceCount + voiceIncrementor);// Move this into the loop as they get completed.
+			// Major Issues with playPanel, play.js
+			voiceIncrementor++;
+		}
+	}
+	else if(previousVoiceCount > voiceTotal)
+	{
+		for( var x = previousVoiceCount; x > voiceTotal; x--)
+		{
+			removeVoice(x);
+		}
+	}
+}
 
-	/*
-		Loads the panels on the initial start up of the website.
-	*/
-    function LoadDefaultPanels(voices, voiceTotal)
-    {
-        LoadDefaultPitchInputNoteCount(voices, voiceTotal);// Found in pitchInput.js
-        LoadDefaultPitchInputTextBox(voices, voiceTotal);// Found in pitchInput.js
-        
-        LoadDefaultDurationInputTextBox(voices, voiceTotal);// Found in durationInput.js
+/*
+	Loads the panels on the initial start up of the website.
+*/
+function LoadDefaultPanels(voices, voiceTotal)
+{
+	LoadDefaultPitchInputNoteCount(voices, voiceTotal);// Found in pitchInput.js
+	LoadDefaultPitchInputTextBox(voices, voiceTotal);// Found in pitchInput.js
 
-        LoadDefaultPitchMappingInputTextBox(voices, voiceTotal);// Found in pitchmapping.js
-        LoadDefaultPitchMappingLowerRange(voices, voiceTotal);// Found in pitchmapping.js
-        LoadDefaultPitchMappingUpperRange(voices, voiceTotal);// Found in pitchmapping.js
+	LoadDefaultDurationInputTextBox(voices, voiceTotal);// Found in durationInput.js
 
-        LoadDefaultDurationMappingInputTextBox(voices, voiceTotal);// Found in durationmapping.js
-        LoadDefaultDurationMappingLowerRange(voices, voiceTotal);// Found in durationmapping.js
-        LoadDefaultDurationMappingUpperRange(voices, voiceTotal);// Found in durationmapping.js
+	LoadDefaultPitchMappingInputTextBox(voices, voiceTotal);// Found in pitchmapping.js
+	LoadDefaultPitchMappingLowerRange(voices, voiceTotal);// Found in pitchmapping.js
+	LoadDefaultPitchMappingUpperRange(voices, voiceTotal);// Found in pitchmapping.js
 
-        LoadDefaultScaleOptionInputTextBox(voices, voiceTotal);// Found in scaleOptions.js
-    }
+	LoadDefaultDurationMappingInputTextBox(voices, voiceTotal);// Found in durationmapping.js
+	LoadDefaultDurationMappingLowerRange(voices, voiceTotal);// Found in durationmapping.js
+	LoadDefaultDurationMappingUpperRange(voices, voiceTotal);// Found in durationmapping.js
+
+	LoadDefaultScaleOptionInputTextBox(voices, voiceTotal);// Found in scaleOptions.js
+}
     
-	/*
-		This is used once the website is already up and running.
-	*/
-    function LoadPanels(voices, voiceTotal, previousVoiceCount)
-    {
-        var voiceIncrementor = 1;
+/*
+	This is used once the website is already up and running.
+*/
+function LoadPanels(voices, voiceTotal, previousVoiceCount)
+{
+	var voiceIncrementor = 1;
 
-        if (previousVoiceCount < voiceTotal) {
-            for (var x = previousVoiceCount; x < voiceTotal; x++) {
-                LoadPitchInputNoteCount(voices, +previousVoiceCount + voiceIncrementor);//Found in pitchInput.js
-                LoadPitchInputTextBox(voices, +previousVoiceCount + voiceIncrementor);//Found in pitchInput.js
-                LoadPitchAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchInput.js
+	if (previousVoiceCount < voiceTotal) {
+		for (var x = previousVoiceCount; x < voiceTotal; x++) {
+			LoadPitchInputNoteCount(voices, +previousVoiceCount + voiceIncrementor);//Found in pitchInput.js
+			LoadPitchInputTextBox(voices, +previousVoiceCount + voiceIncrementor);//Found in pitchInput.js
+			LoadPitchAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchInput.js
 
-                LoadDurationInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in durationInput.js
-                LoadDurationAlgorithm(voices, +previousVoiceCount + voiceIncrementor); // Found in durationInput.js
+			LoadDurationInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in durationInput.js
+			LoadDurationAlgorithm(voices, +previousVoiceCount + voiceIncrementor); // Found in durationInput.js
 
-                LoadPitchMappingLowerRange(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
-                LoadPitchMappingUpperRange(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
-                LoadPitchMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
-                LoadPitchMappingInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
+			LoadPitchMappingLowerRange(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
+			LoadPitchMappingUpperRange(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
+			LoadPitchMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
+			LoadPitchMappingInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
 
-                LoadDurationMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// delete, used for reinstating the voice
-                LoadDurationMappingUpperRange(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
-                LoadDurationMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
-                LoadDurationMappingInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
+			LoadDurationMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// delete, used for reinstating the voice
+			LoadDurationMappingUpperRange(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
+			LoadDurationMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
+			LoadDurationMappingInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
 
-                LoadScaleOptionsInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in scaleOptions.js
+			LoadScaleOptionsInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in scaleOptions.js
 
-                voiceIncrementor++;
-            }
-        }
-    }
-    
-	/*
-		Used when the voice count is decreased. Removes the panel fields. Voice Object however is maintained in memory.
-	*/
-    function removeVoice(voiceIndex) {
-        $( ("#pitchPanel" + voiceIndex) ).remove();
-		$( ("#mappingPanel" + voiceIndex) ).remove();
-		$( ("#dPitchPanel" + voiceIndex) ).remove();
-		$( ("#dMappingPanel" + voiceIndex) ).remove();
-		$( ("#scaleOptionsPanel" + voiceIndex) ).remove();
-		$( ("#voiceContainer" + voiceIndex) ).remove();
+			voiceIncrementor++;
+		}
+	}
+}
+
+/*
+	Used when the voice count is decreased. Removes the panel fields. Voice Object however is maintained in memory.
+*/
+function removeVoice(voiceIndex) 
+{
+	$( ("#pitchPanel" + voiceIndex) ).remove();
+	$( ("#mappingPanel" + voiceIndex) ).remove();
+	$( ("#dPitchPanel" + voiceIndex) ).remove();
+	$( ("#dMappingPanel" + voiceIndex) ).remove();
+	$( ("#scaleOptionsPanel" + voiceIndex) ).remove();
+	$( ("#voiceContainer" + voiceIndex) ).remove();
 }
 
 /*
@@ -240,4 +249,4 @@ function initialInfo($parentId){
 		$silenceInfo.attr("data-original-title",tooltip);
 	}
 }
-});
+
