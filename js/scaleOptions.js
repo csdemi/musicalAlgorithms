@@ -24,6 +24,9 @@ $(document).ready(function () {
         if($SelectedScale.text() == "Morph")
         {
             Morph($(this).parent().parent());
+            $KeyOption.empty();
+            $KeyOption.append($("<option>Beethoven's 9th</option>"));
+            $KeyOption.append($("<option>Sibelius' Finlandia Theme</option>"));
         }
         else if($SelectedScale.text() != "Morph")
         {
@@ -143,9 +146,9 @@ function Morph($elem) {
 	update();
     
     // Add button to reopen morph window
-    $elem.find("select").eq(1).css({ display: "none" }).prev().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
+    $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
 	
-	$(".morph-modal").modal("show");
+	//$(".morph-modal").modal("show");
 	$(".morph-modal").data("voice-num", $elem.attr("id"));
 
 	$("[data-slider]").change();
@@ -155,7 +158,10 @@ function Morph($elem) {
 	Seems it opens the over window for the morph. Maintained from the previous version.
 */
 function openMorph(voice) {
-	setStartData($(voice).find("textarea").val().split(","));
+	var $panel = $(this).closest('div[id]');// This gets the current panel.
+	var $SongOption = $panel.find('[id^=so_key_options]');// This gets the location of the song drop down menu.
+	var $SelectedSong = $SongOption.find("option:selected");// This gets the song from the song drop down menu.
+	setStartData($(voice).find("textarea").val().split(","), $SelectedSong);
 	update();
 	
 	$(".morph-modal").modal("show");

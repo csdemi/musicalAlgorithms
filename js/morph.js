@@ -12,6 +12,7 @@
 	var sliderVal = 1;
 	var targetData;
 	var startingData;
+	var morphToSong;
 
 	loadFile(getTargetdata);
 
@@ -70,8 +71,9 @@
 		reader.send(null);
 	}
 	
-	function setStartData(inVal) {
+	function setStartData(inVal, morphTarget) {
 		startingData = inVal;
+		morphToSong = morphTarget;
 	}
 
 	// Called when the Visualization API is loaded.
