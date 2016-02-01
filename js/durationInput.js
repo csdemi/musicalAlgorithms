@@ -147,7 +147,6 @@ $(document).ready(function(){
 		$infoTooltip.attr("data-original-title",tooltipText); 
 	}		
 });
-// This is new, below.
 
 /*
 	Updates the array when called.
@@ -232,6 +231,9 @@ function GetCurrentSelectedDurationAlgorithm(voiceNumber)
     var algorithm = "";
     if (voiceNumber == 1)
     {
+    	/*
+    		Below is an example of the weird panelpitch method... function... whatever
+    	*/
         $('[id^=dPitchPanel1]').ready(function () {
             var $panel = $(this);
             var $Algorithm = $panel.find('[id^=dInput_set1]');
