@@ -35,6 +35,8 @@ $(document).ready(function(){
         LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);// Found in ScaleOptions.js
 
         $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);// Updates the Textbox on website.
+
+	tooltip($panel);
     });
 
     /*
