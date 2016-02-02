@@ -26,6 +26,8 @@ $(document).ready(function(){
         UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber  - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber  - 1].durationMappingArrayUpperBound);
 
         $TextBox.val(voiceArray[voiceNumber - 1].durationMappingArray);
+        
+        tooltip($panel);
     });
 
     /*
