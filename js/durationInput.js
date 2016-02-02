@@ -36,6 +36,7 @@ $(document).ready(function(){
 		    $TextBox.val(voiceArray[voiceNumber - 1].originalDurationArray);
 		}
 		
+		tooltip($panel);		
 		updateTooltipVals($panel);
 	});
 	
