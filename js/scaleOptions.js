@@ -140,35 +140,29 @@ function adjustForKey(array, voiceValue){
 /*
     This is what gets the morph window to show up. Maintained from previous version.
 */
-function Morph($elem) {
-	// Set starting data
-	setStartData($elem.find("textarea").val().split(","));
-	update();
-    
-    // Add button to reopen morph window
+function Morph($elem) 
+{
+	// Add button to reopen morph window
     $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
-	
-	//$(".morph-modal").modal("show");
-	$(".morph-modal").data("voice-num", $elem.attr("id"));
-
-	$("[data-slider]").change();
 }
 
 /*
 	Seems it opens the over window for the morph. Maintained from the previous version.
 */
-function openMorph(voice) {
-	var $panel = $(this).closest('div[id]');// This gets the current panel.
-	var $SongOption = $panel.find('[id^=so_key_options]');// This gets the location of the song drop down menu.
-	var $SelectedSong = $SongOption.find("option:selected");// This gets the song from the song drop down menu.
-	setStartData($(voice).find("textarea").val().split(","), $SelectedSong);
+function openMorph(voice) 
+{
+	var $SongOption = $(voice).find('[id^=so_key_options]'); // This gets the location of the song drop down menu.
+	var $SelectedSong = $SongOption.find('option:selected'); // This gets the song from the song drop down menu.
+	var song = $SelectedSong.text();
+
+	setStartData($(voice).find("textarea").val().split(","), song);	
+	openMorphGraph();
 	update();
 	
 	$(".morph-modal").modal("show");
 	$(".morph-modal").data("voice-num", voice.id);
 }
 
-// new below
 /*
     This is used for the initialization.
 */
