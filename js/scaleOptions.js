@@ -1,4 +1,6 @@
 $(document).ready(function () {
+   
+	var morphTriggered = false;
     /*
         This is triggered only when the Scale Option is changed.
     */
@@ -23,10 +25,9 @@ $(document).ready(function () {
 
         if($SelectedScale.text() == "Morph")
         {
-            Morph($(this).parent().parent());
-            $KeyOption.empty();
-            $KeyOption.append($("<option>Beethoven's 9th</option>"));
-            $KeyOption.append($("<option>Sibelius' Finlandia Theme</option>"));
+            addMorphButton($(this).parent().parent());
+            changeKeyToSong($KeyOption);
+            morphTriggered = true;
         }
         else if($SelectedScale.text() != "Morph")
         {
@@ -34,6 +35,10 @@ $(document).ready(function () {
             voiceArray[voiceNumber - 1].FinalPitchArray = createOutput(voiceArray[voiceNumber - 1].pitchMappingArray, ModificationArray, voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
            
             $TextBox.val(voiceArray[voiceNumber - 1].FinalPitchArray);
+
+			removeMorphButton($(this).parent().parent());
+			changeSongToKey($KeyOption);
+            morphTriggered = false;
         }
     });
 
@@ -136,14 +141,53 @@ function adjustForKey(array, voiceValue){
 	
 		return array;
 	}
-	
+
 /*
-    This is what gets the morph window to show up. Maintained from previous version.
+	This function changes the key selection to song selection for morph.
 */
-function Morph($elem) 
+function changeKeyToSong($KeyOption)
+{
+	$KeyOption.empty();
+    $KeyOption.append($("<option>Beethoven's 9th</option>"));
+    $KeyOption.append($("<option>Sibelius' Finlandia Theme</option>"));
+}
+
+/*
+	This function changes the song selection to key selection for normal scale adjustments.
+*/
+function changeSongToKey($KeyOption)
+{
+	$KeyOption.empty();		
+	$KeyOption.append($("<option>C</option>"));
+	$KeyOption.append($("<option>C&#9839;/D&#9837;</option>"));
+	$KeyOption.append($("<option>D</option>"));
+	$KeyOption.append($("<option>D&#9839;/E&#9837;</option>"));
+	$KeyOption.append($("<option>E</option>"));
+	$KeyOption.append($("<option>F</option>"));
+	$KeyOption.append($("<option>F&#9839;/G&#9837;</option>"));
+	$KeyOption.append($("<option>G</option>"));
+	$KeyOption.append($("<option>G&#9839;/A&#9837;</option>"));
+	$KeyOption.append($("<option>A</option>"));
+	$KeyOption.append($("<option>A&#9839;/B&#9837;</option>"));
+	$KeyOption.append($("<option>B</option>"));
+}
+
+/*
+    This adds the morph button.
+*/
+function addMorphButton($elem) 
+{
+	// Add morph button
+    $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
+}
+
+/*
+	This removes the morph button.
+*/
+function removeMorphButton($elem)
 {
 	// Add button to reopen morph window
-    $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
+    $elem.find("select").eq(1).css({  }).next().html("<label>Output:</label>");
 }
 
 /*
