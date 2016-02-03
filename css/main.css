@@ -546,6 +546,14 @@ div.graph-tooltip-label td {
 
 .modal-body, #mygraph, #mygraph > div {
   margin: 0px !important; }
+  
+.modal-xl {
+    width: 90%;
+   max-width:1200px;
+  }
+  
+ .pitchInputUtility-modal {
+	width: 100%; }
 
 .choose-mute, .choose-instrument {
   display: inline-block;
