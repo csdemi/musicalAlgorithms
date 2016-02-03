@@ -479,7 +479,9 @@ function pitchInput(numberOfVoice) {
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
 				<label id='notes"+ voiceCount + "'>Note Count:</label>\
-				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
+				<input type='text' id='note_count"+ voiceCount + "'></input>\
+				<label id='util"+ voiceCount+"'>  Utilities:</label>\
+				<button type='button' class='btn btn-default btn-sm' data-toggle='modal' onclick='openPitchInputUtilities("+voiceCount+")'><span class='glyphicon glyphicon-wrench'></span></button><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
                 <textarea id='sequence"+ voiceCount + "' style='display:none'></textarea><br>\
                 <span><br id='A"+voiceCount+"'style='display:none'>\
@@ -497,7 +499,7 @@ function pitchInput(numberOfVoice) {
                 <button id='duplicates"+voiceCount+"'style='display:none'>Count Duplicates</button>\
                 <br id='A"+voiceCount+"'style='display:none'>\
                 <\span>\
-				<label>Input:</label><br>\
+				<label>Input:</label>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
 			</fieldset>\
 		</div>\
