@@ -107,7 +107,10 @@ function drawVisualization()
 	var morphVal;
 	var data = new google.visualization.DataTable();
 	data.addColumn('number');
-	data.addColumn('number', "Beethoven's 9th");
+	if (morphToSong == "Beethoven's 9th")
+		data.addColumn('number', "Beethoven's 9th");
+	else
+		data.addColumn('number', "Sibelius's Finlandoa Theme");
 	data.addColumn('number', 'Voice Data');
 
 	var textData = "";
