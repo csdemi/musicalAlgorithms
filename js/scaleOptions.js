@@ -173,6 +173,19 @@ function changeSongToKey($KeyOption)
 }
 
 /*
+	This function updates the final pitch array with the morph values
+*/
+function adjustForMorph()
+{
+	var ModificationArray = new Array(); // This is used to modify the FinalPitchArray.
+	var textBox = document.getElementById("morphBox");	// This gets the current panel's textbox.
+	var voiceNumber = 1 
+	ModificationArray = $.map(textBox.value.split(","), function(value) { return parseInt(value, 10); });
+	voiceArray[voiceNumber - 1].FinalPitchArray = ModificationArray;
+}
+
+
+/*
     This adds the morph button.
 */
 function addMorphButton($elem) 
