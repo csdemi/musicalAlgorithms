@@ -117,6 +117,7 @@ $(document).ready(function(){
 	    {
 	        if(candidateElement == 0) 
 	        {
+	            candidateElement = 0;
 	            ModifyPitchMappingArray(targetElement, candidateElement, voiceNumber);
 
 	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
