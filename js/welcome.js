@@ -113,22 +113,36 @@ function LoadPanels(voices, voiceTotal, previousVoiceCount)
 	var voiceIncrementor = 1;
 
 	if (previousVoiceCount < voiceTotal) {
-		for (var x = previousVoiceCount; x < voiceTotal; x++) {
+		for (var x = previousVoiceCount; x < voiceTotal; x++) 
+		{
+			UpdateOriginalPitchArray(voiceArray[voiceIncrementor], "Sine");
+	        	UpdateOriginalPitchArrayCount(voiceArray[voiceIncrementor], "Sine", 24);
+	        	UpdatePitchMappingArray(voiceArray[voiceIncrementor], "Division", 0, 88);
+
+	        	voiceArray[voiceIncrementor].pitchMappingArrayLowerBound = 0;
+	        	voiceArray[voiceIncrementor].pitchMappingArrayUpperBound = 88;
+
+	        	UpdateFinalPitchArray(voiceArray[voiceIncrementor], "Chromatic", 0, 88);
+
+	        	UpdateOriginalDurationArray(voiceArray[voiceIncrementor], "Quarter Notes");
+	        	UpdateDurationMappingArray(voiceArray[voiceIncrementor], "Division", 0, 6);
+	      
+	        	voiceArray[voiceIncrementor].durationMappingArrayLowerBound = 0;
+	        	voiceArray[voiceIncrementor].durationMappingArrayUpperBound = 6;
+
+	        	voiceArray[voiceIncrementor].durationMappingArray = voiceArray[voiceIncrementor].originalDurationArray;
+
 			LoadPitchInputNoteCount(voices, +previousVoiceCount + voiceIncrementor);//Found in pitchInput.js
 			LoadPitchInputTextBox(voices, +previousVoiceCount + voiceIncrementor);//Found in pitchInput.js
-			LoadPitchAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchInput.js
 
 			LoadDurationInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in durationInput.js
-			LoadDurationAlgorithm(voices, +previousVoiceCount + voiceIncrementor); // Found in durationInput.js
 
 			LoadPitchMappingLowerRange(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
 			LoadPitchMappingUpperRange(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
-			LoadPitchMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
 			LoadPitchMappingInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in pitchMapping.js
 
-			LoadDurationMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// delete, used for reinstating the voice
 			LoadDurationMappingUpperRange(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
-			LoadDurationMappingAlgorithm(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
+			LoadDurationMappingLowerRange(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
 			LoadDurationMappingInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in durationMapping.js
 
 			LoadScaleOptionsInputTextBox(voices, +previousVoiceCount + voiceIncrementor);// Found in scaleOptions.js
