@@ -109,6 +109,10 @@ $(document).ready(function(){
        
         if (DoesDurationContain(targetElement, voiceNumber)) {
             if (candidateElement == 0 || (candidateElement >= voiceArray[voiceNumber - 1].durationMappingArrayLowerBound && candidateElement <= voiceArray[voiceNumber - 1].durationMappingArrayUpperBound)) {
+               	if(candidateElement == 0)
+               	{
+               		candidateElement = 0;
+               	}
                 ModifyDurationMappingArray(targetElement, candidateElement, voiceNumber);
                 $TextBox.val(voiceArray[voiceNumber - 1].durationMappingArray);
             }
