@@ -78,7 +78,17 @@ function getScaleArray(choice){
 			case "Pentatonic2":
 					return new Array(0,-1,1,0,1,0,1,0,-1,1,0,1);
 			case "Whole Tone":
-					return new Array(0,1,0,1,0,1,0,1,0,1,0,1);	
+					return new Array(0,1,0,1,0,1,0,1,0,1,0,1);
+			case "Octatonic":
+		            return new Array(0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1);
+		    	case "Messiaen Mode 3":
+		            return new Array(0, 1, 0, 0, 2, 1, 0, 0, 0, 2, 1, 0);
+		    	case "Messiaen Mode 4":
+		            return new Array(0, 0, 0, 2, 1, 0, 0, 0, 0, 2, 1, 0);
+		    	case "Messiaen Mode 5":
+		            return new Array(0, 0, 3, 2, 1, 0, 0, 0, 3, 2, 1, 0);
+		    	case "Messiaen Mode 6":
+		            return new Array(0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0);
 			case "Morph":
 					return new Array(0,0,0,0,0,0,0,0,0,0,0,0);
 		}
@@ -266,6 +276,11 @@ function scaleOptions(numberOfVoice) {
 					<option>Pentatonic1</option>\
 					<option>Pentatonic2</option>\
 					<option>Whole Tone</option>\
+					<option>Octatonic</option>\
+                    			<option>Messiaen Mode 3</option>\
+                    			<option>Messiaen Mode 4</option>\
+                    			<option>Messiaen Mode 5</option>\
+                    			<option>Messiaen Mode 6</option>\
 					<option>Morph</option>\
 				</select>\
 				<label>Key:</label>\
