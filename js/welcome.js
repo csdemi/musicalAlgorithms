@@ -20,6 +20,8 @@ $(document).ready(function () {
 	    voiceTotal = $(this).find('option:selected').text();
 		changeVoiceCount(voiceTotal, previousVoiceCount, voiceArray);// Executes voice change procedures.
 
+		displayImage(); // This prints the little I and the pop ups from the textboxes in later panels.
+	
 		if($("#tabs_container").css('visibility') != "hidden")
 			$("#options ul li").find("#tab").click();
 			
