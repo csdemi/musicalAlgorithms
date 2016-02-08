@@ -28,12 +28,11 @@ $(document).ready(function()
         {// Still need to implement the ability to edit the DNA array.
             if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA")
             {
-                biologyLoader($panel);
+                RNAandDNALoader($panel);
             }
             else
             {
-                biologyLoader($panel);
-                
+                RNAandDNALoader($panel);
                 $TextBox.prop("readonly", true);
                 $NoteCount.prop("readonly", false);
 
@@ -49,6 +48,7 @@ $(document).ready(function()
 
             }
         }
+        tooltip($panel);
     });
     
     /*
@@ -479,7 +479,9 @@ function pitchInput(numberOfVoice) {
 				</select>\
 				<img id='pitchInfo"+ voiceCount + "'> \
 				<label id='notes"+ voiceCount + "'>Note Count:</label>\
-				<input type='text' id='note_count"+ voiceCount + "'></input><br>\
+				<input type='text' id='note_count"+ voiceCount + "'></input>\
+				<label id='util"+ voiceCount+"'>  Utilities:</label>\
+				<button type='button' class='btn btn-default btn-sm' data-toggle='modal' onclick='openPitchInputUtilities("+voiceCount+")'><span class='glyphicon glyphicon-wrench'></span></button><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
                 <textarea id='sequence"+ voiceCount + "' style='display:none'></textarea><br>\
                 <span><br id='A"+voiceCount+"'style='display:none'>\
@@ -493,15 +495,11 @@ function pitchInput(numberOfVoice) {
                 <input type='text' id='letterCText"+voiceCount+"'style='display:none'></input>\
                 <label id='G"+voiceCount+"'style='display:none'>G=</label>\
                 <input type='text' id='letterGText"+voiceCount+"'style='display:none'></input>\
-                <ul id='panels"+voiceCount+"'style='display:none'>\
-                    <li><input type='checkbox' name='extra' id='duplicates"+voiceCount+"'style='display:none''></input>\
-                    <label id='countDuplicateRadio"+voiceCount+"'style='display:none'>Count Duplicates</label></li>\
-                    <li><input type='checkbox' name='extra' id='codons"+voiceCount+"'style='display:none' value='2'></input>\
-                    <label id='codonsRadio"+voiceCount+"'style='display:none'>Codons</label></li>\
-                    <li><button id='convert"+voiceCount+"'style='display:none'>Convert</button></li>\
-                </ul>\
+                <button id='convert"+voiceCount+"'style='display:none'>Convert</button>\
+                <button id='duplicates"+voiceCount+"'style='display:none'>Count Duplicates</button>\
+                <br id='A"+voiceCount+"'style='display:none'>\
                 <\span>\
-				<label>Input:</label><br>\
+				<label>Input:</label>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
 			</fieldset>\
 		</div>\
