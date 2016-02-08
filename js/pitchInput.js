@@ -28,11 +28,12 @@ $(document).ready(function()
         {// Still need to implement the ability to edit the DNA array.
             if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA")
             {
-                RNAandDNALoader($panel);
+                biologyLoader($panel);
             }
             else
             {
-                RNAandDNALoader($panel);
+                biologyLoader($panel);
+                
                 $TextBox.prop("readonly", true);
                 $NoteCount.prop("readonly", false);
 
@@ -492,9 +493,13 @@ function pitchInput(numberOfVoice) {
                 <input type='text' id='letterCText"+voiceCount+"'style='display:none'></input>\
                 <label id='G"+voiceCount+"'style='display:none'>G=</label>\
                 <input type='text' id='letterGText"+voiceCount+"'style='display:none'></input>\
-                <button id='convert"+voiceCount+"'style='display:none'>Convert</button>\
-                <button id='duplicates"+voiceCount+"'style='display:none'>Count Duplicates</button>\
-                <br id='A"+voiceCount+"'style='display:none'>\
+                <ul id='panels"+voiceCount+"'style='display:none'>\
+                    <li><input type='checkbox' name='extra' id='duplicates"+voiceCount+"'style='display:none''></input>\
+                    <label id='countDuplicateRadio"+voiceCount+"'style='display:none'>Count Duplicates</label></li>\
+                    <li><input type='checkbox' name='extra' id='codons"+voiceCount+"'style='display:none' value='2'></input>\
+                    <label id='codonsRadio"+voiceCount+"'style='display:none'>Codons</label></li>\
+                    <li><button id='convert"+voiceCount+"'style='display:none'>Convert</button></li>\
+                </ul>\
                 <\span>\
 				<label>Input:</label><br>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
