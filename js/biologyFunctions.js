@@ -60,14 +60,76 @@ function biologyLoader($panel)
         $radioButtonCodons.show();
         $codonLabel.show();
 
-        if ($SelectedAlgorithm.text() == "RNA")
+        if ($SelectedAlgorithm.text() == "RNA")//AUCG
         {
             $letterT.hide();
             $letterU.show();
-            $codonLabel.hide();
-            $radioButtonCodons.hide();
             $letterTText.hide();
             $letterUText.show();
+            $($panel).on('change', $sequenceInput, function(){  
+    voiceArray[voiceNumber - 1].biology.originalRNASequence=$sequenceInput.val().split(",");
+    $NoteCount.val(voiceArray[voiceNumber-1].biology.originalRNASequence.length);
+    $TextBox.val("");
+    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
+    voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]=$letterAText.val());
+            $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]=$letterUText.val());
+            $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]=$letterCText.val());
+            $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]=$letterGText.val());
+
+            var i = 0;
+
+            for (i; i < voiceArray[voiceNumber - 1].biology.originalRNASequence.length; i++)
+            {
+                if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="A")
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[0];
+                }
+                else if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="U")
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[1];
+                }
+                else if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="C")
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[2];
+                }
+                else
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[3];
+                }
+            }  
+});
+
+            $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
+            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
+            $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]);
+            $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]);
+            $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]);
+            $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]);
+
+            var i = 0;
+
+            for (i; i < voiceArray[voiceNumber - 1].biology.originalRNASequence.length; i++)
+            {
+                if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="A")
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[0];
+                }
+                else if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="U")
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[1];
+                }
+                else if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="C")
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[2];
+                }
+                else
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[3];
+                }
+            }  
+            if($buttonConvert.click(rnaConversion));
         }
 //THIS AREA BELOW IS FOR DNA FUNCTIONALITY
         else
@@ -168,6 +230,68 @@ $($panel).on('change', $sequenceInput, function(){
         $codonLabel.hide();
         $duplicateLabel.hide();
     }
+    function rnaConversion()
+    {
+        if($extra[1].checked==true)
+            {
+                var value=[];
+                if(voiceArray[voiceNumber - 1].biology.userSequenceArray.length%3==0)
+                    {
+                        var counter=3;
+                        var seqence="";
+                        for(var i=0;i<voiceArray[voiceNumber - 1].biology.userSequenceArray.length+1;i++)
+                            {
+                                if(counter===0)
+                                {
+                                    counter=3;
+                                    var values= parseInt(seqence.split(","));
+                                    seqence="";
+                                    value.push(values);
+                                }
+                                    seqence+=voiceArray[voiceNumber - 1].biology.userSequenceArray[i];
+                                    counter--;
+                            }
+                        voiceArray[voiceNumber - 1].biology.userSequenceArray=value;
+                        $TextBox.val(value);
+
+                    }
+                else
+                {
+                    alert("Please add more letters to the sequence.");
+                }  
+            }
+        else if($extra[0].checked==true)
+            {
+                voiceArray[voiceNumber-1].biology.userSequenceArray=[];
+                for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.originalRNASequence.length;i++,j++)
+                    {
+                        var counter = 1;
+                        while(voiceArray[voiceNumber - 1].biology.originalRNASequence[i]==voiceArray[voiceNumber - 1].biology.originalRNASequence[j])
+                            {
+                                counter++;
+                                i++;
+                                j++;
+                            }
+                        voiceArray[voiceNumber-1].biology.userSequenceArray.push(counter);
+                    }
+                $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);                
+            }
+        else
+        {
+            $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
+        }  
+        voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
+        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
+        UpdateDurationNoteCount(voiceArray[voiceNumber - 1],voiceNumber);
+        UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+        UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+
+        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+        LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
+        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+    }
+    
     function conversion()
     {        
         if($extra[1].checked==true)
@@ -220,7 +344,6 @@ $($panel).on('change', $sequenceInput, function(){
             }
             
             voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
-            //alert(voiceArray[voiceNumber-1].originalPitchArray);
             UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
             UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
             UpdateDurationNoteCount(voiceArray[voiceNumber - 1],voiceNumber);
