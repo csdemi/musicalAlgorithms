@@ -7,13 +7,15 @@
 /* ----- Helper Mixins ----- */
 /* ----- Page Styles ------ */
 /* Base Styles */
-input#letterAText1,input#letterTText1,input#letterUText1,
-input#letterAText2,input#letterTText2,input#letterUText2,
-input#letterAText3,input#letterTText3,input#letterUText3,
-input#letterAText4,input#letterTText4,input#letterUText4{
+input#letterAText1,input#letterTText1,input#letterUText1,input#letterCText1,input#letterGText1,
+input#letterAText2,input#letterTText2,input#letterUText2,input#letterCText2,input#letterGText2,
+input#letterAText3,input#letterTText3,input#letterUText3,input#letterCText3,input#letterGText3,
+input#letterAText4,input#letterTText4,input#letterUText4,input#letterCText4,input#letterGText4{
     width: 29px;
 }
-
+ul{
+    list-style-type: none;
+}
 body {
   background: url("../images/background.png");
   background-repeat: repeat;

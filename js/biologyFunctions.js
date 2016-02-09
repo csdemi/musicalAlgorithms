@@ -84,10 +84,10 @@ $($panel).on('change', $sequenceInput, function(){
     $TextBox.val("");
     $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalDNASequence);
     voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
-    $letterAText.val(voiceArray[voiceNumber - 1].biology.dnaValues[0]);
-            $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]);
-            $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]);
-            $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]);
+    $letterAText.val(voiceArray[voiceNumber - 1].biology.dnaValues[0]=$letterAText.val());
+            $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]=$letterTText.val());
+            $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]=$letterCText.val());
+            $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]=$letterGText.val());
 
             var i = 0;
 
@@ -141,7 +141,6 @@ $($panel).on('change', $sequenceInput, function(){
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[3];
                 }
             }  
-            
             if($buttonConvert.click(conversion));
         } 
     }
@@ -170,7 +169,7 @@ $($panel).on('change', $sequenceInput, function(){
         $duplicateLabel.hide();
     }
     function conversion()
-    {
+    {        
         if($extra[1].checked==true)
             {
                 var value=[];
@@ -233,4 +232,3 @@ $($panel).on('change', $sequenceInput, function(){
             LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
     }
 }
-

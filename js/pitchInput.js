@@ -32,8 +32,7 @@ $(document).ready(function()
             }
             else
             {
-                biologyLoader($panel);
-                
+               biologyLoader($panel);
                 $TextBox.prop("readonly", true);
                 $NoteCount.prop("readonly", false);
 
@@ -485,7 +484,7 @@ function pitchInput(numberOfVoice) {
 				<button type='button' class='btn btn-default btn-sm' data-toggle='modal' onclick='openPitchInputUtilities("+voiceCount+")'><span class='glyphicon glyphicon-wrench'></span></button><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
                 <textarea id='sequence"+ voiceCount + "' style='display:none'></textarea><br>\
-                <span><br id='A"+voiceCount+"'style='display:none'>\
+                                <span><br id='A"+voiceCount+"'style='display:none'>\
                 <label id='A"+voiceCount+"'style='display:none'>A=</label>\
                 <input type='text' id='letterAText"+voiceCount+"'style='display:none'></input>\
                 <label id='T"+voiceCount+"'style='display:none'>T=</label>\
