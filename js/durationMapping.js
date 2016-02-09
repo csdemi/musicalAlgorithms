@@ -26,6 +26,8 @@ $(document).ready(function(){
         UpdateDurationMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedDurationMappingAlgorithm(voiceNumber), voiceArray[voiceNumber  - 1].durationMappingArrayLowerBound, voiceArray[voiceNumber  - 1].durationMappingArrayUpperBound);
 
         $TextBox.val(voiceArray[voiceNumber - 1].durationMappingArray);
+        
+        tooltip($panel);
     });
 
     /*
@@ -39,11 +41,17 @@ $(document).ready(function(){
     
         var voiceNumber = getVoiceNumber($panel);
 
-        if ($TopRange.val() > 9) {
+        if ($TopRange.val() > 9) 
+        {
             $TopRange.val(9);
         }
-        else if ($TopRange.val() <= $BottomRange.val()) {
-            $TopRange.val(+$BottomRange.val() + 1);
+        else if ($TopRange.val() < 0)
+        {
+        	$TopRange.val(0);	
+        }
+        else if ($TopRange.val() < $BottomRange.val()) 
+        {
+            $TopRange.val(+$BottomRange.val());
         }
 
         voiceArray[voiceNumber - 1].durationMappingArrayUpperBound = $TopRange.val();
@@ -64,11 +72,17 @@ $(document).ready(function(){
 
         var voiceNumber = getVoiceNumber($panel);
 
-        if ($BottomRange.val() < 0) {
-            $TopRange.val(0);
+        if ($BottomRange.val() < 0) 
+        {
+            $BottomRange.val(0);
         }
-        else if ($BottomRange.val() >= $TopRange.val()) {
-            $BottomRange.val(+$TopRange.val() - 1);
+        else if ($BottomRange.val() > 9)
+        {
+        	$BottomRange.val(9);
+        }
+        else if ($BottomRange.val() >= $TopRange.val()) 
+        {
+            $BottomRange.val(+$TopRange.val());
         }
 
         voiceArray[voiceNumber - 1].durationMappingArrayLowerBound = $BottomRange.val();
@@ -95,6 +109,10 @@ $(document).ready(function(){
        
         if (DoesDurationContain(targetElement, voiceNumber)) {
             if (candidateElement == 0 || (candidateElement >= voiceArray[voiceNumber - 1].durationMappingArrayLowerBound && candidateElement <= voiceArray[voiceNumber - 1].durationMappingArrayUpperBound)) {
+               	if(candidateElement == 0)
+               	{
+               		candidateElement = 0;
+               	}
                 ModifyDurationMappingArray(targetElement, candidateElement, voiceNumber);
                 $TextBox.val(voiceArray[voiceNumber - 1].durationMappingArray);
             }

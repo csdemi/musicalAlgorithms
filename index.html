@@ -136,7 +136,27 @@
     </div>
     <!-- End MORPH Modal Dialog //-->
     
-    
+    <!-- Pitch Input Utilities Dialog //-->
+	<div class='modal fade pitchInputUtility-modal' id='pitchInputUtilityModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+		<div class='modal-dialog modal-xl'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+					<h3 class='modal-title' id='myModalLabel'>Utilities</h3>
+				</div>
+				<div class='modal-body'>
+					<textarea readonly id='pitchInputUtilityBox' style='width: 100%' value='124'></textarea>
+					<button type="button" class="btn btn-default" onclick="reverseNotes(document.getElementById('pitchInputUtilityBox'))">Reverse</button>
+					<button type="button" class="btn btn-default" onclick="invert(document.getElementById('pitchInputUtilityBox'))">Invert</button>
+				</div>
+				<div class='modal-footer'>
+					<button type='button' class='btn btn-success pitchInputUtil-accept' onclick="accept(document.getElementById('pitchInputUtilityBox'), 'areaPitch')"><span class='glyphicon glyphicon-ok'></span> Apply</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END Pitch Input Utiities Dialog //-->
     
     
     <!-- Overall Container //-->
@@ -153,6 +173,7 @@
                 </div>
 
                 <div class="btn-group" id="options_buttons">
+					
                     <button type="button" class="btn btn-default btn-sm save_option" data-toggle="modal" data-target="#saveModal"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
                     <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#loadModal"><span class="glyphicon glyphicon-folder-open"></span> Load</button>
 
@@ -382,7 +403,7 @@
     <!-- ----------- //-->
     <!-- Custom Code //-->
     <script src="js/DefaultInit.js"></script> <!--Added 1/7-->
-    <script src="js/RNADNA.js"></script> <!--Added 1/31-->
+    <script src="js/biologyFunctions.js"></script> <!--Added 1/31-->
     <script src="js/selectAlgorithm.js"></script>
     <script src="js/normalization.js"></script>
     <script src="js/information.js"></script>
@@ -390,6 +411,7 @@
     <script src="js/WebSiteFunctions.js"></script> <!--Added-->
     <script src="js/VoiceObject.js"></script> <!--Added-->
     <script src="js/biologyObject.js"></script>
+	<script src="js/preInputUtilities.js"></script> <!--New-->
     <script src="js/pitchInput.js"></script>
     <script src="js/durationInput.js"></script>
     <script src="js/pitchMapping.js"></script>

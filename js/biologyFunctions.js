@@ -198,7 +198,6 @@ $($panel).on('change', $sequenceInput, function(){
                 {
                     alert("Please add more letters to the sequence.");
                 }
-
             }
         else if($extra[0].checked==true)
             {

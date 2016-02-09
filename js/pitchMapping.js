@@ -35,6 +35,8 @@ $(document).ready(function(){
         LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);// Found in ScaleOptions.js
 
         $TextBox.val(voiceArray[voiceNumber - 1].pitchMappingArray);// Updates the Textbox on website.
+
+	tooltip($panel);
     });
 
     /*
@@ -77,11 +79,13 @@ $(document).ready(function(){
         var $TextBox = $panel.find('[id^=mapArea]');
 
         var voiceNumber = getVoiceNumber($panel);
-
-        if ($BottomRange.val() < 1) {
-            $TopRange.val(1);
-        }
-        else if ($BottomRange.val() >= $TopRange.val()) {
+		
+		if ($BottomRange.val() < 0)
+		{
+			$BottomRange.val(0);
+		}
+        else if ($BottomRange.val() >= $TopRange.val()) 
+        {
             $BottomRange.val(+$TopRange.val() - 1);
         }
 
@@ -113,6 +117,7 @@ $(document).ready(function(){
 	    {
 	        if(candidateElement == 0) 
 	        {
+	            candidateElement = 0;
 	            ModifyPitchMappingArray(targetElement, candidateElement, voiceNumber);
 
 	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
