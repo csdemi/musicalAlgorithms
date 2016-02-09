@@ -29,7 +29,7 @@ function biologyLoader($panel)
     var $letterUText=$panel.find('[id^=letterUText]');
     var $letterCText=$panel.find('[id^=letterCText]');
     var $letterGText=$panel.find('[id^=letterGText]');
-    var $extra = document.getElementsByName("extra");
+    var $extra = $panel.find('[name^=extra]');
     var $buttonConvert = $panel.find('[id^=convert]');
     var $radioButtonDuplicate=$panel.find('[id^=duplicates]');
     var $duplicateLabel=$panel.find('[id^=countDuplicateRadio]');
