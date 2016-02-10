@@ -72,7 +72,7 @@ function changeKeyToSong($keyOption, $keyLabel)
 
 	$keyOption.empty();
     $keyOption.append($("<option>Beethoven's 9th</option>"));
-    $keyOption.append($("<option>Sibelius' Finlandia Theme</option>"));
+    $keyOption.append($("<option>Sibelius's Finlandia</option>"));
 }
 
 /*

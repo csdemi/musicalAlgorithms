@@ -57,7 +57,7 @@ function loadFile(callback)
 	}
 	else
 	{
-		file = "../morph/finlandia"
+		file = "../morph/Finlandia"
 	}
 	
 	if (window.XMLHttpRequest) 
@@ -69,7 +69,7 @@ function loadFile(callback)
 		reader = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 
-	reader.onreadystatechange = function ()
+	reader.onreadystatechange = function()
 	{
 		var MaxNoteCount = 2000;
 		if(reader.readyState === 4)
@@ -87,12 +87,18 @@ function loadFile(callback)
 
 				callback(newData);
 			}
+			update();
 		}
 	}
 	reader.open("GET", file, true);
 	reader.send(null);
 }
+
+function initData()
+{
 	
+}
+
 function setStartData(inVal, morphTarget) 
 {
 	startingData = inVal;
@@ -111,7 +117,7 @@ function drawVisualization()
 	if (morphToSong == "Beethoven's 9th")
 		data.addColumn('number', "Beethoven's 9th");
 	else
-		data.addColumn('number', "Sibelius's Finlandoa Theme");
+		data.addColumn('number', "Sibelius's Finlandia");
 	data.addColumn('number', 'Voice Data');
 
 	var textData = "";
@@ -164,7 +170,6 @@ function openMorph(voicePanel)
 
 	setStartData($(voicePanel).find("textarea").val().split(","), song);	
 	openMorphGraph(voiceNumber);
-	
 	$(".morph-modal").modal("show");
 	$(".morph-modal").data("voice-num", voicePanel.id);
 }
