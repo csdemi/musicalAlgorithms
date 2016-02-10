@@ -297,11 +297,12 @@ function downloadMidi()
 */
 function createMidi(type)
 {
-		//add 20 to current pitch values
+	//add 20 to current pitch values
 	var channel=1;
-
 	//get tempo
 	var tempo=$("#tempo").val();
+	// get voice amount
+	var voiceNum = $('#welcomeChoice option:selected').val();
 	//alert("bpm set at: "+ tempo);
 	var microTempo=60000000/tempo;
 	
@@ -314,7 +315,7 @@ function createMidi(type)
 	
 	var mididata;
 	 mididata =basedataArray.join('\r\n');
-	for(i=0; i<voiceArray.length;i++)
+	for(i=0; i<voiceNum;i++)
 	{
 		var track=createTrack(basedataArray,voiceArray[i], i+1, microTempo, type);
 		mididata=mididata+'\r\n'+track;
@@ -330,49 +331,53 @@ function createMidi(type)
 //creates a track from pitchArray and adds it to the basedataArray, channel is the channel the track plays on(voice number)
 function createTrack( basedataArray, voice,channel,microTempo,type)
 {
-    //alert("creating voice on channel"+channel);
-    
-		var pitchArray = voice.FinalPitchArray;
-		var durationArray = voice.durationMappingArray;
-		var midiNotes = new Array(pitchArray.length);
-		//get instrument string
-		var trackdata = 'MTrk'//|0 Meta Text "'+voice.instrumentString+'"|0 ParCh='+channel+' p='+voice.instrument+' v=120';
-		var trackdataArray = trackdata.split('|');
-																						
-																						
-		var dur2 = microTempo/24;//1 MIDI clock
-		//24 MIDI clocks in every quarter note
-		var nowDur = 0;//(1 << durationArray[1]) * 120;
-	for(var i=0;i<midiNotes.length;i++)
+	var nThisDuration;
+	var nowDur = 0;
+	var pitchArray = voice.FinalPitchArray;
+	var durationArray = voice.durationMappingArray;
+	var midiNotes = new Array(pitchArray.length);
+
+	// get instrument string
+	var trackdata = 'MTrk' //|0 Meta Text "'+voice.instrumentString+'"|0 ParCh='+channel+' p='+voice.instrument+' v=120';
+	var trackdataArray = trackdata.split('|');
+		
+	for(var i=0; i < midiNotes.length; i++)
 	{
 		midiNotes[i] = pitchArray[i]+20;
-		if (isNaN(midiNotes[i])) { alert('note ' + i + ' is invalid. Notes must be integers.'); return; }
-		if ((midiNotes[i]<0) || (midiNotes[i]>=127)) { alert('note ' + midiNotes[i]+"= "+"midiNotes[" +i+"]"+ ' is invalid. Notes must be valid midi notes between 0 and 127.'); return; }
+		if (isNaN(midiNotes[i])) 
+		{ 
+			alert('note ' + i + ' is invalid. Notes must be integers.');
+			return; 
+		}
+		if ((midiNotes[i]<0) || (midiNotes[i]>=127)) 
+		{ 
+			alert('note ' + midiNotes[i]+"= "+"midiNotes[" +i+"]"+ ' is invalid. Notes must be valid midi notes between 0 and 127.'); 
+			return; 
+		}
 		
-		if(type=="MTC")
-		nThisDuration=getMidiClocks(durationArray[i]);
-		//SMPTE event time division
-		else
-		nThisDuration= (1 << durationArray[i])*24;
+		if (type=="MTC")
+			nThisDuration=getMidiClocks(durationArray[i]);
+		else //SMPTE event time division
+			nThisDuration= (1 << durationArray[i])*24;
 		
-		if (isNaN(nThisDuration)) { alert('duration ' + i + ' is invalid. must be integer.'); return; }
+		if (isNaN(nThisDuration)) 
+		{ 
+			alert('duration ' + i + ' is invalid. must be integer.'); 
+			return; 
+		}
 		
-		if (midiNotes[i] > 20) {
-				//Add to the MIDI data an "On" event
-				
-				trackdataArray.push( nowDur +' On ch='+channel+ ' n='+midiNotes[i]+ ' v=120');			
-				
-				//Add to the MIDI data an "Off" event
-				trackdataArray.push(nowDur + nThisDuration  +' Off ch='+channel+' n='+midiNotes[i]+ ' v=120');
-			}
-			
-			nowDur += nThisDuration;
-		
+		if (midiNotes[i] > 20)
+		{
+			//Add to the MIDI data an "On" event
+			trackdataArray.push(nowDur +' On ch='+channel+ ' n='+midiNotes[i]+ ' v=120');			
+			//Add to the MIDI data an "Off" event
+			trackdataArray.push(nowDur + 6  +' Off ch='+channel+' n='+midiNotes[i]+ ' v=120');
+		}
+		nowDur += 6; // Increment a 16th note
 	}
-		trackdataArray.push(nowDur + ' Meta TrkEnd');
-		trackdataArray.push('TrkEnd');
-		//alert("track: "+trackdataArray.toString());
-		return trackdataArray.join('\r\n');
+	trackdataArray.push(nowDur +' Meta TrkEnd');
+	trackdataArray.push('TrkEnd');
+	return trackdataArray.join('\r\n');
 }
 
 
@@ -585,7 +590,7 @@ function getMidiClocks(intDur)
 	while(intDur>0)
 	{
 		midiClocks=midiClocks+(midiClocks/2);
-	intDur--
+		intDur--
 	}
 	return midiClocks
 }
