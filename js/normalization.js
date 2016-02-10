@@ -6,114 +6,39 @@ var Division = function(){
 	
 	this.normalize = function(data,minValue,maxValue)
 	{
-	    var resolution = 0;// resolution is the incrementor used for creating the translation table that contains all possible values.
-	    var translationList = new Array();// this is the translation table list which is a list of objects knows as TranslationKey.
-	    var finalTranslation = new Array();// this is the raw data array that has been translated.
-
-	    var keyboardRange = Range(minValue, maxValue);// This call gets the range of the keyboard and duration values.
-	    var algorithmInput = 0;// this is the range that is derived from the incoming values for algorithm or user.
-
-	    var minimumDataValue = Math.min.apply(Math, data);
-	    var maximumDataValue = Math.max.apply(Math, data);
+	    var translationArray = new Array();
 	    
-	    if (minimumDataValue < 0)
-	    {// This is a special case for negative values from the raw data array.
-	        algorithmInput = NegativeRange(minimumDataValue, maximumDataValue);
-	    }
-	    else
+	    var dataMin = Math.min.apply(Math, data);
+	    var dataMax = Math.max.apply(Math, data);
+	    
+	    var keyboardDistance = Math.abs(+minValue - +maxValue);
+	    var dataDistance = Math.abs(+dataMin - +dataMax);
+	    
+	    if (dataDistance == 0)
 	    {
-	        algorithmInput = PositiveRange(minimumDataValue, maximumDataValue);
+	        dataDistance = 1;
 	    }
 
-	    if(maximumDataValue <= maxValue && algorithmInput < keyboardRange)
-	    {
-	        resolution = keyboardRange / algorithmInput;
+	    var resolution = keyboardDistance / dataDistance;
 
-	        if(resolution === 0)
+	    for (var x = 0; x < data.length; x++)
+	    {
+	        translationArray.push(parseInt(Math.round((Math.abs(+dataMin - +data[x]) * resolution) + +minValue) - 1));
+	      
+	        if(translationArray[x] < minValue)
 	        {
-	            resolution = 1;
+	            translationArray[x] = minValue;
+	        }
+
+	        if(translationArray[x] > maxValue)
+	        {
+	            translationArray[x] = maxValue;
 	        }
 	    }
-	    else
-	    {
-	        resolution = keyboardRange / algorithmInput;
-	    }
-
-	    translationList = CreateTranslationTable(minimumDataValue, algorithmInput,minValue, resolution);// creates a complete list of values derived from the raw data. This is the translation table.
-	    finalTranslation = CreateFinalList(data,translationList);// this creates the translated version of the raw data array.
-	    
-	    return finalTranslation;
+	
+	    return translationArray;
 	};
-
-	/*
-		Used to match up values in the raw data list to the complete translation table. Finder helps with this.
-	*/
-	function CreateFinalList(originalList,translatedList)
-	{
-	    var temporaryList = new Array();
-
-	    for(var x = 0; x < originalList.length; x++)
-	    {
-	        temporaryList.push(parseInt(Finder(translatedList,originalList[x])));
-	    }
-	    return temporaryList;
-	}
-
-	function Finder(translatedTable, value)
-	{
-	    var counter = 0;
-
-	    while(value != translatedTable[counter].originalValue)
-	    {
-	        counter++;
-	    }
-
-	    return translatedTable[counter].translatedValue;
-	}
-	/*
-	Creates a complete translation table starting from the min value from data array to max value, this is inclusive.
-	*/
-	function CreateTranslationTable(min, range, base, unit)
-	{
-	    var translated = 0;
-	    var temporaryList = new Array();
-	    incrementor = +min;
-
-	    for(var x = 0; x < range; x++)
-	    {
-	        temporaryList.push(new TranslationKey(incrementor, (x * +unit) + +base));
-	        incrementor++;
-	    }
-	   
-	    return temporaryList;
-	}
-    /*
-        Range method gets range from keyboard and duration values.
-    */
-	function Range(min, max) {
-	    return (+max - +min) + 1;
-	}
-
-    /*
-        NegativeRange and PositiveRange methods are for building translation table.
-    */
-	function NegativeRange(min, max){
-	    return (+min * -1) + (+max + 1);
-	}
-
-	function PositiveRange(min, max){
-	    return (+max + 1) - +min;
-	}
 };
-
-/*
-Translation object for division class. original is the key, translatedvalue is new value per
-constraints.
-*/
-function TranslationKey(original, translation) {
-    this.originalValue = original;
-    this.translatedValue = translation;
-}
 
 //Modulo class
 var Modulo = function(){
@@ -244,6 +169,3 @@ function testNormalizeScale(){
 //alert("ha:"+factory(compressedObject.options[algorithm.selectedIndex].text));
 
 }
-
-
-
