@@ -7,8 +7,9 @@ var sliderVal = 1;
 var targetData;
 var startingData;
 var morphToSong;
+var currentVoiceNumber;
 
-function openMorphGraph()
+function openMorphGraph(voiceNumber)
 {
 	// Set callback to run when API is loaded
 	google.setOnLoadCallback(function() 
@@ -16,7 +17,7 @@ function openMorphGraph()
 		update();
 		console.log("fire");
 	});
-
+	currentVoiceNumber = voiceNumber;
 	loadFile(getTargetdata);
 }
 
@@ -136,4 +137,34 @@ function drawVisualization()
 	};
 	
 	graph.draw(data, options);
+}
+
+// The following functions are for actual array adjustments from the morph output.
+
+/*
+	This function updates the final pitch array with the morph values
+*/
+function adjustForMorph()
+{
+	var ModificationArray = new Array(); // This is used to modify the FinalPitchArray.
+	var textBox = document.getElementById("morphBox");	// This gets the current panel's textbox.
+	ModificationArray = $.map(textBox.value.split(","), function(value) { return parseInt(value, 10); });
+	voiceArray[currentVoiceNumber - 1].FinalPitchArray = ModificationArray;
+}
+
+/*
+	Seems it opens the over window for the morph. Maintained from the previous version.
+*/
+function openMorph(voicePanel) 
+{
+	var $SongOption = $(voicePanel).find('[id^=so_key_options]'); // This gets the location of the song drop down menu.
+	var $SelectedSong = $SongOption.find('option:selected'); // This gets the song from the song drop down menu.
+	var song = $SelectedSong.text();
+	var voiceNumber = getVoiceNumber($(voicePanel));
+
+	setStartData($(voicePanel).find("textarea").val().split(","), song);	
+	openMorphGraph(voiceNumber);
+	
+	$(".morph-modal").modal("show");
+	$(".morph-modal").data("voice-num", voicePanel.id);
 }

@@ -66,6 +66,24 @@ $(document).ready(function () {
     });
 
 });
+
+/*
+    This adds the morph button.
+*/
+function addMorphButton($elem) 
+{
+	// Add morph button
+    $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
+}
+
+/*
+	This removes the morph button.
+*/
+function removeMorphButton($elem)
+{
+	// Add button to reopen morph window
+    $elem.find("select").eq(1).css({  }).next().html("<label>Output:</label>");
+}
 	
 /*
     This is used to return the array that will be used to offset the keys per scale. Maintained from the previous version.
@@ -170,54 +188,6 @@ function changeSongToKey($KeyOption)
 	$KeyOption.append($("<option>A</option>"));
 	$KeyOption.append($("<option>A&#9839;/B&#9837;</option>"));
 	$KeyOption.append($("<option>B</option>"));
-}
-
-/*
-	This function updates the final pitch array with the morph values
-*/
-function adjustForMorph()
-{
-	var ModificationArray = new Array(); // This is used to modify the FinalPitchArray.
-	var textBox = document.getElementById("morphBox");	// This gets the current panel's textbox.
-	var voiceNumber = 1 
-	ModificationArray = $.map(textBox.value.split(","), function(value) { return parseInt(value, 10); });
-	voiceArray[voiceNumber - 1].FinalPitchArray = ModificationArray;
-}
-
-
-/*
-    This adds the morph button.
-*/
-function addMorphButton($elem) 
-{
-	// Add morph button
-    $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
-}
-
-/*
-	This removes the morph button.
-*/
-function removeMorphButton($elem)
-{
-	// Add button to reopen morph window
-    $elem.find("select").eq(1).css({  }).next().html("<label>Output:</label>");
-}
-
-/*
-	Seems it opens the over window for the morph. Maintained from the previous version.
-*/
-function openMorph(voice) 
-{
-	var $SongOption = $(voice).find('[id^=so_key_options]'); // This gets the location of the song drop down menu.
-	var $SelectedSong = $SongOption.find('option:selected'); // This gets the song from the song drop down menu.
-	var song = $SelectedSong.text();
-
-	setStartData($(voice).find("textarea").val().split(","), song);	
-	openMorphGraph();
-	update();
-	
-	$(".morph-modal").modal("show");
-	$(".morph-modal").data("voice-num", voice.id);
 }
 
 /*
