@@ -1,15 +1,11 @@
-$(document).ready(function () {
+$(document).ready(function () 
+{
    
-	var morphTriggered = false;
     /*
         This is triggered only when the Scale Option is changed.
     */
-    $('.scale_options').on('change', '[id^=so_scale_options]', function () {
-        $(this).parent().parent().find("select").eq(1).css({ display: "" }).prev().html("Key: ");
-        /*
-            The above line of code allows the Voice Panel to be changed when voice is selected and 
-            and returns the Voice Panel to normal operation if anything other than Morph is selected. 
-        */
+    $('.scale_options').on('change', '[id^=so_scale_options]', function () 
+    {
         var ModificationArray = new Array();// Due to previous solution, this is used to modify the FinalPitchArray.
 
         var $panel = $(this).closest('div[id]');// This gets the current panel.
@@ -22,12 +18,12 @@ $(document).ready(function () {
         var $SelectedKey = $KeyOption.find("option:selected");// This gets the current data from the key drop down menu.
         
         var voiceNumber = getVoiceNumber($panel);// Located in WebsiteFunctions.js
+        var $keyLabel = $panel.find('[id^=scaleKeyLabel]')
 
         if($SelectedScale.text() == "Morph")
         {
             addMorphButton($(this).parent().parent());
-            changeKeyToSong($KeyOption);
-            morphTriggered = true;
+            changeKeyToSong($KeyOption, $keyLabel);
         }
         else if($SelectedScale.text() != "Morph")
         {
@@ -37,15 +33,15 @@ $(document).ready(function () {
             $TextBox.val(voiceArray[voiceNumber - 1].FinalPitchArray);
 
 			removeMorphButton($(this).parent().parent());
-			changeSongToKey($KeyOption);
-            morphTriggered = false;
+			changeSongToKey($KeyOption, $keyLabel);
         }
     });
 
     /*
         This is triggered only when Key is changed.
     */
-    $('.scale_options').on('change', '[id^=so_key_options]', function () {
+    $('.scale_options').on('change', '[id^=so_key_options]', function () 
+    {
         var ModificationArray = new Array();
 
         var $panel = $(this).closest('div[id]');
@@ -68,12 +64,46 @@ $(document).ready(function () {
 });
 
 /*
+	This function changes the key selection to song selection for morph.
+*/
+function changeKeyToSong($keyOption, $keyLabel)
+{
+	$keyLabel.text("Song:");
+
+	$keyOption.empty();
+    $keyOption.append($("<option>Beethoven's 9th</option>"));
+    $keyOption.append($("<option>Sibelius' Finlandia Theme</option>"));
+}
+
+/*
+	This function changes the song selection to key selection for normal scale adjustments.
+*/
+function changeSongToKey($keyOption, $keyLabel)
+{
+	$keyLabel.text("Key:");
+	
+	$keyOption.empty();		
+	$keyOption.append($("<option>C</option>"));
+	$keyOption.append($("<option>C&#9839;/D&#9837;</option>"));
+	$keyOption.append($("<option>D</option>"));
+	$keyOption.append($("<option>D&#9839;/E&#9837;</option>"));
+	$keyOption.append($("<option>E</option>"));
+	$keyOption.append($("<option>F</option>"));
+	$keyOption.append($("<option>F&#9839;/G&#9837;</option>"));
+	$keyOption.append($("<option>G</option>"));
+	$keyOption.append($("<option>G&#9839;/A&#9837;</option>"));
+	$keyOption.append($("<option>A</option>"));
+	$keyOption.append($("<option>A&#9839;/B&#9837;</option>"));
+	$keyOption.append($("<option>B</option>"));
+}
+
+/*
     This adds the morph button.
 */
 function addMorphButton($elem) 
 {
 	// Add morph button
-    $elem.find("select").eq(1).css({  }).next().html("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
+    $elem.find("select").eq(1).next().replaceWith("<button type='button' class='btn btn-success btn-xs' onclick='openMorph("+$elem.attr("id")+")'>Open Morph</button>");
 }
 
 /*
@@ -82,9 +112,9 @@ function addMorphButton($elem)
 function removeMorphButton($elem)
 {
 	// Add button to reopen morph window
-    $elem.find("select").eq(1).css({  }).next().html("<label>Output:</label>");
+    $elem.find("select").eq(1).next().replaceWith("<label>Output:</label>");
 }
-	
+
 /*
     This is used to return the array that will be used to offset the keys per scale. Maintained from the previous version.
 */
@@ -159,36 +189,6 @@ function adjustForKey(array, voiceValue){
 	
 		return array;
 	}
-
-/*
-	This function changes the key selection to song selection for morph.
-*/
-function changeKeyToSong($KeyOption)
-{
-	$KeyOption.empty();
-    $KeyOption.append($("<option>Beethoven's 9th</option>"));
-    $KeyOption.append($("<option>Sibelius' Finlandia Theme</option>"));
-}
-
-/*
-	This function changes the song selection to key selection for normal scale adjustments.
-*/
-function changeSongToKey($KeyOption)
-{
-	$KeyOption.empty();		
-	$KeyOption.append($("<option>C</option>"));
-	$KeyOption.append($("<option>C&#9839;/D&#9837;</option>"));
-	$KeyOption.append($("<option>D</option>"));
-	$KeyOption.append($("<option>D&#9839;/E&#9837;</option>"));
-	$KeyOption.append($("<option>E</option>"));
-	$KeyOption.append($("<option>F</option>"));
-	$KeyOption.append($("<option>F&#9839;/G&#9837;</option>"));
-	$KeyOption.append($("<option>G</option>"));
-	$KeyOption.append($("<option>G&#9839;/A&#9837;</option>"));
-	$KeyOption.append($("<option>A</option>"));
-	$KeyOption.append($("<option>A&#9839;/B&#9837;</option>"));
-	$KeyOption.append($("<option>B</option>"));
-}
 
 /*
     This is used for the initialization.
@@ -295,7 +295,7 @@ function scaleOptions(numberOfVoice) {
 					<option>Whole Tone</option>\
 					<option>Morph</option>\
 				</select>\
-				<label>Key:</label>\
+				<label id='scaleKeyLabel'>Key:</label>\
 				<select id='so_key_options"+ voiceCount + "'>\
 					<option>C</option>\
 					<option>C&#9839;/D&#9837;</option>\
