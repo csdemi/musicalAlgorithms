@@ -6,12 +6,13 @@ function biologyLoader($panel)
      the user to customize the values to the letters and then convert all the letters in the input area to numerical data 
      that will be used to play music.
      */
+    
     var $TextBox = $panel.find('[id^=areaPitch]');// This gets the Text Box
     var $Algorithm = $panel.find('[id^=input_set]');// This locates the algorithm drop down menu.
     var $SelectedAlgorithm = $Algorithm.find("option:selected");// This gets the current algorithm
     var $NoteCount = $panel.find('[id^=note_count]');
     var voiceNumber = getVoiceNumber($panel);// This identifies the specific panel that is to be effected.
-
+    var $accordion=$panel.find('[id=accordion]');
     voiceArray[voiceNumber - 1].originalPitchArrayAlgorithm = $SelectedAlgorithm.text();// may not be needed.
 
     var $dnaLabel = $panel.find('[id^=dna]');//Finds the DNA label so we can display the Sequence label
@@ -37,7 +38,7 @@ function biologyLoader($panel)
     var $codonLabel=$panel.find('[id^=codonsRadio]');
     var $displayPanels=$panel.find('[id^=panels]');
 
-    if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA")
+    if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA"||$SelectedAlgorithm.text()=="Protein")
     { 
         $NoteCount.prop('readonly',true);
         $dnaLabel.show();
@@ -45,7 +46,7 @@ function biologyLoader($panel)
         $displayPanels.show();
         $textAreaInput.val("");
         $NoteCount.val("");
-
+        $accordion.show();
         $letterA.show();
         $letterC.show();
         $letterG.show();
@@ -67,11 +68,11 @@ function biologyLoader($panel)
             $letterTText.hide();
             $letterUText.show();
             $($panel).on('change', $sequenceInput, function(){  
-    voiceArray[voiceNumber - 1].biology.originalRNASequence=$sequenceInput.val().split(",");
-    $NoteCount.val(voiceArray[voiceNumber-1].biology.originalRNASequence.length);
-    $TextBox.val("");
-    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
-    voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            voiceArray[voiceNumber - 1].biology.originalRNASequence=$sequenceInput.val().split(",");
+            $NoteCount.val(voiceArray[voiceNumber-1].biology.originalRNASequence.length);
+            $TextBox.val("");
+            $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
+            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
             $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]=$letterAText.val());
             $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]=$letterUText.val());
             $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]=$letterCText.val());
@@ -131,12 +132,10 @@ function biologyLoader($panel)
             }  
             if($buttonConvert.click(rnaConversion));
         }
-//THIS AREA BELOW IS FOR DNA FUNCTIONALITY
-        else
+        else if($SelectedAlgorithm.text()=="DNA")//ATCG
         {
             $letterT.show();
             $letterU.hide();
-
             $letterTText.show();
             $letterUText.hide();
             
@@ -205,6 +204,212 @@ $($panel).on('change', $sequenceInput, function(){
             }  
             if($buttonConvert.click(conversion));
         } 
+        else if($SelectedAlgorithm.text()=="Protein")
+        {
+            $accordion.hide();
+$($panel).on('change',$sequenceInput,function(){
+    voiceArray[voiceNumber - 1].biology.originalProteinSequence=$sequenceInput.val().split(",");
+    $NoteCount.val(voiceArray[voiceNumber-1].biology.originalProteinSequence.length);
+    $TextBox.val("");
+    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalProteinSequence);
+    voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+    var i=0;
+    for (i; i < voiceArray[voiceNumber - 1].biology.originalProteinSequence.length; i++)
+    {
+                    if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="W")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[0]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="F")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[1]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="L")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[2]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="I")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[3]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="M")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[4]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="Y")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[5]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="V")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[6]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="C")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[7]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="P")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[8]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="T")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[9]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="A")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[10]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="S")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[11]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="Q")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[12]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="N")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[13]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="G")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[14]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="H")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[15]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="R")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[16]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="E")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[17]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="D")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[18]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="K")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[19]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                }
+    $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
+    voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
+    UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+    UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
+    UpdateDurationNoteCount(voiceArray[voiceNumber - 1],voiceNumber);
+    UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+    UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+
+    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+    LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
+    LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+});
+            $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalProteinSequence);
+            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
+            var i=0;
+            for (i; i < voiceArray[voiceNumber - 1].biology.originalProteinSequence.length; i++)
+            {
+                    if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="W")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[0]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="F")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[1]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="L")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[2]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="I")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[3]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="M")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[4]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="Y")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[5]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="V")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[6]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="C")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[7]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="P")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[8]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="T")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[9]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="A")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[10]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="S")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[11]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="Q")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[12]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="N")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[13]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="G")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[14]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="H")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[15]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="R")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[16]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="E")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[17]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="D")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[18]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="K")
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[19]*voiceArray[voiceNumber-1].biology.conversionValue;
+                    }
+                }
+            
+            $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
+            
+            voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
+            UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
+            UpdateDurationNoteCount(voiceArray[voiceNumber - 1],voiceNumber);
+            UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+            UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+
+            LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+            LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
+            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+        }
     }
     else
     {
@@ -223,7 +428,8 @@ $($panel).on('change', $sequenceInput, function(){
         $letterTText.hide();
         $letterCText.hide();
         $letterGText.hide();
-
+        
+        $accordion.hide();
         $buttonConvert.hide();
         $radioButtonCodons.hide();
         $radioButtonDuplicate.hide();
@@ -353,5 +559,5 @@ $($panel).on('change', $sequenceInput, function(){
             LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
             LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
             LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
-    }
+    }  
 }
