@@ -40,14 +40,14 @@ $(function () {
 	$(".player-stop").on("click",function(){stop();} );//end stop.click args
 	$(".player-pause").on("click",function(){pause();} );		
 	
-	disablePlay(true);
+	//disablePlay(true);
 
-	MIDI.loader = new widgets.Loader("Music Algorithms");
+	MIDI.loader = new widgets.Loader("Loading Instrument...");
 
 	MIDI.loadPlugin({
 	soundfontUrl: "/js/midiJs/soundfont/",
-	instrument: [ "acoustic_grand_piano", "synth_drum", "violin", "alto_sax", "electric_bass_finger", "electric_guitar_clean", "trumpet" ],
-	callback: function() {
+	instrument: [ "acoustic_grand_piano" ],
+	onsuccess: function() {
 		MIDI.loader.stop();
 		disablePlay(false);
 		}
@@ -528,46 +528,78 @@ function muteTrack(elem) {
 }
 
 
-function selectInstrument(voiceNum) {
-			var selected = $(".instrument"+voiceNum+"").prop("selectedIndex");
-			var voice = voiceNum;
-			var instrument = 0;
-			var selectedString=$(".instrument"+voiceNum);
-			
-			switch(selected)
-			{
-				case 0:
-					instrument = 0;
-					break;
-				case 1:
-					instrument = 27;
-					break;
-				case 2:
-					instrument = 33;
-					break;
-				case 3:
-					instrument = 65;
-					break;
-				case 4: 
-					instrument = 40;
-					break;
-				case 5:
-					instrument = 56;
-					break;
-				case 6:
-					instrument = 118;
-					break;
-				default:
-					instrument = 0;
-					break;
-		}
-		
-		MIDI.programChange( (voice - 1), instrument);
-		voiceArray[voice - 1].instrument=instrument;// this is the midi number assocaited with the instrument.
-		voiceArray[voice - 1].instrumentString = selectedString;// I am assuming this is the sttring representation of the instrument.
+function selectInstrument(voiceNum) 
+{
+	var selected = $(".instrument"+voiceNum+"").prop("selectedIndex");
+	var voice = voiceNum;
+	var instrument = 0;
+	var instrumentName;
+	var selectedString=$(".instrument"+voiceNum);
+
+	switch(selected)
+	{			
+		case 0:
+			instrument = 0;
+			instrumentName = "acoustic_grand_piano";
+			break;
+		case 1:
+			instrument = 27;
+			instrumentName = "electric_guitar_clean";
+			break;
+		case 2:
+			instrument = 33;
+			instrumentName = "electric_bass_finger";
+			break;
+		case 3:
+			instrument = 65;
+			instrumentName = "alto_sax";
+			break;
+		case 4:
+			instrument = 40;
+			instrumentName = "violin";
+			break;
+		case 5:
+			instrument = 56;
+			instrumentName = "trumpet";
+			break;
+		case 6:
+			instrument = 118;
+			instrumentName = "synth_drum";
+			break;
+		case 7:
+			instrument = 42;
+			instrumentName = "cello";
+			break;
+		default:
+			instrument = 0;
+			instrumentName = "acoustic_grand_piano";
+			break;
+	}
+	
+	loadInstrument( (voice - 1), instrumentName, instrument);
+	voiceArray[voice - 1].instrument = instrument;             // this is the (general midi number - 1) assocaited with the instrument.
+	voiceArray[voice - 1].instrumentString = selectedString;   // I am assuming this is the string representation of the instrument.
 }
 
-
+function loadInstrument(voiceID, instrumentName, instrumentNum) 
+{
+	MIDI.loader.start();
+	MIDI.loadResource(
+	{
+		instrument: instrumentName,
+		onprogress: function(state, percent)
+					{
+						console.log(state, percent);
+						disablePlay(true);
+					},
+		onsuccess: function()
+		{
+		 	MIDI.programChange(voiceID, instrumentNum);
+		 	MIDI.loader.stop();
+			disablePlay(false);
+		}
+	})
+}	
 
 function longestNoteCount(voiceArray){
 	var maxLength = 1;
@@ -651,6 +683,7 @@ function playPanel(numberOfVoice) {
 					<option>Violin</option>\
 					<option>Trumpet</option>\
 					<option>Synth Drum</option>\
+					<option>Cello</option>\
 				</select></div>\
 			</div>\
 			";
