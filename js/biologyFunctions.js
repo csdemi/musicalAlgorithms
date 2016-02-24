@@ -5,6 +5,9 @@ function biologyLoader($panel)
      If the option is DNA then it will toggle on the areas and display the current values of the items. This area will allow 
      the user to customize the values to the letters and then convert all the letters in the input area to numerical data 
      that will be used to play music.
+     
+     WEBSITE FOR RANDOM PROTEIN STRING: http://web.expasy.org/randseq/
+     WEBSITE FOR AMINO ACIDS: http://www.cbs.dtu.dk/courses/27619/codon.html
      */
         var $TextBox = $panel.find('[id^=areaPitch]');// This gets the Text Box
         var $Algorithm = $panel.find('[id^=input_set]');// This locates the algorithm drop down menu.
@@ -35,6 +38,8 @@ function biologyLoader($panel)
         var $duplicateLabel=$panel.find('[id^=countDuplicateRadio]');
         var $radioButtonCodons=$panel.find('[id^=codons]');
         var $codonLabel=$panel.find('[id^=codonsRadio]');
+        var $defaultRadio=$panel.find('[id^=default]');
+        var $defaultRadioLabel=$panel.find('[id^=defaultRadio]');
         var $displayPanels=$panel.find('[id^=panels]');
 
     if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA"||$SelectedAlgorithm.text()=="Protein"){ 
@@ -42,6 +47,8 @@ function biologyLoader($panel)
         $dnaLabel.show();
         $sequenceInput.show();
         $displayPanels.show();
+        $defaultRadio.show();
+        $defaultRadioLabel.show();
         $textAreaInput.val("");
         $NoteCount.val("");
         $accordion.show();
@@ -58,13 +65,22 @@ function biologyLoader($panel)
         $duplicateLabel.show();
         $radioButtonCodons.show();
         $codonLabel.show();
-
         if ($SelectedAlgorithm.text() == "RNA")//AUCG
         {
+            voiceArray[voiceNumber-1].biology.userSequenceArray=new Array();
             $letterT.hide();
             $letterU.show();
             $letterTText.hide();
             $letterUText.show();
+            $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
+            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
+            $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]);
+            $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]);
+            $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]);
+            $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]);
+            rnaSequenceConversion();
+            update();
             $($panel).on('change', $sequenceInput, function(){  
                 voiceArray[voiceNumber - 1].biology.originalRNASequence=$sequenceInput.val().split(",");
                 $NoteCount.val(voiceArray[voiceNumber-1].biology.originalRNASequence.length);
@@ -76,16 +92,8 @@ function biologyLoader($panel)
                 $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]=$letterCText.val());
                 $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]=$letterGText.val());
                 rnaSequenceConversion();
+                update();
             });
-
-            $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
-            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
-            $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
-            $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]);
-            $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]);
-            $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]);
-            $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]);
-            rnaSequenceConversion();
             if($buttonConvert.click(rnaConversion));
         }
         else if($SelectedAlgorithm.text()=="DNA")//ATCG
@@ -106,6 +114,7 @@ $($panel).on('change', $sequenceInput, function(){
     $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]=$letterCText.val());
     $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]=$letterGText.val());
     dnaSequenceConversion();
+    update();
 });
 
             $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalDNASequence);
@@ -116,6 +125,7 @@ $($panel).on('change', $sequenceInput, function(){
             $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]);
             $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]);
             dnaSequenceConversion();
+            update();
             if($buttonConvert.click(conversion));
         } 
         else if($SelectedAlgorithm.text()=="Protein")
@@ -145,7 +155,7 @@ $($panel).on('change',$sequenceInput,function(){
         }
     }
     else{
-        //$NoteCount.prop('readonly',false);        
+        $NoteCount.prop('readonly',false);        
         $dnaLabel.hide();
         $sequenceInput.hide();
         $displayPanels.hide();
@@ -154,19 +164,20 @@ $($panel).on('change',$sequenceInput,function(){
         $letterU.hide();
         $letterC.hide();
         $letterG.hide();
-
         $letterAText.hide();
         $letterUText.hide();
         $letterTText.hide();
         $letterCText.hide();
         $letterGText.hide();
-        
+        $defaultRadio.hide();
+        $defaultRadioLabel.hide();
         $accordion.hide();
         $buttonConvert.hide();
         $radioButtonCodons.hide();
         $radioButtonDuplicate.hide();
         $codonLabel.hide();
         $duplicateLabel.hide();
+        update();
     }
     function rnaConversion(){
         if($extra[1].checked==true)
@@ -404,7 +415,7 @@ $($panel).on('change',$sequenceInput,function(){
                 }
     }
     function update(){
-                    voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
+            voiceArray[voiceNumber-1].originalPitchArray=voiceArray[voiceNumber-1].biology.userSequenceArray;
             UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
             UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound); 
             UpdateDurationNoteCount(voiceArray[voiceNumber - 1],voiceNumber);

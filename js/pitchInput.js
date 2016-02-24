@@ -26,7 +26,7 @@ $(document).ready(function()
         }
         else if ($SelectedAlgorithm.text() != "Custom")
         {// Still need to implement the ability to edit the DNA array.
-            if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA")
+            if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA"|| $SelectedAlgorithm.text()=="Protein")
             {
                 biologyLoader($panel);
             }
@@ -505,10 +505,12 @@ function pitchInput(numberOfVoice) {
                                     <label id='G"+voiceCount+"'style='display:none'>G=</label>\
                                     <input type='text' id='letterGText"+voiceCount+"'style='display:none'></input>\
                                     <ul id='panels"+voiceCount+"'style='display:none'list-style-type: 'none'>\
-                                        <li><input type='checkbox' name='extra' id='duplicates"+voiceCount+"'style='display:none''></input>\
-                                        <label id='countDuplicateRadio"+voiceCount+"'style='display:none'>Count Duplicates</label></li>\
-                                        <li><input type='checkbox' name='extra"+voiceCount+"' id='codons"+voiceCount+"'style='display:none' value='2'></input>\
-                                        <label id='codonsRadio"+voiceCount+"'style='display:none'>Codons</label></li>\
+                                        <li><input type='radio' name='extra"+voiceCount+"'id='duplicates"+voiceCount+"'style='display:none''></input>\
+                                           <label id='countDuplicateRadio"+voiceCount+"'style='display:none'>Count Duplicates</label></li>\
+                                        <li><input type='radio' name='extra"+voiceCount+"' id='codons"+voiceCount+"'style='display:none'></input>\
+                                           <label id='codonsRadio"+voiceCount+"'style='display:none'>Codons</label></li>\
+                                        <li><input type='radio' name='extra"+voiceCount+"' id='default"+voiceCount+"'style='display:none' checked='checked'></input>\
+                                           <label id='defaultRadio"+voiceCount+"'style='display:none'>Standard Convert</label></li>\
                                         <li><button id='convert"+voiceCount+"'style='display:none'>Convert</button></li>\
                                     </ul>\
                                     <\span>\
