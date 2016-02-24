@@ -49,6 +49,7 @@ $(document).ready(function()
             }
         }
         tooltip($panel);
+        updatePitchMapTooltip($panel);
     });
     
     /*
@@ -116,9 +117,9 @@ $(document).ready(function()
             LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
             LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
 
-            updatePitchMapData($panel, voiceNumber);
             updateTooltipVals($panel);
             updateDurationMapTooltip($panel);
+            updatePitchMapTooltip($panel);
         }
     });
 
@@ -187,6 +188,9 @@ $(document).ready(function()
 	            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
 	        }
 	    }
+	    updateTooltipVals($panel);
+	    updateDurationMapTooltip($panel);
+	    updatePitchMapTooltip($panel);
 	})
 	
 	/*

@@ -1,130 +1,146 @@
 /*
-
-	DOMLoader.XMLHttp
-	--------------------------
-	DOMLoader.sendRequest({
-		url: "./dir/something.extension",
-		data: "test!",
-		onerror: function(event) {
-			console.log(event);
+	----------------------------------------------------------
+	util/Request : 0.1.1 : 2015-03-26
+	----------------------------------------------------------
+	util.request({
+		url: './dir/something.extension',
+		data: 'test!',
+		format: 'text', // text | xml | json | binary
+		responseType: 'text', // arraybuffer | blob | document | json | text
+		headers: {},
+		withCredentials: true, // true | false
+		///
+		onerror: function(evt, percent) {
+			console.log(evt);
 		},
-		onload: function(response) {
-			console.log(response.responseText);
-		}, 
-		onprogress: function (event) {
-			var percent = event.loaded / event.total * 100 >> 0;
-			loader.message("loading: " + percent + "%");
+		onsuccess: function(evt, responseText) {
+			console.log(responseText);
+		},
+		onprogress: function(evt, percent) {
+			percent = Math.round(percent * 100);
+			loader.create('thread', 'loading... ', percent);
 		}
 	});
-	
 */
 
-if (typeof(DOMLoader) === "undefined") var DOMLoader = {};
+if (typeof MIDI === 'undefined') MIDI = {};
 
-// Add XMLHttpRequest when not available
+(function(root) {
 
-if (typeof (XMLHttpRequest) === "undefined") {
-	var XMLHttpRequest;
-	(function () { // find equivalent for IE
-		var factories = [
-		function () {
-			return new ActiveXObject("Msxml2.XMLHTTP")
-		}, function () {
-			return new ActiveXObject("Msxml3.XMLHTTP")
-		}, function () {
-			return new ActiveXObject("Microsoft.XMLHTTP")
-		}];
-		for (var i = 0; i < factories.length; i++) {
-			try {
-				factories[i]();
-			} catch (e) {
-				continue;
-			}
-			break;
-		}
-		XMLHttpRequest = factories[i];
-	})();
-}
+	var util = root.util || (root.util = {});
 
-if (typeof ((new XMLHttpRequest()).responseText) === "undefined") {
-	// http://stackoverflow.com/questions/1919972/how-do-i-access-xhr-responsebody-for-binary-data-from-javascript-in-ie
-    var IEBinaryToArray_ByteStr_Script =
-    "<!-- IEBinaryToArray_ByteStr -->\r\n"+
-    "<script type='text/vbscript'>\r\n"+
-    "Function IEBinaryToArray_ByteStr(Binary)\r\n"+
-    "   IEBinaryToArray_ByteStr = CStr(Binary)\r\n"+
-    "End Function\r\n"+
-    "Function IEBinaryToArray_ByteStr_Last(Binary)\r\n"+
-    "   Dim lastIndex\r\n"+
-    "   lastIndex = LenB(Binary)\r\n"+
-    "   if lastIndex mod 2 Then\r\n"+
-    "       IEBinaryToArray_ByteStr_Last = Chr( AscB( MidB( Binary, lastIndex, 1 ) ) )\r\n"+
-    "   Else\r\n"+
-    "       IEBinaryToArray_ByteStr_Last = "+'""'+"\r\n"+
-    "   End If\r\n"+
-    "End Function\r\n"+
-    "</script>\r\n";
-
-	// inject VBScript
-	document.write(IEBinaryToArray_ByteStr_Script);
-
-	DOMLoader.sendRequest = function(conf) {
-		// helper to convert from responseBody to a "responseText" like thing
-		function getResponseText(binary) {
-			var byteMapping = {};
-			for (var i = 0; i < 256; i++) {
-				for (var j = 0; j < 256; j++) {
-					byteMapping[String.fromCharCode(i + j * 256)] = String.fromCharCode(i) + String.fromCharCode(j);
-				}
-			}
-			// call into VBScript utility fns
-			var rawBytes = IEBinaryToArray_ByteStr(binary);
-			var lastChr = IEBinaryToArray_ByteStr_Last(binary);
-			return rawBytes.replace(/[\s\S]/g, function (match) {
-				return byteMapping[match];
-			}) + lastChr;
-		};
-		//
-		var req = XMLHttpRequest();
-		req.open("GET", conf.url, true);
-		if (conf.responseType) req.responseType = conf.responseType;
-		if (conf.onerror) req.onerror = conf.onerror;
-		if (conf.onprogress) req.onprogress = conf.onprogress;
-		req.onreadystatechange = function (event) {
-			if (req.readyState === 4) {
-				if (req.status === 200) {
-					req.responseText = getResponseText(req.responseBody);
+	util.request = function(opts, onsuccess, onerror, onprogress) { 'use strict';
+		if (typeof opts === 'string') opts = {url: opts};
+		///
+		var data = opts.data;
+		var url = opts.url;
+		var method = opts.method || (opts.data ? 'POST' : 'GET');
+		var format = opts.format;
+		var headers = opts.headers;
+		var responseType = opts.responseType;
+		var withCredentials = opts.withCredentials || false;
+		///
+		var onsuccess = onsuccess || opts.onsuccess;
+		var onerror = onerror || opts.onerror;
+		var onprogress = onprogress || opts.onprogress;
+		///
+		if (typeof NodeFS !== 'undefined' && root.loc.isLocalUrl(url)) {
+			NodeFS.readFile(url, 'utf8', function(err, res) {
+				if (err) {
+					onerror && onerror(err);
 				} else {
-					req = false;
+					onsuccess && onsuccess({responseText: res});
 				}
-				if (conf.onload) conf.onload(req);
+			});
+			return;
+		}
+		///
+		var xhr = new XMLHttpRequest();
+		xhr.open(method, url, true);
+		///
+		if (headers) {
+			for (var type in headers) {
+				xhr.setRequestHeader(type, headers[type]);
+			}
+		} else if (data) { // set the default headers for POST
+			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		}
+		if (format === 'binary') { //- default to responseType="blob" when supported
+			if (xhr.overrideMimeType) {
+				xhr.overrideMimeType('text/plain; charset=x-user-defined');
+			}
+		}
+		if (responseType) {
+			xhr.responseType = responseType;
+		}
+		if (withCredentials) {
+			xhr.withCredentials = 'true';
+		}
+		if (onerror && 'onerror' in xhr) {
+			xhr.onerror = onerror;
+		}
+		if (onprogress && xhr.upload && 'onprogress' in xhr.upload) {
+			if (data) {
+				xhr.upload.onprogress = function(evt) {
+					onprogress.call(xhr, evt, event.loaded / event.total);
+				};
+			} else {
+				xhr.addEventListener('progress', function(evt) {
+					var totalBytes = 0;
+					if (evt.lengthComputable) {
+						totalBytes = evt.total;
+					} else if (xhr.totalBytes) {
+						totalBytes = xhr.totalBytes;
+					} else {
+						var rawBytes = parseInt(xhr.getResponseHeader('Content-Length-Raw'));
+						if (isFinite(rawBytes)) {
+							xhr.totalBytes = totalBytes = rawBytes;
+						} else {
+							return;
+						}
+					}
+					onprogress.call(xhr, evt, evt.loaded / totalBytes);
+				});
+			}
+		}
+		///
+		xhr.onreadystatechange = function(evt) {
+			if (xhr.readyState === 4) { // The request is complete
+				if (xhr.status === 200 || // Response OK
+					xhr.status === 304 || // Not Modified
+					xhr.status === 308 || // Permanent Redirect
+					xhr.status === 0 && root.client.cordova // Cordova quirk
+				) {
+					if (onsuccess) {
+						var res;
+						if (format === 'xml') {
+							res = evt.target.responseXML;
+						} else if (format === 'text') {
+							res = evt.target.responseText;
+						} else if (format === 'json') {
+							try {
+								res = JSON.parse(evt.target.response);
+							} catch(err) {
+								onerror && onerror.call(xhr, evt);
+							}
+						}
+						///
+						onsuccess.call(xhr, evt, res);
+					}
+				} else {
+					onerror && onerror.call(xhr, evt);
+				}
 			}
 		};
-		req.setRequestHeader("Accept-Charset", "x-user-defined");
-		req.send(null);
-		return req;
-	}
-} else {
-	DOMLoader.sendRequest = function(conf) {
-		var req = new XMLHttpRequest();
-		req.open(conf.data ? "POST" : "GET", conf.url, true);
-		if (req.overrideMimeType) req.overrideMimeType("text/plain; charset=x-user-defined");
-		if (conf.data) req.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-		if (conf.responseType) req.responseType = conf.responseType;
-		if (conf.onerror) req.onerror = conf.onerror;
-		if (conf.onprogress) req.onprogress = conf.onprogress;
-		req.onreadystatechange = function (event) {
-			if (req.readyState === 4) {
-				if (req.status !== 200 && req.status != 304) {
-					if (conf.onerror) conf.onerror(event, false);
-					return;
-				}
-				if (conf.onload) {
-					conf.onload(req);
-				}
-			}
-		};
-		req.send(conf.data);
-		return req;
+		xhr.send(data);
+		return xhr;
 	};
-}
+
+	/// NodeJS
+	if (typeof module !== 'undefined' && module.exports) {
+		var NodeFS = require('fs');
+		XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+		module.exports = root.util.request;
+	}
+
+})(MIDI);

@@ -49,7 +49,7 @@ function LoadOriginalDurationArray(voices)
 function LoadPitchMappingArray(voices)
 {
     var DefaultPitchMappingAlgorithm = "Division";
-    var lowerKeyboardBound = 0;
+    var lowerKeyboardBound = 1;
     var upperKeyboardBound = 88;
 
     musicNormalize.setAlgorithm(normalizeFactory.createNormalizer(DefaultPitchMappingAlgorithm));
@@ -64,7 +64,7 @@ function LoadDurationMappingArray(voices)
 {
     var DefaultDurationMappingAlgorithm = "Division";
     var lowerNoteBound = 0;
-    var upperNoteBound = 9;
+    var upperNoteBound = 6;
 
     musicNormalize.setAlgorithm(normalizeFactory.createNormalizer(DefaultDurationMappingAlgorithm));
 
@@ -77,7 +77,7 @@ function LoadDurationMappingArray(voices)
 function LoadScaleOption(voices)
 {
     var DefaultScale = "Chromatic";
-    var lowerKeyboardRange = 0;
+    var lowerKeyboardRange = 1;
     var upperKeyboardRange = 88;
     var selectedScaleArray = adjustForKey(getScaleArray(DefaultScale));
 

@@ -10,7 +10,7 @@ function VoiceObject(id)
 
     this.pitchMappingArray = new Array(); // Integer
     this.pitchMappingArrayAlgorithm = "Division";// May be deleted, Used as default value.
-    this.pitchMappingArrayLowerBound = 0;// Used for ease of access these values instead of pulling from website.
+    this.pitchMappingArrayLowerBound = 1;// Used for ease of access these values instead of pulling from website.
     this.pitchMappingArrayUpperBound = 88;// Used as default values.
 
     this.durationMappingArray = new Array(); // Integer. This is the data that is sent into play.js for the final output.

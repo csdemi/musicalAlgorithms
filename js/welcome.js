@@ -11,6 +11,8 @@ $(document).ready(function () {
     LoadDefaultPanels(voiceArray, voiceTotal);	// This loads the default values into the panels
     displayImage();								// This does something.
     
+    updateDefaultPitchMapTooltip(1);
+    updateDefaultDurationMapTooltip(1);
 	/*
 		This is called whenever the voice count is changed by the the user.
 	*/
@@ -33,6 +35,23 @@ $(document).ready(function () {
 	
 });
 
+/*
+	This sets the values for the pop up windows initially when user goes to pitch mapping and duration mapping.
+    They can see the original data set.
+*/
+function updateDefaultPitchMapTooltip(voiceNum) {
+    var targetArea = $("#mapArea" + voiceNum);
+
+    targetArea.popover("hide");
+    targetArea.attr("data-content", "<textarea readonly>" + voiceArray[voiceNum - 1].originalPitchArray + "</textarea>");
+}
+
+function updateDefaultDurationMapTooltip(voiceNum) {
+    var targetArea = $("#dMapArea" + voiceNum);
+
+    targetArea.popover("hide");
+    targetArea.attr("data-content", "<textarea readonly>" + voiceArray[voiceNum - 1].originalDurationArray + "</textarea>");
+}
 /*
 	This is used to change the voices via CreatePanels and LoadPanels.
 */
