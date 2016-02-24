@@ -180,6 +180,7 @@ $($panel).on('change',$sequenceInput,function(){
         update();
     }
     function rnaConversion(){
+//THIS CONVERTS TO CODONS
         if($extra[1].checked==true)
             {
                 var value=[];
@@ -208,7 +209,8 @@ $($panel).on('change',$sequenceInput,function(){
                     alert("Please add more letters to the sequence.");
                 }  
             }
-        else if($extra[0].checked==true)
+//THIS COUNTS THE DUPLICATE VALUES
+        else if($extra[2].checked==true)
             {
                 voiceArray[voiceNumber-1].biology.userSequenceArray=[];
                 for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.originalRNASequence.length;i++,j++)
@@ -224,6 +226,7 @@ $($panel).on('change',$sequenceInput,function(){
                     }
                 $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);                
             }
+//THIS CONVERTS TO SINGLE BASE VALUES
         else
         {
             $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
@@ -231,6 +234,7 @@ $($panel).on('change',$sequenceInput,function(){
         update();
     }
     function conversion(){        
+//THIS IS MAKING CODONS
         if($extra[1].checked==true)
             {
                 var value=[];
@@ -259,7 +263,8 @@ $($panel).on('change',$sequenceInput,function(){
                     alert("Please add more letters to the sequence.");
                 }
             }
-        else if($extra[0].checked==true)
+//THIS IS COUNTING DUPLICATES
+        else if($extra[2].checked==true)
             {
                 voiceArray[voiceNumber-1].biology.userSequenceArray=[];
                 for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.originalDNASequence.length;i++,j++)
@@ -275,6 +280,7 @@ $($panel).on('change',$sequenceInput,function(){
                     }
                 $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
             }
+//THIS IS SINGLE BASE CONVERSIONS
         else
             {
                 $TextBox.val(voiceArray[voiceNumber-1].biology.userSequenceArray);
