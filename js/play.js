@@ -538,42 +538,93 @@ function selectInstrument(voiceNum)
 
 	switch(selected)
 	{			
-		case 0:
+		case 0: // Piano
 			instrument = 0;
 			instrumentName = "acoustic_grand_piano";
 			break;
 		case 1:
-			instrument = 27;
-			instrumentName = "electric_guitar_clean";
+			instrument = 11;
+			instrumentName = "vibraphone";
 			break;
 		case 2:
+			instrument = 12;
+			instrumentName = "marimba";
+			break;
+		case 3: // Classical Guitar
+			instrument = 24;
+			instrumentName = "acoustic_guitar_nylon";
+			break;
+		case 4:
+			instrument = 118;
+			instrumentName = "synth_drum";
+			break;
+		case 5:
 			instrument = 33;
 			instrumentName = "electric_bass_finger";
 			break;
-		case 3:
-			instrument = 65;
-			instrumentName = "alto_sax";
-			break;
-		case 4:
-			instrument = 40;
-			instrumentName = "violin";
-			break;
-		case 5:
-			instrument = 56;
-			instrumentName = "trumpet";
-			break;
 		case 6:
-			instrument = 118;
-			instrumentName = "synth_drum";
+			instrument = 73;
+			instrumentName = "flute";
 			break;
 		case 7:
 			instrument = 42;
 			instrumentName = "cello";
 			break;
+		case 8:
+			instrument = 66;
+			instrumentName = "tenor_sax";
+			break;
+		case 9:
+			instrument = 115;
+			instrumentName = "woodblock";
+			break;
+		case 10:
+			instrument = 57;
+			instrumentName = "trombone";
+			break;
+		case 11:
+			instrument = 46;
+			instrumentName = "orchestral_harp";
+			break;
+		case 12:
+			instrument = 47;
+			instrumentName = "timpani";
+			break;
+		case 13:
+			instrument = 53;
+			instrumentName = "voice_oohs";
+			break;
+		case 14:
+			instrument = 75;
+			instrumentName = "pan_flute";
+			break;
+		case 15:
+			instrument = 45;
+			instrumentName = "pizzicato_strings";
+			break;
+		case 16:
+			instrument = 50;
+			instrumentName = "synth_strings_1";
+			break;
+		case 17:
+			instrument = 113;
+			instrumentName = "agogo";
+			break;
 		default:
 			instrument = 0;
 			instrumentName = "acoustic_grand_piano";
 			break;
+/* 
+	No longer used.
+		case 1:
+			instrument = 27;
+			instrumentName = "electric_guitar_clean";
+			break;
+		case 3:
+			instrument = 65;
+			instrumentName = "alto_sax";
+			break;
+*/
 	}
 	
 	loadInstrument( (voice - 1), instrumentName, instrument);
@@ -677,13 +728,23 @@ function playPanel(numberOfVoice) {
 			<div class='choose-mute'>Mute Track: <input type='checkbox' name='mute' id='mute"+numberOfVoice+"' onclick='muteTrack($(this))'></div>\
 				<div class='choose-instrument'>Instrument: <select class='instrument"+numberOfVoice+"' onchange='selectInstrument("+numberOfVoice+")'>\
 					<option>Piano</option>\
-					<option>Guitar</option>\
-					<option>Bass</option>\
-					<option>Alto Sax</option>\
-					<option>Violin</option>\
-					<option>Trumpet</option>\
+					<option>Vibraphone</option>\
+					<option>Marimba</option>\
+					<option>Classical Guitar</option>\
 					<option>Synth Drum</option>\
+					<option>Bass</option>\
+					<option>Flute</option>\
 					<option>Cello</option>\
+					<option>Tenor Sax</option>\
+					<option>Woodblock</option>\
+					<option>Trombone</option>\
+					<option>Orchestral Harp</option>\
+					<option>Timpani</option>\
+					<option>Voice (Ooohs)</option>\
+					<option>Pan Flute</option>\
+					<option>Pizzicato Strings</option>\
+					<option>Synth Strings</option>\
+					<option>Agogo</option>\
 				</select></div>\
 			</div>\
 			";
