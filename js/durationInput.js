@@ -403,7 +403,8 @@ function durationInput(numberOfVoice) {
 					<option>Custom</option>\
 				</select>\
 				<img id='durPitchInfo"+ voiceCount + "'> \
-				<label>Input:</label><br>\
+				<label>  Utilities:</label>\
+				<button type='button' class='btn btn-default btn-sm' data-toggle='modal' onclick='openUtilities(\"durationInputUtilityModal\",\"dAreaMap\","+voiceCount+",\"durationInputUtilityBox\")'><span class='glyphicon glyphicon-wrench'></span></button><br>\
 				<textarea readonly id='dAreaMap"+ voiceCount + "'></textarea>\
 			</fieldset>\
 		</div>\

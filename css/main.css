@@ -554,6 +554,15 @@ div.graph-tooltip-label td {
    max-width:1200px;
   }
   
+
+.horizontalAlignCenter * {
+    vertical-align: middle;
+}
+  
+.horizontalAlignBottom * {
+	vertical-align: bottom;
+}
+
  .pitchInputUtility-modal {
 	width: 100%; }
 
