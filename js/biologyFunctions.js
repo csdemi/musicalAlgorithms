@@ -143,7 +143,7 @@ $($panel).on('change', $sequenceInput, function(){
 });
             $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalDNASequence);
             voiceArray[voiceNumber-1].biology.GenericDataArray=$sequenceInput.val().split(",");
-            //voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
             $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
             $letterAText.val(voiceArray[voiceNumber - 1].biology.dnaValues[0]);
             $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]);
