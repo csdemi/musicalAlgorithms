@@ -7,6 +7,7 @@ function biologyObject()
     this.originalDNASequence=["A","C","A","T","G","A","G","A","C","A","G","A","C","A","G","A","C","C","C","C","C","A","G","A","G","A","C","A","G","A","C","C","C","C","T","A","G","A","C","A","C","A","G","A","G","A","G","A","G","T","A","T","G","C","A","G","G","A","C","A","G","G","G"];
     this.originalRNASequence=["A","U","G","G","A","A","U","U","C","U","C","G","C","U","C","A","U","G","G","A","A","U","C","U","C","G","C","U","C","A","A","U","A","U","G"];
     this.originalProteinSequence=["E","G","L","R","I","W","V","F","C","I","R","Y","K","K","G","N","S","G","A","L","Q","N","P","E","L","D","V","G","L","V","T","A","I","A","R","F","S","T","L","T","K","M","S","D","Q","D","E","A","P","H"];
+    this.GenericDataArray=new Array();//This holds all letter values needed for conversion
     this.conversionValue = 10;
     this.userSequenceArray=new Array();
 }

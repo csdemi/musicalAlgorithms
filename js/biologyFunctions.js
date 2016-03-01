@@ -67,13 +67,13 @@ function biologyLoader($panel)
         $codonLabel.show();
         if ($SelectedAlgorithm.text() == "RNA")//AUCG
         {
-            voiceArray[voiceNumber-1].biology.userSequenceArray=new Array();
             $letterT.hide();
             $letterU.show();
             $letterTText.hide();
             $letterUText.show();
             $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
             voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            voiceArray[voiceNumber-1].biology.GenericDataArray=$sequenceInput.val().split(",");
             $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
             $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]);
             $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]);
@@ -81,18 +81,30 @@ function biologyLoader($panel)
             $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]);
             rnaSequenceConversion();
             update();
-            $($panel).on('change', $sequenceInput, function(){  
-                voiceArray[voiceNumber - 1].biology.originalRNASequence=$sequenceInput.val().split(",");
-                $NoteCount.val(voiceArray[voiceNumber-1].biology.originalRNASequence.length);
-                $TextBox.val("");
-                $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalRNASequence);
-                voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
-                $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]=$letterAText.val());
-                $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]=$letterUText.val());
-                $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]=$letterCText.val());
-                $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]=$letterGText.val());
-                rnaSequenceConversion();
-                update();
+            $($panel).on('change', $sequenceInput, function(){
+                CanidateArray =$sequenceInput.val().split(",");
+                if(ValidateBiologyData("RNA",CanidateArray)==false)
+                    {
+                        alert("Make Sure All Data Entered is A,U,C,G");
+                        $sequenceInput.val(voiceArray[voiceNumber-1].biology.GenericDataArray);
+                    }
+                else
+                {
+                    voiceArray[voiceNumber - 1].biology.GenericDataArray=CanidateArray;
+                    $NoteCount.val(voiceArray[voiceNumber-1].biology.GenericDataArray.length);
+                    $TextBox.val("");
+                    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.GenericDataArray);
+                    for(var i = 0;i<voiceArray[voiceNumber-1].biology.GenericDataArray.length;i++)
+                    {
+                        voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.GenericDataArray[i];
+                    }
+                    $letterAText.val(voiceArray[voiceNumber - 1].biology.rnaValues[0]=$letterAText.val());
+                    $letterUText.val(voiceArray[voiceNumber-1].biology.rnaValues[1]=$letterUText.val());
+                    $letterCText.val(voiceArray[voiceNumber-1].biology.rnaValues[2]=$letterCText.val());
+                    $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]=$letterGText.val());
+                    rnaSequenceConversion();
+                    update();
+                }
             });
             if($buttonConvert.click(rnaConversion));
         }
@@ -103,22 +115,35 @@ function biologyLoader($panel)
             $letterTText.show();
             $letterUText.hide();
             
-$($panel).on('change', $sequenceInput, function(){  
-    voiceArray[voiceNumber - 1].biology.originalDNASequence=$sequenceInput.val().split(",");
-    $NoteCount.val(voiceArray[voiceNumber-1].biology.originalDNASequence.length);
-    $TextBox.val("");
-    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalDNASequence);
-    voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
-    $letterAText.val(voiceArray[voiceNumber - 1].biology.dnaValues[0]=$letterAText.val());
-    $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]=$letterTText.val());
-    $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]=$letterCText.val());
-    $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]=$letterGText.val());
-    dnaSequenceConversion();
-    update();
+$($panel).on('change', $sequenceInput, function(){
+            CanidateArray = $sequenceInput.val().split(",");
+            if (ValidateBiologyData("DNA",CanidateArray) == false)
+	        {
+	            alert("Make Sure All Data Entered Is A,T,C,G");
+                $sequenceInput.val(voiceArray[voiceNumber - 1].biology.GenericDataArray);
+	        }
+	        else
+	        {
+                voiceArray[voiceNumber - 1].biology.GenericDataArray=CanidateArray;
+                $NoteCount.val(voiceArray[voiceNumber-1].biology.GenericDataArray.length);
+                $TextBox.val("");
+                $sequenceInput.val(voiceArray[voiceNumber - 1].biology.GenericDataArray);
+                voiceArray[voiceNumber-1].biology.userSequenceArray=new Array();
+                for(var i = 0;i<voiceArray[voiceNumber-1].biology.GenericDataArray.length;i++)
+                {
+                    voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.GenericDataArray[i];
+                }
+                $letterAText.val(voiceArray[voiceNumber - 1].biology.dnaValues[0]=$letterAText.val());
+                $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]=$letterTText.val());
+                $letterCText.val(voiceArray[voiceNumber-1].biology.dnaValues[2]=$letterCText.val());
+                $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]=$letterGText.val());
+                dnaSequenceConversion();
+                update();
+            }
 });
-
             $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalDNASequence);
-            voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+            voiceArray[voiceNumber-1].biology.GenericDataArray=$sequenceInput.val().split(",");
+            //voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
             $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
             $letterAText.val(voiceArray[voiceNumber - 1].biology.dnaValues[0]);
             $letterTText.val(voiceArray[voiceNumber-1].biology.dnaValues[1]);
@@ -132,11 +157,11 @@ $($panel).on('change', $sequenceInput, function(){
         {
             $accordion.hide();
 $($panel).on('change',$sequenceInput,function(){
-    voiceArray[voiceNumber - 1].biology.originalProteinSequence=$sequenceInput.val().split(",");
-    $NoteCount.val(voiceArray[voiceNumber-1].biology.originalProteinSequence.length);
+    voiceArray[voiceNumber - 1].biology.GenericDataArray=$sequenceInput.val().split(",");
+    $NoteCount.val(voiceArray[voiceNumber-1].biology.GenericDataArray.length);
     $TextBox.val("");
-    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalProteinSequence);
-    voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
+    $sequenceInput.val(voiceArray[voiceNumber - 1].biology.GenericDataArray);
+    voiceArray[voiceNumber-1].biology.userSequenceArray=voiceArray[voiceNumber-1].biology.GenericDataArray;
     
     proteinSequenceConversion();
     
@@ -144,6 +169,7 @@ $($panel).on('change',$sequenceInput,function(){
     update();
 });
             $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalProteinSequence);
+            voiceArray[voiceNumber-1].biology.GenericDataArray=$sequenceInput.val().split(",");
             voiceArray[voiceNumber-1].biology.userSequenceArray=$sequenceInput.val().split(",");
             $NoteCount.val(voiceArray[voiceNumber-1].biology.userSequenceArray.length);
             
@@ -154,8 +180,11 @@ $($panel).on('change',$sequenceInput,function(){
             update();
         }
     }
+    /*
+    ELSE STATEMENT REPRESENTS WHEN IT IS NONE OF THESE ITEMS IT WILL TURN OFF THE REQUIRED FIELDS FOR
+    DNA/RNA/PROTEIN.
+    */
     else{
-        $NoteCount.prop('readonly',false);        
         $dnaLabel.hide();
         $sequenceInput.hide();
         $displayPanels.hide();
@@ -213,10 +242,10 @@ $($panel).on('change',$sequenceInput,function(){
         else if($extra[2].checked==true)
             {
                 voiceArray[voiceNumber-1].biology.userSequenceArray=[];
-                for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.originalRNASequence.length;i++,j++)
+                for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.GenericDataArray.length;i++,j++)
                     {
                         var counter = 1;
-                        while(voiceArray[voiceNumber - 1].biology.originalRNASequence[i]==voiceArray[voiceNumber - 1].biology.originalRNASequence[j])
+                        while(voiceArray[voiceNumber - 1].biology.GenericDataArray[i]==voiceArray[voiceNumber - 1].biology.GenericDataArray[j])
                             {
                                 counter++;
                                 i++;
@@ -238,11 +267,11 @@ $($panel).on('change',$sequenceInput,function(){
         if($extra[1].checked==true)
             {
                 var value=[];
-                if(voiceArray[voiceNumber - 1].biology.userSequenceArray.length%3==0)
+                if(voiceArray[voiceNumber - 1].biology.GenericDataArray.length%3==0)
                     {
                         var counter=3;
                         var seqence="";
-                        for(var i=0;i<voiceArray[voiceNumber - 1].biology.userSequenceArray.length+1;i++)
+                        for(var i=0;i<voiceArray[voiceNumber - 1].biology.GenericDataArray.length+1;i++)
                             {
                                 if(counter===0)
                                 {
@@ -251,7 +280,7 @@ $($panel).on('change',$sequenceInput,function(){
                                     seqence="";
                                     value.push(values);
                                 }
-                                    seqence+=voiceArray[voiceNumber - 1].biology.userSequenceArray[i];
+                                    seqence+=voiceArray[voiceNumber - 1].biology.GenericDataArray[i];
                                     counter--;
                             }
                         voiceArray[voiceNumber - 1].biology.userSequenceArray=value;
@@ -267,10 +296,10 @@ $($panel).on('change',$sequenceInput,function(){
         else if($extra[2].checked==true)
             {
                 voiceArray[voiceNumber-1].biology.userSequenceArray=[];
-                for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.originalDNASequence.length;i++,j++)
+                for(var i = 0,j = 1;i<voiceArray[voiceNumber - 1].biology.GenericDataArray.length;i++,j++)
                     {
                         var counter = 1;
-                        while(voiceArray[voiceNumber - 1].biology.originalDNASequence[i]==voiceArray[voiceNumber - 1].biology.originalDNASequence[j])
+                        while(voiceArray[voiceNumber - 1].biology.GenericDataArray[i]==voiceArray[voiceNumber - 1].biology.GenericDataArray[j])
                             {
                                 counter++;
                                 i++;
@@ -291,17 +320,17 @@ $($panel).on('change',$sequenceInput,function(){
     function rnaSequenceConversion(){
                     var i = 0;
 
-            for (i; i < voiceArray[voiceNumber - 1].biology.originalRNASequence.length; i++)
+            for (i; i < voiceArray[voiceNumber - 1].biology.GenericDataArray.length; i++)
             {
-                if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="A")
+                if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="A")
                 {
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[0];
                 }
-                else if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="U")
+                else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="U")
                 {
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[1];
                 }
-                else if(voiceArray[voiceNumber-1].biology.originalRNASequence[i]=="C")
+                else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="C")
                 {
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.rnaValues[2];
                 }
@@ -314,17 +343,17 @@ $($panel).on('change',$sequenceInput,function(){
     function dnaSequenceConversion(){
         var i = 0;
 
-            for (i; i < voiceArray[voiceNumber - 1].biology.originalDNASequence.length; i++)
+            for (i; i < voiceArray[voiceNumber - 1].biology.GenericDataArray.length; i++)
             {
-                if(voiceArray[voiceNumber-1].biology.originalDNASequence[i]=="A")
+                if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="A")
                 {
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[0];
                 }
-                else if(voiceArray[voiceNumber-1].biology.originalDNASequence[i]=="T")
+                else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="T")
                 {
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[1];
                 }
-                else if(voiceArray[voiceNumber-1].biology.originalDNASequence[i]=="C")
+                else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="C")
                 {
                     voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.dnaValues[2];
                 }
@@ -336,85 +365,85 @@ $($panel).on('change',$sequenceInput,function(){
     }
     function proteinSequenceConversion(){
             var i=0;
-    for (i; i < voiceArray[voiceNumber - 1].biology.originalProteinSequence.length; i++)
+    for (i; i < voiceArray[voiceNumber - 1].biology.GenericDataArray.length; i++)
     {
-                    if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="W")
+                    if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="W")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[0]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="F")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="F")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[1]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="L")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="L")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[2]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="I")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="I")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[3]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="M")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="M")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[4]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="Y")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="Y")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[5]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="V")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="V")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[6]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="C")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="C")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[7]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="P")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="P")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[8]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="T")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="T")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[9]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="A")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="A")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[10]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="S")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="S")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[11]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="Q")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="Q")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[12]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="N")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="N")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[13]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="G")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="G")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[14]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="H")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="H")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[15]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="R")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="R")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[16]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="E")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="E")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[17]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="D")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="D")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[18]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
-                    else if(voiceArray[voiceNumber-1].biology.originalProteinSequence[i]=="K")
+                    else if(voiceArray[voiceNumber-1].biology.GenericDataArray[i]=="K")
                     {
                         voiceArray[voiceNumber-1].biology.userSequenceArray[i]=voiceArray[voiceNumber-1].biology.proteinValues[19]*voiceArray[voiceNumber-1].biology.conversionValue;
                     }
@@ -432,4 +461,38 @@ $($panel).on('change',$sequenceInput,function(){
             LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
             LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
     }
+    function ValidateBiologyData(selection,userTextData)
+{
+    var conditional = true;
+    var index = 0;
+    var acceptableDNAInput = new RegExp("^[ATCG]$");
+    var acceptableRNAInput = new RegExp("^[AUCG]$");
+    var acceptableProtienInput = new RegExp("[WFLIMYVCPTASQNGHREDK]$");
+    if(selection == "DNA")
+        {
+            while(conditional && index <= userTextData.length - 1)
+            {
+                conditional = acceptableDNAInput.test(userTextData[index]);
+                index++;
+            }
+        }
+    else if(selection == "RNA")
+        {
+            while(conditional && index <= userTextData.length - 1)
+            {
+                conditional = acceptableRNAInput.test(userTextData[index]);
+                index++;
+            }
+        }
+    else
+        {
+            while(conditional && index <= userTextData.length - 1)
+            {
+                conditional = acceptableProtienInput.test(userTextData[index]);
+                index++;
+            }
+        }
+    
+    return conditional;
+}
 }
