@@ -83,13 +83,13 @@ function biologyLoader($panel)
             update();
             $($panel).on('change', $sequenceInput, function(){
                 CanidateArray =$sequenceInput.val().split(",");
-                if(ValidateBiologyData("RNA",CanidateArray)==false)
+               /* if(ValidateBiologyData("RNA",CanidateArray)==false)
                     {
                         alert("Make Sure All Data Entered is A,U,C,G");
                         $sequenceInput.val(voiceArray[voiceNumber-1].biology.GenericDataArray);
                     }
                 else
-                {
+                {*/
                     voiceArray[voiceNumber - 1].biology.GenericDataArray=CanidateArray;
                     $NoteCount.val(voiceArray[voiceNumber-1].biology.GenericDataArray.length);
                     $TextBox.val("");
@@ -104,7 +104,7 @@ function biologyLoader($panel)
                     $letterGText.val(voiceArray[voiceNumber-1].biology.rnaValues[3]=$letterGText.val());
                     rnaSequenceConversion();
                     update();
-                }
+                //}
             });
             if($buttonConvert.click(rnaConversion));
         }
@@ -117,13 +117,13 @@ function biologyLoader($panel)
             
 $($panel).on('change', $sequenceInput, function(){
             CanidateArray = $sequenceInput.val().split(",");
-            if (ValidateBiologyData("DNA",CanidateArray) == false)
+            /*if (ValidateBiologyData("DNA",CanidateArray) == false)
 	        {
 	            alert("Make Sure All Data Entered Is A,T,C,G");
                 $sequenceInput.val(voiceArray[voiceNumber - 1].biology.GenericDataArray);
 	        }
 	        else
-	        {
+	        {*/
                 voiceArray[voiceNumber - 1].biology.GenericDataArray=CanidateArray;
                 $NoteCount.val(voiceArray[voiceNumber-1].biology.GenericDataArray.length);
                 $TextBox.val("");
@@ -139,7 +139,7 @@ $($panel).on('change', $sequenceInput, function(){
                 $letterGText.val(voiceArray[voiceNumber-1].biology.dnaValues[3]=$letterGText.val());
                 dnaSequenceConversion();
                 update();
-            }
+            //}
 });
             $sequenceInput.val(voiceArray[voiceNumber - 1].biology.originalDNASequence);
             voiceArray[voiceNumber-1].biology.GenericDataArray=$sequenceInput.val().split(",");
