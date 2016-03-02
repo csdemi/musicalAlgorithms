@@ -18,7 +18,7 @@ function acceptPitchInputUtilities() {
 	$("#input_set"+voiceNumber).val("Custom");
 	$("#areaPitch"+voiceNumber).attr('readonly', false);
 	
-	$("#areaPitch"+voiceNumber).trigger('change');	
+	$("#areaPitch"+voiceNumber).trigger('change'); //Throw event that causes validation to happen.	
 	$(".Utility-modal").modal("hide");
 }
 
@@ -281,6 +281,17 @@ function invert(textArea) {
 	}
 	
 	textArea.value = array;
+}
+//Converts each character into its underlying ascii number
+function charToNote(textArea) {
+	var array = textArea.value.split(",");
+	
+	for(var i = 0; i < array.length; i++){
+		array[i] = array[i].charCodeAt(0);
+		
+	}
+	
+	textArea.value = array;	
 }
 /*
 END UTILITY FUNCTIONS
