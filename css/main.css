@@ -7,6 +7,9 @@
 /* ----- Helper Mixins ----- */
 /* ----- Page Styles ------ */
 /* Base Styles */
+#note_count1,#note_count2,#note_count3,#note_count4{
+	width:50px;
+}
 input#letterAText1,input#letterTText1,input#letterUText1,input#letterCText1,input#letterGText1,
 input#letterAText2,input#letterTText2,input#letterUText2,input#letterCText2,input#letterGText2,
 input#letterAText3,input#letterTText3,input#letterUText3,input#letterCText3,input#letterGText3,
