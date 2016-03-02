@@ -26,7 +26,7 @@ $(document).ready(function()
         }
         else if ($SelectedAlgorithm.text() != "Custom")
         {// Still need to implement the ability to edit the DNA array.
-            if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA")
+            if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA"|| $SelectedAlgorithm.text()=="Protein")
             {
                 biologyLoader($panel);
             }
@@ -488,25 +488,40 @@ function pitchInput(numberOfVoice) {
 				<button type='button' class='btn btn-default btn-sm' data-toggle='modal' onclick='openUtilities(\"pitchInputUtilityModal\",\"areaPitch\","+voiceCount+",\"pitchInputUtilityBox\")'><span class='glyphicon glyphicon-wrench'></span></button><br>\
                 <label id='dna"+ voiceCount + "' style='display:none'>Sequence:</label>\
                 <textarea id='sequence"+ voiceCount + "' style='display:none'></textarea><br>\
-                                <span><br id='A"+voiceCount+"'style='display:none'>\
-                <label id='A"+voiceCount+"'style='display:none'>A=</label>\
-                <input type='text' id='letterAText"+voiceCount+"'style='display:none'></input>\
-                <label id='T"+voiceCount+"'style='display:none'>T=</label>\
-                <input type='text' id='letterTText"+voiceCount+"'style='display:none'></input>\
-                <label id='U"+voiceCount+"'style='display:none'>U=</label>\
-                <input type='text' id='letterUText"+voiceCount+"'style='display:none'></input>\
-                <label id='C"+voiceCount+"'style='display:none'>C=</label>\
-                <input type='text' id='letterCText"+voiceCount+"'style='display:none'></input>\
-                <label id='G"+voiceCount+"'style='display:none'>G=</label>\
-                <input type='text' id='letterGText"+voiceCount+"'style='display:none'></input>\
-                <ul id='panels"+voiceCount+"'style='display:none'>\
-                    <li><input type='checkbox' name='extra' id='duplicates"+voiceCount+"'style='display:none''></input>\
-                    <label id='countDuplicateRadio"+voiceCount+"'style='display:none'>Count Duplicates</label></li>\
-                    <li><input type='checkbox' name='extra' id='codons"+voiceCount+"'style='display:none' value='2'></input>\
-                    <label id='codonsRadio"+voiceCount+"'style='display:none'>Codons</label></li>\
-                    <li><button id='convert"+voiceCount+"'style='display:none'>Convert</button></li>\
-                </ul>\
-                <\span>\
+                <div class='panel-group' id='accordion' style='display:none'>\
+                    <div class='panel panel-default'>\
+                        <div class='panel-heading'>\
+                            <h4 class='panel-title'>\
+                                <a class='accordion-toggle' data-toggle='collapse' href='#collapseOne"+voiceCount+"'>Options</a>\
+                            </h4>\
+                        </div>\
+                        <div id='collapseOne"+voiceCount+"' class='panel-collapse collapse in'>\
+                            <div class='panel-body'>\
+                                    <span><br id='A"+voiceCount+"'style='display:none'>\
+                                    <label id='A"+voiceCount+"'style='display:none'>A=</label>\
+                                    <input type='text' id='letterAText"+voiceCount+"'style='display:none'></input>\
+                                    <label id='T"+voiceCount+"'style='display:none'>T=</label>\
+                                    <input type='text' id='letterTText"+voiceCount+"'style='display:none'></input>\
+                                    <label id='U"+voiceCount+"'style='display:none'>U=</label>\
+                                    <input type='text' id='letterUText"+voiceCount+"'style='display:none'></input>\
+                                    <label id='C"+voiceCount+"'style='display:none'>C=</label>\
+                                    <input type='text' id='letterCText"+voiceCount+"'style='display:none'></input>\
+                                    <label id='G"+voiceCount+"'style='display:none'>G=</label>\
+                                    <input type='text' id='letterGText"+voiceCount+"'style='display:none'></input>\
+                                    <ul id='panels"+voiceCount+"'style='display:none'list-style-type: 'none'>\
+                                        <li><input type='radio' name='extra"+voiceCount+"' id='default"+voiceCount+"'style='display:none' checked='checked'></input>\
+                                           <label id='defaultRadio"+voiceCount+"'style='display:none'>Single Bases</label></li>\
+                                        <li><input type='radio' name='extra"+voiceCount+"' id='codons"+voiceCount+"'style='display:none'></input>\
+                                           <label id='codonsRadio"+voiceCount+"'style='display:none'>Codons</label></li>\
+                                        <li><input type='radio' name='extra"+voiceCount+"'id='duplicates"+voiceCount+"'style='display:none''></input>\
+                                           <label id='countDuplicateRadio"+voiceCount+"'style='display:none'>Duplicates</label></li>\
+                                        <li><button id='convert"+voiceCount+"'style='display:none'>Convert</button></li>\
+                                    </ul>\
+                                    <\span>\
+                              </div>\
+                    </div>\
+                    </div>\
+                </div>\
 				<label>Input:</label>\
 				<textarea readonly id='areaPitch"+ voiceCount + "'></textarea>\
 			</fieldset>\
