@@ -142,20 +142,30 @@
 			<div class='modal-content'>
 				<div class='modal-header'>
 					<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-					<h3 class='modal-title' id='myModalLabel'>Utilities</h3>
+					<h3 class='modal-title' id='myModalLabel'>Data Utilities</h3>
 				</div>
 				<div class='modal-body'>
 					<textarea id='pitchInputUtilityBox' style='width: 100%' value='124'></textarea>
 					<button type="button" class="btn btn-default" onclick="reverseNotes(document.getElementById('pitchInputUtilityBox'))">Reverse</button>
-					<button type="button" class="btn btn-default" onclick="separateCharacters(document.getElementById('pitchInputUtilityBox'))">Separate Characters</button>
-					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">Convert Letters</button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchInputUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchInputUtilityFilterDiv')">Filter by Range  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchInputUtilitySampleDiv')">Sample Notes  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchInputUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchInputUtilityDecimalDiv')">Decimal Utilities <span class='glyphicon glyphicon-list'></span></button><br>
+					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">ASCII Conversion</button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchInputUtilityAddCommaDiv')">Add Commas  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchInputUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchInputUtilityFilterDiv')">Parse by Range  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchInputUtilitySampleDiv')">Sample Rate  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchInputUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchInputUtilityDecimalDiv')">Decimals <span class='glyphicon glyphicon-list'></span></button><br>
+					<div id='pitchInputUtilityAddCommaDiv' class='util-div' style='display: none'>
+					<hr>
+					<br>
+					<b>These tools will help separate the data for use in other functions.<br>
+					This function is best used for data that isn't separated by anything and needs commas.<br>
+					If the data is already separated by something that isn't a comma, consider using the replace utility instead.</b><br><br>
+					<div class="horizontalAlignCenter">
+					Insert a comma every <input type="text" id='pitchInputUtilityCommaValue' style='width: 40px' maxlength='4'> character(s). <button type="button" onclick='addCommas("#pitchInputUtilityCommaValue", "#pitchInputUtilityBox")'class="btn btn-default">Insert</button>
+					</div>
 					
-					<div id='pitchInputUtilityDecimalDiv' style='display: none'>
+					</div>
+					<div id='pitchInputUtilityDecimalDiv' class='util-div' style='display: none'>
 						<hr>
 						<br>
 						<b>Use these tools to turn decimal numbers into a more playable form.</b><br><br>
@@ -168,7 +178,7 @@
 						<button type="button" class="btn btn-default" onclick="ceiling(document.getElementById('pitchInputUtilityBox'))">Ceiling</button>
 						<button type="button" class="btn btn-default" onclick="round(document.getElementById('pitchInputUtilityBox'))">Round</button>
 					</div>
-					<div id='pitchInputUtilityInvertDiv' style='display: none'>
+					<div id='pitchInputUtilityInvertDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Invert the values of the notes around a value, or around the average.
@@ -182,7 +192,7 @@
 						Or invert around the average note for the stream: <button type="button" class="btn btn-default" onclick="invert(document.getElementById('pitchInputUtilityBox'))">Invert via Average</button>
 						</div>
 					</div>
-					<div id='pitchInputUtilitySampleDiv' style='display: none'>
+					<div id='pitchInputUtilitySampleDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Reduce the stream size by sampling every X note via the sampling types below.</b><br><br>
@@ -197,15 +207,16 @@
 						<button type="button" class="btn btn-default" onclick="sampleMedian(document.getElementById('pitchInputUtilitySampleInterval').value, document.getElementById('pitchInputUtilityBox'))">Median</button>
 						<button type="button" class="btn btn-default" onclick="sampleActual(document.getElementById('pitchInputUtilitySampleInterval').value, document.getElementById('pitchInputUtilityBox'))">Actual</button>
 						</div>	
+						<br>Not satisfied? <button type="button" class="btn btn-default" onclick="undo(document.getElementById('pitchInputUtilityBox'))">Undo</button>
 					</div>
-					<div id='pitchInputUtilityReplaceDiv' class="horizontalAlignCenter" style='display: none'>
+					<div id='pitchInputUtilityReplaceDiv' class="horizontalAlignCenter util-div" style='display: none'>
 					<hr>
 					<br>
 					<b>Replace characters in the stream.</b><br><br>
 					<button type="button" class="btn btn-default" onclick="replace(document.getElementById('pitchInputUtilityBox'), document.getElementById('pitchInputUtilityReplaceTarget'), document.getElementById('pitchInputUtilityReplaceSubstitute'))" >Replace</button>
 					<input type='text' id='pitchInputUtilityReplaceTarget' style='width: 36px' maxlength='3'> with <input type="text" id='pitchInputUtilityReplaceSubstitute' style='width: 36px' maxlength='3'>
 					</div>
-					<div id='pitchInputUtilityFilterDiv' style='display: none'>
+					<div id='pitchInputUtilityFilterDiv' class='util-div' style='display: none'>
 						<hr>
 						<br><b>Filter the notes by a range of values. All notes that do not fall in the range become zero. </b><br><br>
 						
@@ -252,18 +263,28 @@
 			<div class='modal-content'>
 				<div class='modal-header'>
 					<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-					<h3 class='modal-title' id='myModalLabel'>Utilities</h3>
+					<h3 class='modal-title' id='myModalLabel'>Data Utilities</h3>
 				</div>
 				<div class='modal-body'>
 					<textarea id='durationInputUtilityBox' style='width: 100%' value='124'></textarea>
 					<button type="button" class="btn btn-default" onclick="reverseNotes(document.getElementById('durationInputUtilityBox'))">Reverse</button>
-					<button type="button" class="btn btn-default" onclick="separateCharacters(document.getElementById('durationInputUtilityBox'))">Separate Characters</button>
-					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">Convert Letters</button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationInputUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationInputUtilityFilterDiv')">Filter by Range  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationInputUtilitySampleDiv')">Sample Notes  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationInputUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationInputUtilityDecimalDiv')">Decimal Utilities <span class='glyphicon glyphicon-list'></span></button><br>
+					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">ASCII Conversion</button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationInputUtilityAddCommaDiv')">Add Commas  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationInputUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationInputUtilityFilterDiv')">Parse by Range  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationInputUtilitySampleDiv')">Sample Rate  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationInputUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationInputUtilityDecimalDiv')">Decimals <span class='glyphicon glyphicon-list'></span></button><br>
+					<div id='durationInputUtilityAddCommaDiv' class='util-div' style='display: none'>
+					<hr>
+					<br>
+					<b>These tools will help separate the data for use in other functions.<br>
+					This function is best used for data that isn't separated by anything and needs commas.<br>
+					If the data is already separated by something that isn't a comma, consider using the replace utility instead.</b><br><br>
+					<div class="horizontalAlignCenter">
+					Insert a comma every <input type="text" id='durationInputUtilityCommaValue' style='width: 40px' maxlength='4'> character(s). <button type="button" onclick='addCommas("#durationInputUtilityCommaValue", "#durationInputUtilityBox")'class="btn btn-default">Insert</button>
+					</div>
+					</div>
 					<div id='durationInputUtilityDecimalDiv' style='display: none'>
 						<hr>
 						<br>
@@ -277,7 +298,7 @@
 						<button type="button" class="btn btn-default" onclick="ceiling(document.getElementById('durationInputUtilityBox'))">Ceiling</button>
 						<button type="button" class="btn btn-default" onclick="round(document.getElementById('durationInputUtilityBox'))">Round</button>
 					</div>
-					<div id='durationInputUtilityInvertDiv' style='display: none'>
+					<div id='durationInputUtilityInvertDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Invert the values of the notes around a value, or around the average.
@@ -291,7 +312,7 @@
 						Or invert around the average note for the stream: <button type="button" class="btn btn-default" onclick="invert(document.getElementById('durationInputUtilityBox'))">Invert via Average</button>
 						</div>
 					</div>
-					<div id='durationInputUtilitySampleDiv' style='display: none'>
+					<div id='durationInputUtilitySampleDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Reduce the stream size by sampling every X note via the sampling types below.</b><br><br>
@@ -306,15 +327,16 @@
 						<button type="button" class="btn btn-default" onclick="sampleMedian(document.getElementById('durationInputUtilitySampleInterval').value, document.getElementById('durationInputUtilityBox'))">Median</button>
 						<button type="button" class="btn btn-default" onclick="sampleActual(document.getElementById('durationInputUtilitySampleInterval').value, document.getElementById('durationInputUtilityBox'))">Actual</button>
 						</div>	
+						<br>Not satisfied? <button type="button" class="btn btn-default" onclick="undo(document.getElementById('durationInputUtilityBox'))">Undo</button>
 					</div>
-					<div id='durationInputUtilityReplaceDiv' class="horizontalAlignCenter" style='display: none'>
+					<div id='durationInputUtilityReplaceDiv' class="horizontalAlignCenter util-div" style='display: none'>
 					<hr>
 					<br>
 					<b>Replace characters in the stream.</b><br><br>
 					<button type="button" class="btn btn-default" onclick="replace(document.getElementById('durationInputUtilityBox'), document.getElementById('durationInputUtilityReplaceTarget'), document.getElementById('durationInputUtilityReplaceSubstitute'))" >Replace</button>
 					<input type='text' id='durationInputUtilityReplaceTarget' style='width: 36px' maxlength='3'> with <input type="text" id='durationInputUtilityReplaceSubstitute' style='width: 36px' maxlength='3'>
 					</div>
-					<div id='durationInputUtilityFilterDiv' style='display: none'>
+					<div id='durationInputUtilityFilterDiv' class='util-div' style='display: none'>
 						<hr>
 						<br><b>Filter the notes by a range of values. All notes that do not fall in the range become zero. </b><br><br>
 						
@@ -361,19 +383,29 @@
 			<div class='modal-content'>
 				<div class='modal-header'>
 					<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-					<h3 class='modal-title' id='myModalLabel'>Utilities</h3>
+					<h3 class='modal-title' id='myModalLabel'>Data Utilities</h3>
 				</div>
 				<div class='modal-body'>
 					<textarea id='pitchMapUtilityBox' style='width: 100%' value='124'></textarea>
 					<button type="button" class="btn btn-default" onclick="reverseNotes(document.getElementById('pitchMapUtilityBox'))">Reverse</button>
-					<button type="button" class="btn btn-default" onclick="separateCharacters(document.getElementById('pitchMapUtilityBox'))">Separate Characters</button>
-					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">Convert Letters</button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchMapUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchMapUtilityFilterDiv')">Filter by Range  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchMapUtilitySampleDiv')">Sample Notes  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchMapUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#pitchMapUtilityDecimalDiv')">Decimal Utilities <span class='glyphicon glyphicon-list'></span></button><br>
-					<div id='pitchMapUtilityDecimalDiv' style='display: none'>
+					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">ASCII Conversion</button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchMapUtilityAddCommaDiv')">Add Commas  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchMapUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchMapUtilityFilterDiv')">Parse by Range  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchMapUtilitySampleDiv')">Sample Rate  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchMapUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#pitchMapUtilityDecimalDiv')">Decimals <span class='glyphicon glyphicon-list'></span></button><br>
+					<div id='pitchMapUtilityAddCommaDiv' class='util-div' style='display: none'>
+					<hr>
+					<br>
+					<b>These tools will help separate the data for use in other functions.<br>
+					This function is best used for data that isn't separated by anything and needs commas.<br>
+					If the data is already separated by something that isn't a comma, consider using the replace utility instead.</b><br><br>
+					<div class="horizontalAlignCenter">
+					Insert a comma every <input type="text" id='pitchMapUtilityCommaValue' style='width: 40px' maxlength='4'> character(s). <button type="button" onclick='addCommas("#pitchMapUtilityCommaValue", "#pitchMapUtilityBox")'class="btn btn-default">Insert</button>
+					</div>
+					</div>
+					<div id='pitchMapUtilityDecimalDiv' class='util-div' style='display: none'>
 						<hr>
 						<br>
 						<b>Use these tools to turn decimal numbers into a more playable form.</b><br><br>
@@ -386,7 +418,7 @@
 						<button type="button" class="btn btn-default" onclick="ceiling(document.getElementById('pitchMapUtilityBox'))">Ceiling</button>
 						<button type="button" class="btn btn-default" onclick="round(document.getElementById('pitchMapUtilityBox'))">Round</button>
 					</div>
-					<div id='pitchMapUtilityInvertDiv' style='display: none'>
+					<div id='pitchMapUtilityInvertDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Invert the values of the notes around a value, or around the average.
@@ -400,7 +432,7 @@
 						Or invert around the average note for the stream: <button type="button" class="btn btn-default" onclick="invert(document.getElementById('pitchMapUtilityBox'))">Invert via Average</button>
 						</div>
 					</div>
-					<div id='pitchMapUtilitySampleDiv' style='display: none'>
+					<div id='pitchMapUtilitySampleDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Reduce the stream size by sampling every X note via the sampling types below.</b><br><br>
@@ -415,15 +447,16 @@
 						<button type="button" class="btn btn-default" onclick="sampleMedian(document.getElementById('pitchMapUtilitySampleInterval').value, document.getElementById('pitchMapUtilityBox'))">Median</button>
 						<button type="button" class="btn btn-default" onclick="sampleActual(document.getElementById('pitchMapUtilitySampleInterval').value, document.getElementById('pitchMapUtilityBox'))">Actual</button>
 						</div>	
+						<br>Not satisfied? <button type="button" class="btn btn-default" onclick="undo(document.getElementById('pitchMapUtilityBox'))">Undo</button>
 					</div>
-					<div id='pitchMapUtilityReplaceDiv' class="horizontalAlignCenter" style='display: none'>
+					<div id='pitchMapUtilityReplaceDiv' class="horizontalAlignCenter util-div" style='display: none'>
 					<hr>
 					<br>
 					<b>Replace characters in the stream.</b><br><br>
 					<button type="button" class="btn btn-default" onclick="replace(document.getElementById('pitchMapUtilityBox'), document.getElementById('pitchMapUtilityReplaceTarget'), document.getElementById('pitchMapUtilityReplaceSubstitute'))" >Replace</button>
 					<input type='text' id='pitchMapUtilityReplaceTarget' style='width: 36px' maxlength='3'> with <input type="text" id='pitchMapUtilityReplaceSubstitute' style='width: 36px' maxlength='3'>
 					</div>
-					<div id='pitchMapUtilityFilterDiv' style='display: none'>
+					<div id='pitchMapUtilityFilterDiv' class='util-div' style='display: none'>
 						<hr>
 						<br><b>Parse the stream of notes by a range of values. All notes that do not fall in the range become zero. </b><br><br>
 						
@@ -469,19 +502,29 @@
 			<div class='modal-content'>
 				<div class='modal-header'>
 					<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-					<h3 class='modal-title' id='myModalLabel'>Utilities</h3>
+					<h3 class='modal-title' id='myModalLabel'>Data Utilities</h3>
 				</div>
 				<div class='modal-body'>
 					<textarea id='durationMapUtilityBox' style='width: 100%' value='124'></textarea>
 					<button type="button" class="btn btn-default" onclick="reverseNotes(document.getElementById('durationMapUtilityBox'))">Reverse</button>
-					<button type="button" class="btn btn-default" onclick="separateCharacters(document.getElementById('durationMapUtilityBox'))">Separate Characters</button>
-					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">Convert Letters</button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationMapUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationMapUtilityFilterDiv')">Filter by Range  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationMapUtilitySampleDiv')">Sample Notes  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationMapUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#durationMapUtilityDecimalDiv')">Decimal Utilities <span class='glyphicon glyphicon-list'></span></button><br>
-					<div id='durationMapUtilityDecimalDiv' style='display: none'>
+					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">ASCII Conversion</button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationMapUtilityAddCommaDiv')">Add Commas  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationMapUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationMapUtilityFilterDiv')">Parse by Range  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationMapUtilitySampleDiv')">Sample Rate  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationMapUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#durationMapUtilityDecimalDiv')">Decimals <span class='glyphicon glyphicon-list'></span></button><br>
+					<div id='durationMapUtilityAddCommaDiv' class='util-div' style='display: none'>
+					<hr>
+					<br>
+					<b>These tools will help separate the data for use in other functions.<br>
+					This function is best used for data that isn't separated by anything and needs commas.<br>
+					If the data is already separated by something that isn't a comma, consider using the replace utility instead.</b><br><br>
+					<div class="horizontalAlignCenter">
+					Insert a comma every <input type="text" id='durationMapUtilityCommaValue' style='width: 40px' maxlength='4'> character(s). <button type="button" onclick='addCommas("#durationMapUtilityCommaValue", "#durationMapUtilityBox")'class="btn btn-default">Insert</button>
+					</div>
+					</div>
+					<div id='durationMapUtilityDecimalDiv' class='util-div' style='display: none'>
 						<hr>
 						<br>
 						<b>Use these tools to turn decimal numbers into a more playable form.</b><br><br>
@@ -494,7 +537,7 @@
 						<button type="button" class="btn btn-default" onclick="ceiling(document.getElementById('durationMapUtilityBox'))">Ceiling</button>
 						<button type="button" class="btn btn-default" onclick="round(document.getElementById('durationMapUtilityBox'))">Round</button>
 					</div>
-					<div id='durationMapUtilityInvertDiv' style='display: none'>
+					<div id='durationMapUtilityInvertDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Invert the values of the notes around a value, or around the average.
@@ -508,7 +551,7 @@
 						Or invert around the average note for the stream: <button type="button" class="btn btn-default" onclick="invert(document.getElementById('durationMapUtilityBox'))">Invert via Average</button>
 						</div>
 					</div>
-					<div id='durationMapUtilitySampleDiv' style='display: none'>
+					<div id='durationMapUtilitySampleDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Reduce the stream size by sampling every X note via the sampling types below.</b><br><br>
@@ -523,15 +566,16 @@
 						<button type="button" class="btn btn-default" onclick="sampleMedian(document.getElementById('durationMapUtilitySampleInterval').value, document.getElementById('durationMapUtilityBox'))">Median</button>
 						<button type="button" class="btn btn-default" onclick="sampleActual(document.getElementById('durationMapUtilitySampleInterval').value, document.getElementById('durationMapUtilityBox'))">Actual</button>
 						</div>	
+					<br>Not satisfied? <button type="button" class="btn btn-default" onclick="undo(document.getElementById('durationMapUtilityBox'))">Undo</button>
 					</div>
-					<div id='durationMapUtilityReplaceDiv' class="horizontalAlignCenter" style='display: none'>
+					<div id='durationMapUtilityReplaceDiv' class="horizontalAlignCenter util-div" style='display: none'>
 					<hr>
 					<br>
 					<b>Replace characters in the stream.</b><br><br>
 					<button type="button" class="btn btn-default" onclick="replace(document.getElementById('durationMapUtilityBox'), document.getElementById('durationMapUtilityReplaceTarget'), document.getElementById('durationMapUtilityReplaceSubstitute'))" >Replace</button>
 					<input type='text' id='durationMapUtilityReplaceTarget' style='width: 36px' maxlength='3'> with <input type="text" id='durationMapUtilityReplaceSubstitute' style='width: 36px' maxlength='3'>
 					</div>
-					<div id='durationMapUtilityFilterDiv' style='display: none'>
+					<div id='durationMapUtilityFilterDiv' class='util-div' style='display: none'>
 						<hr>
 						<br><b>Parse the stream of notes by a range of values. All notes that do not fall in the range become zero. </b><br><br>
 						
@@ -577,19 +621,29 @@
 			<div class='modal-content'>
 				<div class='modal-header'>
 					<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-					<h3 class='modal-title' id='myModalLabel'>Utilities</h3>
+					<h3 class='modal-title' id='myModalLabel'>Data Utilities</h3>
 				</div>
 				<div class='modal-body'>
 					<textarea id='scaleUtilityBox' style='width: 100%' value='124'></textarea>
 					<button type="button" class="btn btn-default" onclick="reverseNotes(document.getElementById('scaleUtilityBox'))">Reverse</button>
-					<button type="button" class="btn btn-default" onclick="separateCharacters(document.getElementById('scaleUtilityBox'))">Separate Characters</button>
-					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">Convert Letters</button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#scaleUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#scaleUtilityFilterDiv')">Filter by Range  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#scaleUtilitySampleDiv')">Sample Notes  <span class='glyphicon glyphicon-list'></span></button>
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#scaleUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
-					<button type="button" class="btn btn-default" onclick="toggleDisplay('#scaleUtilityDecimalDiv')">Decimal Utilities <span class='glyphicon glyphicon-list'></span></button><br>
-					<div id='scaleUtilityDecimalDiv' style='display: none'>
+					<button type="button" class="btn btn-default" onclick="charToNote(document.getElementById('pitchInputUtilityBox'))">ASCII Conversion</button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#scaleUtilityAddCommaDiv')">Add Commas  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#scaleUtilityInvertDiv')">Invert  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#scaleUtilityFilterDiv')">Parse by Range  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#scaleUtilitySampleDiv')">Sample Rate  <span class='glyphicon glyphicon-list'></span></button>
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#scaleUtilityReplaceDiv')">Replace  <span class='glyphicon glyphicon-list'></span></button> 
+					<button type="button" class="btn btn-default" onclick="toggleSelection('#scaleUtilityDecimalDiv')">Decimals <span class='glyphicon glyphicon-list'></span></button><br>
+					<div id='scaleUtilityAddCommaDiv' class='util-div' style='display: none'>
+					<hr>
+					<br>
+					<b>These tools will help separate the data for use in other functions.<br>
+					This function is best used for data that isn't separated by anything and needs commas.<br>
+					If the data is already separated by something that isn't a comma, consider using the replace utility instead.</b><br><br>
+					<div class="horizontalAlignCenter">
+					Insert a comma every <input type="text" id='scaleUtilityCommaValue' style='width: 40px' maxlength='4'> character(s). <button type="button" onclick='addCommas("#scaleUtilityCommaValue", "#scaleUtilityBox")'class="btn btn-default">Insert</button>
+					</div>
+					</div>
+					<div id='scaleUtilityDecimalDiv' class='util-div' style='display: none'>
 						<hr>
 						<br>
 						<b>Use these tools to turn decimal numbers into a more playable form.</b><br><br>
@@ -602,7 +656,7 @@
 						<button type="button" class="btn btn-default" onclick="ceiling(document.getElementById('scaleUtilityBox'))">Ceiling</button>
 						<button type="button" class="btn btn-default" onclick="round(document.getElementById('scaleUtilityBox'))">Round</button>
 					</div>
-					<div id='scaleUtilityInvertDiv' style='display: none'>
+					<div id='scaleUtilityInvertDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Invert the values of the notes around a value, or around the average.
@@ -616,7 +670,7 @@
 						Or invert around the average note for the stream: <button type="button" class="btn btn-default" onclick="invert(document.getElementById('scaleUtilityBox'))">Invert via Average</button>
 						</div>
 					</div>
-					<div id='scaleUtilitySampleDiv' style='display: none'>
+					<div id='scaleUtilitySampleDiv' class='util-div' style='display: none'>
 					<hr>
 					<br>
 					<b>Reduce the stream size by sampling every X note via the sampling types below.</b><br><br>
@@ -631,15 +685,16 @@
 						<button type="button" class="btn btn-default" onclick="sampleMedian(document.getElementById('scaleUtilitySampleInterval').value, document.getElementById('scaleUtilityBox'))">Median</button>
 						<button type="button" class="btn btn-default" onclick="sampleActual(document.getElementById('scaleUtilitySampleInterval').value, document.getElementById('scaleUtilityBox'))">Actual</button>
 						</div>	
+						<br>Not satisfied? <button type="button" class="btn btn-default" onclick="undo(document.getElementById('scaleUtilityBox'))">Undo</button>
 					</div>
-					<div id='scaleUtilityReplaceDiv' class="horizontalAlignCenter" style='display: none'>
+					<div id='scaleUtilityReplaceDiv'  class="horizontalAlignCenter util-div" style='display: none'>
 					<hr>
 					<br>
 					<b>Replace characters in the stream.</b><br><br>
 					<button type="button" class="btn btn-default" onclick="replace(document.getElementById('scaleUtilityBox'), document.getElementById('scaleUtilityReplaceTarget'), document.getElementById('scaleUtilityReplaceSubstitute'))" >Replace</button>
 					<input type='text' id='scaleUtilityReplaceTarget' style='width: 36px' maxlength='3'> with <input type="text" id='scaleUtilityReplaceSubstitute' style='width: 36px' maxlength='3'>
 					</div>
-					<div id='scaleUtilityFilterDiv' style='display: none'>
+					<div id='scaleUtilityFilterDiv' class='util-div' style='display: none'>
 						<hr>
 						<br><b>Parse the stream of notes by a range of values. All notes that do not fall in the range become zero. </b><br><br>
 						

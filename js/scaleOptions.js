@@ -325,8 +325,6 @@ function scaleOptions(numberOfVoice) {
 					<option>A&#9839;/B&#9837;</option>\
 					<option>B</option>\
 				</select>\
-				<label id='util"+ voiceCount+"'>  Utilities:</label>\
-				<button type='button' class='btn btn-default btn-sm' data-toggle='modal' onclick='openUtilities(\"scaleUtilityModal\",\"so_text_area\","+voiceCount+",\"scaleUtilityBox\")'><span class='glyphicon glyphicon-wrench'></span></button><br>\
 				<br /><label>Output:</label><br />\
 				<textarea readonly id='so_text_area"+ voiceCount + "'></textarea>\
 			</fieldset>\

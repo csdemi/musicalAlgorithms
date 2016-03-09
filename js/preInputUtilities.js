@@ -2,11 +2,8 @@
 This file contains all the functions pertaining to processing and opening utilities.
 */
 
-//elem will be the voicepanel passed in, such that the utilities can target specific voices
-
-//applies the changes to the appropriate text box
-
 var voiceNumber; //Keep track of which voice we're working with
+var lastStream; //used for the undo function in sample rate, gets populated after each call to a sample function.
 
 /*
 ACCEPT METHODS: They're all pretty much the same. They send the text back then trigger the proper event to update everything else.
@@ -67,17 +64,63 @@ function openUtilities(modalID, homeID, voiceNum, utilID){
 	$("#"+modalID).modal("show");
 }
 
+/*DEPRECATED
 function toggleDisplay(id){
 	$(id).toggle();
+} */
+
+//Opens up the div of divID, and ensures all others are hidden in the utility
+function toggleSelection(divID){
+	
+	if($(divID).css('display')== 'none'){
+		$(".util-div").hide();
+		$(divID).show();
+	}
+	else {
+		$(divID).hide();
+	}
+	
+	
 }
 
 /*
-UTILITY FUNCTIONS - THESE DO ALL THE WORK
+UTILITY FUNCTIONS - THESE DO ALL THE DATA MANIPULATION WORK
 */
 
 function separateCharacters(textArea){
 	var array = textArea.value.split('');
 	textArea.value = array;
+}
+
+function addCommas(intervalID, homeTextID){
+	var preData = $(homeTextID).val(); //String
+	var interval = parseInt($(intervalID).val(), 10); //A number
+	var array = new Array(); //what we send back
+	if(interval === 1)
+		array = preData.split('');
+	else if(interval > 1){
+		var temp = preData.split('');
+		var counter = 0;
+		var nextCharSet = "";
+		for(var i = 0; i < temp.length; i++){
+			nextCharSet += temp[i];
+			counter++;
+			if(counter % (interval) === 0) {
+				array.push(nextCharSet);
+				nextCharSet = "";
+				
+			}
+			
+			
+		}
+		
+		if(nextCharSet !== ""){
+			array.push(nextCharSet);
+		}
+	}
+	
+	
+	$(homeTextID).val(array);
 }
 
 //Reverses the order of the notes. Pretty simple.
@@ -105,12 +148,18 @@ function replace(textArea, targetTextArea, substituteTextArea){
 }
 
 
+function undo(homeText){
+homeText.value = lastStream;	
+	
+}
+
 
 function sampleAverage(interval, text){
  var skip = parseInt(interval, 10);
  var cumSum = 0;
  var length = 0;
  var sequence = text.value.split(",");
+ lastStream = sequence.slice();
  var result = [];
 
  for (var i = 0; i < sequence.length; i++){
@@ -133,6 +182,7 @@ function sampleMedian(interval, text) {
  var skip = parseInt(interval, 10);
  var length = 0;
  var sequence = text.value.split(",");
+ lastStream = sequence.slice();
  var result = [];
  
  for(var i = 0; i < sequence.length; i++){
@@ -154,6 +204,7 @@ function sampleActual(interval, text) {
  var skip = parseInt(interval, 10);
  var length = 0;
  var sequence = text.value.split(",");
+ lastStream = sequence.slice();
  var result = [];
  
  for(var i = 0; i < sequence.length; i++){

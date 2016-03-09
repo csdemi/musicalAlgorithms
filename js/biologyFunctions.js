@@ -206,7 +206,7 @@ $($panel).on('change',$sequenceInput,function(){
         $radioButtonDuplicate.hide();
         $codonLabel.hide();
         $duplicateLabel.hide();
-        update();
+       // update();
     }
     function rnaConversion(){
 //THIS CONVERTS TO CODONS

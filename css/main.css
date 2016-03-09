@@ -546,8 +546,21 @@ div.graph-tooltip-label td {
 .morph-modal .modal-dialog {
   width: 75%; }
 
+  
+.modal-header {
+  background: #49463f;
+}
+
+.modal-title {
+  color: #FFF;
+   font-weight: 700;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  /* text-transform: uppercase; */
+}
+  
 .modal-body {
-  width: 100%; }
+  width: 100%;
+  background: url("../images/background.png");  }
 
 .modal-body, #mygraph, #mygraph > div {
   margin: 0px !important; }
