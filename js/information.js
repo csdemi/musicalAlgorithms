@@ -126,6 +126,14 @@ Custom info goes here.\
 </p>";
 }
 
+Info.prototype.addPiano = function(){
+	this.hashInfo["Piano"] ="\
+<p align=\"left\">\
+Certain instruments don't have a full pitch range. Below is the following instruments range.,\
+<br />&nbsp;Piano: 1-88\
+</p>";
+}
+
 Info.prototype.fillHash = function(){
 	this.addEConstant();
 	this.addFinobacci();
@@ -142,6 +150,7 @@ Info.prototype.fillHash = function(){
 	this.addDurationMap();
 	this.addSilence();
 	this.addCustom();
+	this.addPiano();
 }
 
 information = new Info();

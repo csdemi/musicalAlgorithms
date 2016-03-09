@@ -53,6 +53,15 @@ $(function () {
 		}
 	});
 });
+
+function instrumentTooltip($parentId){
+		$infoTooltip = $($parentId.parentElement.parentElement).find('[id^=instrumentInfo]');
+		var $input = $infoTooltip.closest('div[id]');	
+		var $selected = $input.find("option:selected");
+		var tooltipText = information.getText($selected.text());
+	
+		$infoTooltip.attr("data-original-title",tooltipText); 
+	}
 /****************************************************************End Set Event Handlers******************************************************************/
 
 /****************************************************************Play Controls Handlers******************************************************************/
@@ -610,6 +619,10 @@ function selectInstrument(voiceNum)
 			instrument = 113;
 			instrumentName = "agogo";
 			break;
+		case 18:
+			instrument = 72;
+			instrumentName = "piccolo";
+			break;
 		default:
 			instrument = 0;
 			instrumentName = "acoustic_grand_piano";
@@ -726,26 +739,28 @@ function playPanel(numberOfVoice) {
 			</div>\
 			\
 			<div class='choose-mute'>Mute Track: <input type='checkbox' name='mute' id='mute"+numberOfVoice+"' onclick='muteTrack($(this))'></div>\
-				<div class='choose-instrument'>Instrument: <select class='instrument"+numberOfVoice+"' onchange='selectInstrument("+numberOfVoice+")'>\
-					<option>Piano</option>\
-					<option>Vibraphone</option>\
-					<option>Marimba</option>\
-					<option>Classical Guitar</option>\
-					<option>Synth Drum</option>\
-					<option>Bass</option>\
-					<option>Flute</option>\
-					<option>Cello</option>\
-					<option>Tenor Sax</option>\
-					<option>Woodblock</option>\
-					<option>Trombone</option>\
-					<option>Orchestral Harp</option>\
-					<option>Timpani</option>\
-					<option>Voice (Ooohs)</option>\
-					<option>Pan Flute</option>\
-					<option>Pizzicato Strings</option>\
-					<option>Synth Strings</option>\
-					<option>Agogo</option>\
-				</select></div>\
+			<div class='choose-instrument'>Instrument: <select class='instrument"+numberOfVoice+"' onchange='selectInstrument("+numberOfVoice+");instrumentTooltip(this);'>\
+				<option>Piano</option>\
+				<option>Vibraphone</option>\
+				<option>Marimba</option>\
+				<option>Classical Guitar</option>\
+				<option>Synth Drum</option>\
+				<option>Bass</option>\
+				<option>Flute</option>\
+				<option>Cello</option>\
+				<option>Tenor Sax</option>\
+				<option>Woodblock</option>\
+				<option>Trombone</option>\
+				<option>Orchestral Harp</option>\
+				<option>Timpani</option>\
+				<option>Voice (Ooohs)</option>\
+				<option>Pan Flute</option>\
+				<option>Pizzicato Strings</option>\
+				<option>Synth Strings</option>\
+				<option>Agogo</option>\
+				<option>Piccolo</option>\
+			</select></div>\
+			<img  id='instrumentInfo"+ numberOfVoice + "'>\
 			</div>\
 			";
 		
