@@ -36,7 +36,7 @@ function LoadOriginalPitchArray(voices)
 
 function LoadOriginalDurationArray(voices)
 {
-    var DefaultAlgorithm = algorithmFactory.createSequence("Quarter Notes");//get from user
+    var DefaultAlgorithm = algorithmFactory.createSequence("Sine");//get from user
     var DefaultNoteCount = voices[0].originalPitchArray.length;
     musicAlgorithms.setAlgorithm(DefaultAlgorithm);
 
