@@ -35,6 +35,49 @@ $(document).ready(function()
                biologyLoader($panel);
                 $TextBox.prop("readonly", true);
                 $NoteCount.prop("readonly", false);
+                
+                if ($SelectedAlgorithm.text() == "Pascal")
+                {
+                    if($NoteCount.val() > 561)
+                    {
+                        $NoteCount.val(561);
+
+                        UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
+                        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+                        UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                        UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+
+                        UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                        LoadPitchMappingInputTextBox(voiceArray, voiceNumber); // found in pitchMapping.js
+                        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+                        $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                    }
+                }
+                else if ($SelectedAlgorithm.text() == "Fibonacci") {
+                  
+                    if ($NoteCount.val() > 47) {
+                       
+                        $NoteCount.val(47);
+
+                        UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
+                        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+                        UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                        UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+
+                        UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                        LoadPitchMappingInputTextBox(voiceArray, voiceNumber); // found in pitchMapping.js
+                        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+                        $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                    }
+                }
 
                 UpdateOriginalPitchArray(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text());
                 UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
@@ -67,7 +110,50 @@ $(document).ready(function()
         if ($NoteCount.val() > UpperNoteBound)
         {
             $NoteCount.val(UpperNoteBound);
+	    
+	        if ($SelectedAlgorithm.text() == "Pascal")
+                {
+                    if($NoteCount.val() > 561)
+                    {
+                        $NoteCount.val(561);
 
+                        UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
+                        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+                        UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                        UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+
+                        UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                        LoadPitchMappingInputTextBox(voiceArray, voiceNumber); // found in pitchMapping.js
+                        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+                        $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                    }
+                }
+                else if ($SelectedAlgorithm.text() == "Fibonacci") {
+                  
+                    if ($NoteCount.val() > 47) {
+                       
+                        $NoteCount.val(47);
+
+                        UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
+                        UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                        UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+                        UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                        UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+
+                        UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                        LoadPitchMappingInputTextBox(voiceArray, voiceNumber); // found in pitchMapping.js
+                        LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                        LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+                        $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                    }
+                }
+	    
             UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
             UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
             UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
@@ -103,6 +189,47 @@ $(document).ready(function()
         }
         else
         {
+            if ($SelectedAlgorithm.text() == "Pascal") {
+                if ($NoteCount.val() > 561) {
+                    $NoteCount.val(561);
+
+                    UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
+                    UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                    UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+                    UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                    UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+
+                    UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                    LoadPitchMappingInputTextBox(voiceArray, voiceNumber); // found in pitchMapping.js
+                    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+                    $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                }
+            }
+            else if ($SelectedAlgorithm.text() == "Fibonacci") {
+
+                if ($NoteCount.val() > 47) {
+
+                    $NoteCount.val(47);
+
+                    UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
+                    UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                    UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+
+                    UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                    UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+
+                    UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                    LoadPitchMappingInputTextBox(voiceArray, voiceNumber); // found in pitchMapping.js
+                    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+
+                    $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                }
+            }
+            
             UpdateOriginalPitchArrayCount(voiceArray[voiceNumber - 1], $SelectedAlgorithm.text(), $NoteCount.val());
             UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);// this needs to be updating the other panels.
             UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);// this needs to be updating the other panels.
