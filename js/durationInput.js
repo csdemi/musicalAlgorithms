@@ -391,7 +391,6 @@ function durationInput(numberOfVoice) {
 				<legend><h3>Voice "+ voiceCount + "</h3></legend>\
 					<label>Input Set:</label>\
 					<select id='dInput_set"+ voiceCount + "' name='inputSet' >\
-					<option>Quarter Notes</option>\
 					<option>Sine</option>\
 					<option>Fibonacci</option>\
 					<option>Integers</option>\
