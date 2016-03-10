@@ -145,7 +145,7 @@ function LoadPanels(voices, voiceTotal, previousVoiceCount)
 
 	        	UpdateFinalPitchArray(voiceArray[voiceIncrementor], "Chromatic", 0, 88);
 
-	        	UpdateOriginalDurationArray(voiceArray[voiceIncrementor], "Quarter Notes");
+	        	UpdateOriginalDurationArray(voiceArray[voiceIncrementor], "Sine");
 	        	UpdateDurationMappingArray(voiceArray[voiceIncrementor], "Division", 0, 6);
 	      
 	        	voiceArray[voiceIncrementor].durationMappingArrayLowerBound = 0;
@@ -204,7 +204,7 @@ function displayImage(){//name could change
 		$modifyButton.popover({title:"Attention!",placement:"top",
 		html:"true",content:"Default",trigger:"manual"});
 
-		noteCount.tooltip({title:"Max note count is 2000",placement:"top"});
+		noteCount.tooltip({title:"Max note count is 2000. Fibonacci max note count is 47. Pascal's Triangle max note count is 561.",placement:"top"});
 
 		initialInfo($parentId);	
 	});
