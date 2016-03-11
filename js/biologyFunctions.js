@@ -310,7 +310,9 @@ $('.pitch_input').on('click', '[id^=convert]', function ()
         }
         else
         {
-            alert("Please add more letters to the sequence.");
+            var num =(+(voiceArray[voiceNumber - 1].biology.GenericDataArray.length % 3)%2)+1;
+            var rem = (voiceArray[voiceNumber - 1].biology.GenericDataArray.length % 3);
+            alert("Please add "+num +" more letters to the sequence or remove "+ rem +".");
         }
     }
         //THIS IS COUNTING DUPLICATES
