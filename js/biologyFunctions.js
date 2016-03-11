@@ -269,7 +269,7 @@ $('.pitch_input').on('click', '[id^=convert]', function ()
                 if (counter === 0)
                 {
                     counter = 3;
-                    value.push(ValueConversion(sequence));
+                    value.push(ValueConversion(sequence,voiceNumber));
                     sequence = "";
                 }
 
@@ -394,36 +394,60 @@ function biologyDestructor($panel)
     $duplicateLabel.hide();
 }
 
-function ValueConversion(codone)
+function ValueConversion(codone,voiceNumber)
 {
     var i = 0;
     var tempValue = "";
-
-    for (i; i < codone.length; i++)
+    
+    var $Algorithm = $MacroPanel.find('[id^=input_set]');// This locates the algorithm drop down menu.
+    var $SelectedAlgorithm = $Algorithm.find("option:selected");// This gets the current algorithm
+    if($SelectedAlgorithm.text()=="DNA")
     {
-        if (codone[i] == "A")
+        for (i; i < codone.length; i++)
         {
-            tempValue += "0";
-        }
+            if (codone[i] == "A")
+            {
+                tempValue += ""+voiceArray[voiceNumber-1].biology.dnaValues[0];
+            }
 
-        else if (codone[i] == "T")
-        {
-                tempValue += "1";
-        }
+            else if (codone[i] == "T")
+            {
+                tempValue +=""+ voiceArray[voiceNumber-1].biology.dnaValues[1];
+            }
 
-        else if (codone[i] == "C")
-        {
-                tempValue += "2";
-        }
+            else if (codone[i] == "C")
+            {
+                tempValue +=""+ voiceArray[voiceNumber-1].biology.dnaValues[2];
+            }
 
-        else if (codone[i] == "G")
-        {
-                tempValue += "3";
+            else if (codone[i] == "G")
+            {
+                tempValue += ""+voiceArray[voiceNumber-1].biology.dnaValues[3];
+            }
         }
-
-        else if (codone[i] == "U")
+    }
+    else if($SelectedAlgorithm.text()=="RNA"){
+        for (i; i < codone.length; i++)
         {
-                tempValue += "4";
+            if (codone[i] == "A")
+            {
+                tempValue += ""+voiceArray[voiceNumber-1].biology.rnaValues[0];
+            }
+
+            else if (codone[i] == "C")
+            {
+                tempValue +=""+ voiceArray[voiceNumber-1].biology.dnaValues[2];
+            }
+
+            else if (codone[i] == "G")
+            {
+                tempValue += ""+voiceArray[voiceNumber-1].biology.dnaValues[3];
+            }
+
+            else if (codone[i] == "U")
+            {
+                tempValue +=""+ voiceArray[voiceNumber-1].biology.rnaValues[1];
+            }
         }
     }
 
