@@ -18,21 +18,25 @@ $(document).ready(function()
 
         if($SelectedAlgorithm.text() == "Custom")
         {
+            biologyDestructor($panel);
+
             $TextBox.prop("readonly", false);
             $TextBox.val("");
 
             $NoteCount.prop("readonly", true);
             $NoteCount.val(" ");
         }
+
         else if ($SelectedAlgorithm.text() != "Custom")
-        {// Still need to implement the ability to edit the DNA array.
+        {
             if ($SelectedAlgorithm.text() == "DNA" || $SelectedAlgorithm.text() == "RNA"|| $SelectedAlgorithm.text()=="Protein")
             {
                 biologyLoader($panel);
             }
             else
             {
-               biologyLoader($panel);
+                biologyDestructor($panel);
+
                 $TextBox.prop("readonly", true);
                 $NoteCount.prop("readonly", false);
                 
@@ -98,7 +102,7 @@ $(document).ready(function()
     /*
         This function is called when the note count is changed.
     */
-    $('.pitch_input').on('input', '[id^=note_count]', function () {	
+    $('.pitch_input').on('input', '[id^=note_count]', function () {
         var UpperNoteBound = 2000;
         var $panel = $(this).closest('div[id]');// This gets the specific voice panel
         var $NoteCount = $panel.find('[id^=note_count]');
@@ -254,70 +258,64 @@ $(document).ready(function()
         This is called when user types into a text box.
     */
     $('.pitch_input').on('change', '[id^=areaPitch]', function () {
-        var UpperNoteLimit = 2000;
-	    var $panel = $(this).closest('div[id]');
-	    var $NoteCount = $panel.find('[id^=note_count]');
-	    var $TextBox = $panel.find('[id^=areaPitch]');
-	    var voiceNumber = getVoiceNumber($panel);
+            var UpperNoteLimit = 2000;
+            var $panel = $(this).closest('div[id]');
+            var $NoteCount = $panel.find('[id^=note_count]');
+            var $TextBox = $panel.find('[id^=areaPitch]');
+            var voiceNumber = getVoiceNumber($panel);
 
-	    var TextData = document.getElementById($TextBox.attr('id')).value;
-	    var candidateArray = TextData.split(",");
-	    
-	    if(candidateArray.length > UpperNoteLimit)
-	    {
-	        $NoteCount.val(UpperNoteLimit);
-	        var DifferenceInLength = candidateArray.length - UpperNoteLimit;
-	        candidateArray.length -= DifferenceInLength;
-            if (ValidateCustomData(candidateArray) == false)
-	        {
-	            alert("Make Sure All Data Entered Is An Integer");
-	        }
-	        else
-	        {
-	            voiceArray[voiceNumber - 1].originalPitchArray = candidateArray;
+            var TextData = document.getElementById($TextBox.attr('id')).value;
+            var candidateArray = TextData.split(",");
 
-	            UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
-	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+            if (candidateArray.length > UpperNoteLimit) {
+                $NoteCount.val(UpperNoteLimit);
+                var DifferenceInLength = candidateArray.length - UpperNoteLimit;
+                candidateArray.length -= DifferenceInLength;
+                if (ValidateCustomData(candidateArray) == false) {
+                    alert("Make Sure All Data Entered Is An Integer");
+                }
+                else {
+                    voiceArray[voiceNumber - 1].originalPitchArray = candidateArray;
 
-	            UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
-	            UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+                    UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                    UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
 
-	            $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
-	            UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                    UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                    UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
 
-	            LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
-	            LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
-	            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
-	        }
-	    }
-	    else
-	    {
-	        if (ValidateCustomData(candidateArray) == false)
-	        {
-	            alert("Make Sure All Data Entered Is An Integer");
-	        }
-	        else
-	        {
-	            $NoteCount.val(candidateArray.length);
-	            voiceArray[voiceNumber - 1].originalPitchArray = candidateArray;
+                    $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                    UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
 
-	            UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
-	            UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                    LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+                }
+            }
+            else {
+                if (ValidateCustomData(candidateArray) == false) {
+                    alert("Make Sure All Data Entered Is An Integer");
+                }
+                else {
+                    $NoteCount.val(candidateArray.length);
+                    voiceArray[voiceNumber - 1].originalPitchArray = candidateArray;
 
-	            UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
-	            UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
+                    UpdatePitchMappingArray(voiceArray[voiceNumber - 1], GetCurrentSelectedPitchMappingAlgorithm(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
+                    UpdateFinalPitchArray(voiceArray[voiceNumber - 1], GetCurrentSelectedScale(voiceNumber), voiceArray[voiceNumber - 1].pitchMappingArrayLowerBound, voiceArray[voiceNumber - 1].pitchMappingArrayUpperBound);
 
-	            $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
-	            UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+                    UpdateDurationNoteCount(voiceArray[voiceNumber - 1], voiceNumber);
+                    UpdateDurationMappingNoteCount(voiceArray[voiceNumber - 1]);
 
-	            LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
-	            LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
-	            LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
-	        }
-	    }
-	    updateTooltipVals($panel);
-	    updateDurationMapTooltip($panel);
-	    updatePitchMapTooltip($panel);
+                    $TextBox.val(voiceArray[voiceNumber - 1].originalPitchArray);
+                    UpdateDurationInputTextBoxFromPitchInput(voiceArray[voiceNumber - 1], voiceNumber);
+
+                    LoadPitchMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadDurationMappingInputTextBox(voiceArray, voiceNumber);
+                    LoadScaleOptionsInputTextBox(voiceArray, voiceNumber);
+                }
+            }
+            updateTooltipVals($panel);
+            updateDurationMapTooltip($panel);
+            updatePitchMapTooltip($panel);
 	})
 	
 	/*
@@ -657,3 +655,4 @@ function pitchInput(numberOfVoice) {
 
         $(".pitch_input").append($voice);
 }
+
