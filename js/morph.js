@@ -142,7 +142,9 @@ function drawVisualization()
 		   			  'legend': {'position': 'bottom'}
 	};
 	
-	graph.draw(data, options);
+	setTimeout(function() {
+		graph.draw(data, options)
+	}, 200);
 }
 
 google.load("visualization", "1", {packages:["corechart"]});
