@@ -12,16 +12,14 @@ var currentVoiceNumber;
 function openMorphGraph(voiceNumber)
 {
 	// Set callback to run when API is loaded
-	google.setOnLoadCallback(function() 
-	{
-		update();
-		console.log("fire");
-	});
+	//google.setOnLoadCallback(updateMorph);
+
 	currentVoiceNumber = voiceNumber;
 	loadFile(getTargetdata);
+	
 }
 
-function update() 
+function updateMorph() 
 {
 	var slider = document.getElementById('slide');
 	sliderVal = slider.value;	
@@ -32,6 +30,7 @@ function update()
 function getTargetdata(data)
 {
 	targetData = data;
+
 }
 
 function startingData()
@@ -42,6 +41,7 @@ function startingData()
 	{
 		startingData[i] = Math.floor(Math.random()*200);
 	}
+
 }
 	
 //asynchronous function with callback
@@ -87,7 +87,7 @@ function loadFile(callback)
 
 				callback(newData);
 			}
-			update();
+			updateMorph();
 		}
 	}
 	reader.open("GET", file, true);
@@ -97,12 +97,14 @@ function loadFile(callback)
 function initData()
 {
 	
+	$("#slide").trigger('change');
 }
 
 function setStartData(inVal, morphTarget) 
 {
 	startingData = inVal;
 	morphToSong = morphTarget;
+
 }
 
 // Called when the Visualization API is loaded.
@@ -132,7 +134,8 @@ function drawVisualization()
 	document.getElementById("morphBox").value = textData;
 
 	// specify options
-	var options = 	{ width: "100%", allowHtml: true,
+	
+		var options = 	{ width: "100%", allowHtml: true,
 					  lines: [ { color: "#0075BE", style: "dot" },
 					  		   { color: "#FF5506", style: "dot",} ],
 					  chartArea: { width: "100%", height: "75%"},
@@ -141,6 +144,9 @@ function drawVisualization()
 	
 	graph.draw(data, options);
 }
+
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(initData);
 
 // The following functions are for actual array adjustments from the morph output.
 

@@ -23,7 +23,7 @@ drawVisualization();
 	startingData();
 	loadFile(getTargetdata);
 
-	function update(){
+	function updateMorph(){
 		var slider = document.getElementById('slide');
 		sliderVal = slider.value;	
 		drawVisualization();
