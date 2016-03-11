@@ -7,6 +7,12 @@
 /* ----- Helper Mixins ----- */
 /* ----- Page Styles ------ */
 /* Base Styles */
+#note_count1,#note_count2,#note_count3,note_count4,
+#range1,#to1,#range2,#to2,#range3,#to3,#range4,#to4,
+#dRange1,#dRange2,#dRange3,#dRange4,
+#dTo1,#dTo2,#dTo3,#dTo4{
+    width:50px;
+}
 input#letterAText1,input#letterTText1,input#letterUText1,input#letterCText1,input#letterGText1,
 input#letterAText2,input#letterTText2,input#letterUText2,input#letterCText2,input#letterGText2,
 input#letterAText3,input#letterTText3,input#letterUText3,input#letterCText3,input#letterGText3,
@@ -554,6 +560,15 @@ div.graph-tooltip-label td {
    max-width:1200px;
   }
   
+
+.horizontalAlignCenter * {
+    vertical-align: middle;
+}
+  
+.horizontalAlignBottom * {
+	vertical-align: bottom;
+}
+
  .pitchInputUtility-modal {
 	width: 100%; }
 
