@@ -122,7 +122,7 @@ Silences or \"rest,\" can be an important part of music. By adding silences, you
 Info.prototype.addCustom = function(){
 	this.hashInfo["Custom"] ="\
 <p align=\"left\">\
-Custom info goes here.\
+Type in your own notes. Make sure they're comma-separated, and valid integer values.\
 </p>";
 }
 
@@ -133,6 +133,31 @@ Certain instruments don't have a full pitch range. Below is the following instru
 <br />&nbsp;Piano: 1-88\
 </p>";
 }
+
+Info.prototype.addDNA = function(){
+	this.hashInfo["DNA"] = "\
+<p align=\"left\">\
+This algorithm converts a DNA sequence into a list of numbers. A DNA sequence is composed of four bases: adenine (A), thymine (T), cytosine (C), and guanine (G). The sequence can only contain the letters A, T, C, and G in either uppercase or lowercase; all non-letter characters will be ignored.    Sequences can be found from databanks: http://www.ncbi.nlm.nih.gov/  and http://genome.ucsc.edu/cgi-bin/hgGateway\
+</p>";
+
+}
+
+Info.prototype.addRNA = function(){
+	this.hashInfo["RNA"] = "\
+<p align=\"left\">\
+This algorithm converts a RNA sequence into a list of numbers.  A RNA sequence is composed of four bases: adenine (A), uracil (U), cytosine (C), and guanine (G). The sequence can only contain the letters A, U, C, and G in either uppercase or lowercase; all non-letter characters will be ignored.  Sequences can be found from databanks: http://www.ncbi.nlm.nih.gov/  and http://genome.ucsc.edu/cgi-bin/hgGateway\
+</p>";
+	
+}
+
+Info.prototype.addProtein = function(){
+	this.hashInfo["Protein"] = "\
+<p align=\"left\">\
+This algorithm converts protein chains into a list of numbers.  The default settings are in reference to the Wimley-White whole residue octanol hydrophobicity scale (with averaging).   Proteins are made of amino acid residue chains that form organic compounds (from 22 standard amino acids).   Sequences can be found from databanks: http://www.ncbi.nlm.nih.gov/  \
+</p>";
+}
+
+
 
 Info.prototype.fillHash = function(){
 	this.addEConstant();
@@ -151,6 +176,9 @@ Info.prototype.fillHash = function(){
 	this.addSilence();
 	this.addCustom();
 	this.addPiano();
+	this.addDNA();
+	this.addRNA();
+	this.addProtein();
 }
 
 information = new Info();
